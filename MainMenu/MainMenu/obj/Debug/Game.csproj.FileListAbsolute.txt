@@ -1,0 +1,12 @@
+C:\Users\Admin\Documents\GitHub\Pexeso---ROP\MainMenu\MainMenu\bin\Debug\MainMenu.exe.config
+C:\Users\Admin\Documents\GitHub\Pexeso---ROP\MainMenu\MainMenu\bin\Debug\MainMenu.exe
+C:\Users\Admin\Documents\GitHub\Pexeso---ROP\MainMenu\MainMenu\bin\Debug\MainMenu.pdb
+C:\Users\Admin\Documents\GitHub\Pexeso---ROP\MainMenu\MainMenu\obj\Debug\Game.csproj.AssemblyReference.cache
+C:\Users\Admin\Documents\GitHub\Pexeso---ROP\MainMenu\MainMenu\obj\Debug\MainMenu.NewGame.resources
+C:\Users\Admin\Documents\GitHub\Pexeso---ROP\MainMenu\MainMenu\obj\Debug\MainMenu.Open.resources
+C:\Users\Admin\Documents\GitHub\Pexeso---ROP\MainMenu\MainMenu\obj\Debug\MainMenu.Properties.Resources.resources
+C:\Users\Admin\Documents\GitHub\Pexeso---ROP\MainMenu\MainMenu\obj\Debug\MainMenu.StartingMenu.resources
+C:\Users\Admin\Documents\GitHub\Pexeso---ROP\MainMenu\MainMenu\obj\Debug\Game.csproj.GenerateResource.cache
+C:\Users\Admin\Documents\GitHub\Pexeso---ROP\MainMenu\MainMenu\obj\Debug\Game.csproj.CoreCompileInputs.cache
+C:\Users\Admin\Documents\GitHub\Pexeso---ROP\MainMenu\MainMenu\obj\Debug\MainMenu.exe
+C:\Users\Admin\Documents\GitHub\Pexeso---ROP\MainMenu\MainMenu\obj\Debug\MainMenu.pdb
