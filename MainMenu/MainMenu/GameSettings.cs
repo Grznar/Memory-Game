@@ -31,10 +31,7 @@ namespace MainMenu
         private void Volume(object sender, EventArgs e)
         {
 
-            if (checkBox2.Checked)
-            {
-               
-            }
+            
 
         }
 

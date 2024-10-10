@@ -98,9 +98,9 @@
             // 
             this.button5.BackColor = System.Drawing.Color.PowderBlue;
             this.button5.Font = new System.Drawing.Font("Microsoft YaHei UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.button5.Location = new System.Drawing.Point(907, 417);
+            this.button5.Location = new System.Drawing.Point(895, 417);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(162, 80);
+            this.button5.Size = new System.Drawing.Size(174, 80);
             this.button5.TabIndex = 7;
             this.button5.Text = "Scoreboard";
             this.button5.UseVisualStyleBackColor = false;
