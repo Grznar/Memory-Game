@@ -16,12 +16,18 @@ namespace MainMenu
         {
             InitializeComponent();
         }
-
+        private string playerNumber;
         private void QuitApp(object sender, EventArgs e)
         {
             Application.Exit();
         }
+        public StartingMenu(string playerNumber)
+        {
+            InitializeComponent();
+            this.playerNumber = playerNumber;
 
+            
+        }
         private void LoadGame(object sender, EventArgs e)
         {
             NewGame gameWindow = new NewGame();
@@ -29,6 +35,7 @@ namespace MainMenu
             this.Visible = false;
         }
 
+        
         private void LoadSettings(object sender, EventArgs e)
         {
             GameSettings gameSettings = new GameSettings();
@@ -38,6 +45,7 @@ namespace MainMenu
 
         private void LoadScore(object sender, EventArgs e)
         {
+            
             Score score = new Score();
             score.Show();
             this.Visible = false;

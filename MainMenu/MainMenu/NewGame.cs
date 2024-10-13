@@ -15,8 +15,9 @@ namespace MainMenu
         public NewGame()
         {
             InitializeComponent();
+            
             iconsToPlace();
-
+            tableLayoutPanel1.Padding = new Padding(0, 0, 0, statusStrip1.Height);
         }
         Random rnd = new Random();
         List<string> icons = new List<string>()
@@ -25,6 +26,8 @@ namespace MainMenu
         };
 
         Label first, second;
+        int score = 0;
+        
 
         private void label_Click(object sender, EventArgs e)
         {
@@ -54,8 +57,14 @@ namespace MainMenu
             {
                 first = null;
                 second = null;
+                score++;
+                toolStripStatusLabel1.Text = "Počet bodů: " + score;
             }
-            timer1.Start();
+            else
+            {
+                timer1.Start();
+            }
+            
 
         }
 
@@ -76,11 +85,16 @@ namespace MainMenu
         private void timer1_Tick(object sender, EventArgs e)
         {
             timer1.Stop();
-            first.ForeColor = first.BackColor;
+                first.ForeColor = first.BackColor;
             second.ForeColor = second.BackColor;
 
             first = null;
             second=null;
+        }
+
+        private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
+        {
+
         }
 
         private void iconsToPlace()
@@ -99,6 +113,7 @@ namespace MainMenu
                 rndnumber = rnd.Next(0, icons.Count);
                 label.Text = icons[rndnumber];
                 icons.RemoveAt(rndnumber);
+                label.ForeColor = label.BackColor;
             }
             
 

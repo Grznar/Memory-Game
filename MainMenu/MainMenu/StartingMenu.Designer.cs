@@ -44,7 +44,7 @@
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(155, 80);
             this.button1.TabIndex = 2;
-            this.button1.Text = "New Game";
+            this.button1.Text = "Nová hra";
             this.button1.UseVisualStyleBackColor = false;
             this.button1.Click += new System.EventHandler(this.LoadGame);
             // 
@@ -67,7 +67,7 @@
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(155, 80);
             this.button2.TabIndex = 4;
-            this.button2.Text = "Settings";
+            this.button2.Text = "Nastavení";
             this.button2.UseVisualStyleBackColor = false;
             this.button2.Click += new System.EventHandler(this.LoadSettings);
             // 
@@ -79,7 +79,7 @@
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(155, 80);
             this.button3.TabIndex = 5;
-            this.button3.Text = "Quit";
+            this.button3.Text = "Odejít";
             this.button3.UseVisualStyleBackColor = false;
             this.button3.Click += new System.EventHandler(this.QuitApp);
             // 
@@ -91,7 +91,7 @@
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(167, 80);
             this.button4.TabIndex = 6;
-            this.button4.Text = "Open Game";
+            this.button4.Text = "Nová hra";
             this.button4.UseVisualStyleBackColor = false;
             // 
             // button5
@@ -102,7 +102,7 @@
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(174, 80);
             this.button5.TabIndex = 7;
-            this.button5.Text = "Scoreboard";
+            this.button5.Text = "Tabulka";
             this.button5.UseVisualStyleBackColor = false;
             this.button5.Click += new System.EventHandler(this.LoadScore);
             // 

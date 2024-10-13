@@ -16,14 +16,16 @@ namespace MainMenu
         {
             InitializeComponent();
         }
-
+        private string playerNumber;
+        
+        
         private void button1_Click(object sender, EventArgs e)
         {
 
         }
         private void LoadMenu(object sender, EventArgs e)
         {
-            StartingMenu startingMenu = new StartingMenu();
+            StartingMenu startingMenu = new StartingMenu(playerNumber);
             startingMenu.Show();
             this.Visible = false;
 
@@ -38,6 +40,33 @@ namespace MainMenu
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void GameSettings_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && (e.KeyChar < '2' || e.KeyChar > '6'))
+            {
+                e.Handled = true; 
+            }
+            if (textBox1.Text.Length >= 1 && !char.IsControl(e.KeyChar))
+            {
+                e.Handled = true; 
+            }
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            playerNumber = textBox1.Text;
         }
     }
 }
