@@ -30,7 +30,7 @@ namespace MainMenu
         }
         private void LoadGame(object sender, EventArgs e)
         {
-            NewGame gameWindow = new NewGame();
+            NewGame gameWindow = new NewGame(int.Parse(playerNumber));
             gameWindow.Show();
             this.Visible = false;
         }

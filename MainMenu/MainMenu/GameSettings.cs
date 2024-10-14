@@ -15,10 +15,12 @@ namespace MainMenu
         public GameSettings()
         {
             InitializeComponent();
+            radioButton2.Checked = true;
         }
         private string playerNumber;
+        private string cardNumber;
         
-        
+
         private void button1_Click(object sender, EventArgs e)
         {
 
@@ -67,6 +69,36 @@ namespace MainMenu
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             playerNumber = textBox1.Text;
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+             
+
+        }
+        private void textBox2_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            
+        }
+
+        private void comboBox1_SelectedIndexChanged_1(object sender, EventArgs e)
+        {
+
+        }
+        private void radioButtonChanged(object sender, EventArgs e)
+        {
+            if (radioButton1.Checked)
+            {
+                cardNumber= radioButton1.Text;
+            }
+            if (radioButton2.Checked)
+            {
+                cardNumber = radioButton2.Text;
+            }
+            if (radioButton3.Checked)
+            {
+                cardNumber = radioButton3.Text;
+            }
         }
     }
 }

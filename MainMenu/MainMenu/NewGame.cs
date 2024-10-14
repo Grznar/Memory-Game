@@ -12,12 +12,19 @@ namespace MainMenu
 {
     public partial class NewGame : Form
     {
-        public NewGame()
+        Label first, second;
+        private int[] score;
+        private int playerNumber;
+        private int playerCurrent = 1;
+        public NewGame(int playerNumber)
         {
             InitializeComponent();
-            
+            this.playerNumber = playerNumber;
+            score=new int[playerNumber];
             iconsToPlace();
+            updateScoreLabel();
             tableLayoutPanel1.Padding = new Padding(0, 0, 0, statusStrip1.Height);
+
         }
         Random rnd = new Random();
         List<string> icons = new List<string>()
@@ -25,9 +32,12 @@ namespace MainMenu
         "a","a","b","b","c","c","d","d","e","e","f","f","g","g","h","h"
         };
 
-        Label first, second;
-        int score = 0;
-        
+
+        private void updateScoreLabel()
+        {
+           toolStripStatusLabel1.Text  = "Hráč " + playerCurrent + " je na tahu. "+" Počet jeho bodů: "+score[playerCurrent-1];
+
+        }
 
         private void label_Click(object sender, EventArgs e)
         {
@@ -44,7 +54,7 @@ namespace MainMenu
             {
                 return;
             }
-            if (first == null)
+            if (first == null)  
             {
                 first = clickedLabel;
                 first.ForeColor = Color.White;
@@ -57,12 +67,14 @@ namespace MainMenu
             {
                 first = null;
                 second = null;
-                score++;
-                toolStripStatusLabel1.Text = "Počet bodů: " + score;
+                score[playerCurrent-1]++;
+                updateScoreLabel();
             }
             else
             {
                 timer1.Start();
+                playerCurrent = (playerCurrent%playerNumber)+1;
+                updateScoreLabel() ;
             }
             
 
