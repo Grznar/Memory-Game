@@ -35,8 +35,29 @@ namespace MainMenu
 
         private void updateScoreLabel()
         {
-           toolStripStatusLabel1.Text  = "Hráč " + playerCurrent + " je na tahu. "+" Počet jeho bodů: "+score[playerCurrent-1];
+            toolStripStatusLabel1.Text = "Hráč " + playerCurrent + " je na tahu. " + " Počet jeho bodů: " + score[playerCurrent - 1];
+            
+        }
+        private void DisplayScores()
+        {
+            int[] playerIndices = new int[playerNumber];
+            for (int i = 0; i < playerNumber; i++)
+            {
+                playerIndices[i] = i;
+            }
 
+            
+            Array.Sort(score, playerIndices);
+            Array.Reverse(score);  
+
+            
+            string scoreText = "Pořadí hráčů:\n";
+            for (int i = 0; i < playerNumber; i++)
+            {
+                scoreText += "Hráč " + (playerIndices[i] + 1) + ": " + score[i] + " bodů\n";
+            }
+
+            MessageBox.Show(scoreText, "Konečné skóre");
         }
 
         private void label_Click(object sender, EventArgs e)
@@ -54,44 +75,58 @@ namespace MainMenu
             {
                 return;
             }
-            if (first == null)  
+            if (first == null)
             {
                 first = clickedLabel;
                 first.ForeColor = Color.White;
                 return;
             }
+
             second = clickedLabel;
             second.ForeColor = Color.White;
-            WinnerCheck();
+
+            
             if (first.Text == second.Text)
             {
+                score[playerCurrent - 1]++;
+                updateScoreLabel();
+
+                
                 first = null;
                 second = null;
-                score[playerCurrent-1]++;
-                updateScoreLabel();
+
+                
+                WinnerCheck();
             }
             else
             {
                 timer1.Start();
-                playerCurrent = (playerCurrent%playerNumber)+1;
-                updateScoreLabel() ;
+                
+                playerCurrent = (playerCurrent % playerNumber) + 1;
+                updateScoreLabel();
             }
-            
+
 
         }
 
         private void WinnerCheck()
         {
             Label label;
+            
+
             for (int i = 0; i < tableLayoutPanel1.Controls.Count; i++)
             {
                 label = tableLayoutPanel1.Controls[i] as Label;
-                if(label !=null && label.ForeColor==label.BackColor)
+                if (label != null && label.ForeColor == label.BackColor)
                 {
+
                     return;
                 }
             }
-            MessageBox.Show("Winner winner chicken dinner");
+
+            
+                DisplayScores();
+            
 
         }
         private void timer1_Tick(object sender, EventArgs e)

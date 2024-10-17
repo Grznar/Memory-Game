@@ -17,8 +17,8 @@ namespace MainMenu
             InitializeComponent();
             radioButton2.Checked = true;
         }
-        private string playerNumber;
-        private string cardNumber;
+        private int playerNumber;
+        private int cardNumber;
         
 
         private void button1_Click(object sender, EventArgs e)
@@ -68,7 +68,10 @@ namespace MainMenu
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-            playerNumber = textBox1.Text;
+            if (!string.IsNullOrEmpty(textBox1.Text))
+            {
+                playerNumber = int.Parse(textBox1.Text);
+            }
         }
 
         private void textBox2_TextChanged(object sender, EventArgs e)
@@ -89,15 +92,15 @@ namespace MainMenu
         {
             if (radioButton1.Checked)
             {
-                cardNumber= radioButton1.Text;
+                cardNumber = 4;
             }
             if (radioButton2.Checked)
             {
-                cardNumber = radioButton2.Text;
+                cardNumber = 5;
             }
             if (radioButton3.Checked)
             {
-                cardNumber = radioButton3.Text;
+                cardNumber = 6;
             }
         }
     }

@@ -16,12 +16,12 @@ namespace MainMenu
         {
             InitializeComponent();
         }
-        private string playerNumber;
+        private int playerNumber = 2;
         private void QuitApp(object sender, EventArgs e)
         {
             Application.Exit();
         }
-        public StartingMenu(string playerNumber)
+        public StartingMenu(int playerNumber)
         {
             InitializeComponent();
             this.playerNumber = playerNumber;
@@ -30,7 +30,7 @@ namespace MainMenu
         }
         private void LoadGame(object sender, EventArgs e)
         {
-            NewGame gameWindow = new NewGame(int.Parse(playerNumber));
+            NewGame gameWindow = new NewGame(playerNumber);
             gameWindow.Show();
             this.Visible = false;
         }
