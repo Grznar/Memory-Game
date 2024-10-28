@@ -16,27 +16,29 @@ namespace MainMenu
         {
             InitializeComponent();
         }
+        private int difficulty = 2;
         private int playerNumber = 2;
         private int cardNumber = 4;
+        private bool pcPlayer = false;
         private void QuitApp(object sender, EventArgs e)
         {
             Application.Exit();
         }
-        public StartingMenu(int playerNumber,int cardNumber)
+        public StartingMenu(int playerNumber,int cardNumber,bool pcPlayer,int obtiznost)
         {
             InitializeComponent();
             
             {
                 this.playerNumber = playerNumber;
-                
+                this.difficulty = obtiznost;
                 this.cardNumber = cardNumber;
-                
+                this.pcPlayer = pcPlayer;
             }
             
         }
         private void LoadGame(object sender, EventArgs e)
         {
-            NewGame gameWindow = new NewGame(playerNumber,cardNumber);
+            NewGame gameWindow = new NewGame(playerNumber,cardNumber,pcPlayer,difficulty);
             gameWindow.Show();
             this.Visible = false;
         }

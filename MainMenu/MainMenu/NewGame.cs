@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -18,21 +14,25 @@ namespace MainMenu
         private int playerNumber;
         private int playerCurrent = 1;
         private int cardNumber;
-        public NewGame(int playerNumber, int cardNumber)
+        private bool pcPlayer;
+        private int difficulty;
+        public NewGame(int playerNumber, int cardNumber, bool pcPlayer, int obtiznost)
         {
             InitializeComponent();
             this.playerNumber = playerNumber;
-            
+            this.pcPlayer = pcPlayer;
             this.cardNumber = cardNumber;
-            score=new int[playerNumber];
+            this.difficulty = obtiznost;
+            score = new int[playerNumber];
             sizeOfTable();
             iconsToPlace();
             updateScoreLabel();
             tableLayoutPanel1.Padding = new Padding(0, 0, 0, statusStrip1.Height);
             playerCurrent = 1;
-           
+
 
         }
+
         Random rnd = new Random();
         List<string> icons6x6 = new List<string>()
         {
@@ -55,14 +55,15 @@ namespace MainMenu
             tableLayoutPanel1.ColumnCount = columns;
             tableLayoutPanel1.ColumnStyles.Clear();
             tableLayoutPanel1.RowStyles.Clear();
+            tableLayoutPanel1.Dock = DockStyle.Fill;
 
-            
+
             for (int i = 0; i < columns; i++)
             {
                 tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f / columns));
             }
 
-            
+
             for (int i = 0; i < rows; i++)
             {
                 tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100f / rows));
@@ -72,25 +73,26 @@ namespace MainMenu
         private void updateScoreLabel()
         {
             toolStripStatusLabel1.Text = "Hráč " + playerCurrent + " je na tahu. " + " Počet jeho bodů: " + score[playerCurrent - 1];
-            
+
         }
         private void DisplayScores()
         {
-            int[] playerIndices = new int[playerNumber];
+            int[] playerNumeros = new int[playerNumber];
             for (int i = 0; i < playerNumber; i++)
             {
-                playerIndices[i] = i;
+                playerNumeros[i] = i;
             }
 
-            
-            Array.Sort(score, playerIndices);
-            Array.Reverse(score);  
 
-            
+            Array.Sort(score, playerNumeros);
+            Array.Reverse(score);
+
+
             string scoreText = "Pořadí hráčů:\n";
+
             for (int i = 0; i < playerNumber; i++)
             {
-                scoreText += "Hráč " + (playerIndices[i] + 1) + ": " + score[i] + " bodů\n";
+                scoreText += "Hráč " + (playerNumeros[i] + 1) + ": " + score[i] + " bodů\n";
             }
 
             MessageBox.Show(scoreText, "Konečné skóre");
@@ -98,6 +100,7 @@ namespace MainMenu
 
         private void label_Click(object sender, EventArgs e)
         {
+
             if (first != null && second != null)
             {
                 return;
@@ -121,34 +124,38 @@ namespace MainMenu
             second = clickedLabel;
             second.ForeColor = Color.White;
 
-            
+
             if (first.Text == second.Text)
             {
                 score[playerCurrent - 1]++;
                 updateScoreLabel();
 
-                
+
                 first = null;
                 second = null;
 
-                
+
                 WinnerCheck();
             }
             else
             {
                 timer1.Start();
-                
+
                 playerCurrent = (playerCurrent % playerNumber) + 1;
                 updateScoreLabel();
             }
+            if (pcPlayer && playerCurrent == 2)
+            {
 
+                computerTurn();
+            }
 
         }
 
         private void WinnerCheck()
         {
             Label label;
-            
+
 
             for (int i = 0; i < tableLayoutPanel1.Controls.Count; i++)
             {
@@ -160,19 +167,19 @@ namespace MainMenu
                 }
             }
 
-            
-                DisplayScores();
-            
+
+            DisplayScores();
+
 
         }
         private void timer1_Tick(object sender, EventArgs e)
         {
             timer1.Stop();
-                first.ForeColor = first.BackColor;
+            first.ForeColor = first.BackColor;
             second.ForeColor = second.BackColor;
 
             first = null;
-            second=null;
+            second = null;
         }
 
         private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
@@ -185,7 +192,7 @@ namespace MainMenu
             Label label;
             int rndnumber;
             List<string> icons = null;
-            switch(cardNumber)
+            switch (cardNumber)
             {
                 case 2:
                     {
@@ -203,17 +210,17 @@ namespace MainMenu
                         break;
                     }
             }
-            MessageBox.Show("Card number je " + cardNumber);
             tableLayoutPanel1.Controls.Clear();
-            for(int i=0;i<cardNumber*cardNumber;i++)
+            for (int i = 0; i < cardNumber * cardNumber; i++)
             {
                 label = new Label();
                 label.TextAlign = ContentAlignment.MiddleCenter;
                 label.ImageAlign = ContentAlignment.MiddleCenter;
                 label.BackColor = Color.LightSkyBlue;
                 label.ForeColor = label.BackColor;
-                label.Font = new Font("Webdings" ,48);
+                label.Font = new Font("Webdings", 48);
                 label.AutoSize = true;
+                label.Dock = DockStyle.Fill;
                 rndnumber = rnd.Next(0, icons.Count);
                 label.Text = icons[rndnumber];
                 icons.RemoveAt(rndnumber);
@@ -225,5 +232,15 @@ namespace MainMenu
 
 
         }
+        private async void computerTurn()
+        {
+            
+                
+        }
+
+
+
+        }
     }
-}
+
+

@@ -16,11 +16,13 @@ namespace MainMenu
         {
             InitializeComponent();
             radioButton2.Checked = true;
+            checkBox1.Checked = false;
+            radioButton5.Checked = true;
         }
         private int playerNumber = 2;
         private int cardNumber = 4;
-        
-
+        private bool pcPlayer = false;
+        private int difficulty = 2;
         private void button1_Click(object sender, EventArgs e)
         {
 
@@ -28,7 +30,7 @@ namespace MainMenu
         private void LoadMenu(object sender, EventArgs e)
         {
             
-            StartingMenu startingMenu = new StartingMenu(playerNumber,cardNumber);
+            StartingMenu startingMenu = new StartingMenu(playerNumber,cardNumber,pcPlayer,difficulty);
             startingMenu.Show();
             this.Visible = false;
 
@@ -42,7 +44,11 @@ namespace MainMenu
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
-
+            if(checkBox1.Checked)
+            {
+                pcPlayer = true;
+            }
+            else pcPlayer = false;
         }
 
         private void GameSettings_Load(object sender, EventArgs e)
@@ -108,6 +114,22 @@ namespace MainMenu
             }
            
 
+        }
+
+        private void radioChanged2(object sender, EventArgs e)
+        {
+            if (radioButton4.Checked)
+            {
+                difficulty = 1;
+            }
+            else if (radioButton5.Checked)
+            {
+                difficulty = 2;
+            }
+            else if (radioButton6.Checked)
+            {
+                difficulty = 3;
+            }
         }
     }
 }
