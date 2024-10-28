@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -16,23 +17,58 @@ namespace MainMenu
         private int[] score;
         private int playerNumber;
         private int playerCurrent = 1;
-        public NewGame(int playerNumber)
+        private int cardNumber;
+        public NewGame(int playerNumber, int cardNumber)
         {
             InitializeComponent();
             this.playerNumber = playerNumber;
+            
+            this.cardNumber = cardNumber;
             score=new int[playerNumber];
+            sizeOfTable();
             iconsToPlace();
             updateScoreLabel();
             tableLayoutPanel1.Padding = new Padding(0, 0, 0, statusStrip1.Height);
+            playerCurrent = 1;
+           
 
         }
         Random rnd = new Random();
-        List<string> icons = new List<string>()
+        List<string> icons6x6 = new List<string>()
+        {
+        "a","a","b","b","c","c","d","d","e","e","f","f","g","g","h","h","i","i","j","j","k","k","l","l","m","m","n","n","o","o","p","p","q","q","r","r"
+        };
+        List<string> icons2x2 = new List<string>()
+        {
+        "a","a","b","b"
+        };
+        List<string> icons4x4 = new List<string>()
         {
         "a","a","b","b","c","c","d","d","e","e","f","f","g","g","h","h"
         };
 
+        private void sizeOfTable()
+        {
+            int rows = cardNumber;
+            int columns = cardNumber;
+            tableLayoutPanel1.RowCount = rows;
+            tableLayoutPanel1.ColumnCount = columns;
+            tableLayoutPanel1.ColumnStyles.Clear();
+            tableLayoutPanel1.RowStyles.Clear();
 
+            
+            for (int i = 0; i < columns; i++)
+            {
+                tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f / columns));
+            }
+
+            
+            for (int i = 0; i < rows; i++)
+            {
+                tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100f / rows));
+            }
+
+        }
         private void updateScoreLabel()
         {
             toolStripStatusLabel1.Text = "Hráč " + playerCurrent + " je na tahu. " + " Počet jeho bodů: " + score[playerCurrent - 1];
@@ -148,21 +184,45 @@ namespace MainMenu
         {
             Label label;
             int rndnumber;
-
-            for (int i = 0; i < tableLayoutPanel1.Controls.Count;i++)
+            List<string> icons = null;
+            switch(cardNumber)
             {
-                if (tableLayoutPanel1.Controls[i] is Label)
-                {
-                    label = (Label)tableLayoutPanel1.Controls[i];
-                }
-                else continue;
-
+                case 2:
+                    {
+                        icons = icons2x2;
+                        break;
+                    }
+                case 4:
+                    {
+                        icons = icons4x4;
+                        break;
+                    }
+                case 6:
+                    {
+                        icons = icons6x6;
+                        break;
+                    }
+            }
+            MessageBox.Show("Card number je " + cardNumber);
+            tableLayoutPanel1.Controls.Clear();
+            for(int i=0;i<cardNumber*cardNumber;i++)
+            {
+                label = new Label();
+                label.TextAlign = ContentAlignment.MiddleCenter;
+                label.ImageAlign = ContentAlignment.MiddleCenter;
+                label.BackColor = Color.LightSkyBlue;
+                label.ForeColor = label.BackColor;
+                label.Font = new Font("Webdings" ,48);
+                label.AutoSize = true;
                 rndnumber = rnd.Next(0, icons.Count);
                 label.Text = icons[rndnumber];
                 icons.RemoveAt(rndnumber);
-                label.ForeColor = label.BackColor;
+
+                label.Click += label_Click;
+                tableLayoutPanel1.Controls.Add(label);
+
             }
-            
+
 
         }
     }

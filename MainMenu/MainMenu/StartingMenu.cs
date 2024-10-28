@@ -17,20 +17,26 @@ namespace MainMenu
             InitializeComponent();
         }
         private int playerNumber = 2;
+        private int cardNumber = 4;
         private void QuitApp(object sender, EventArgs e)
         {
             Application.Exit();
         }
-        public StartingMenu(int playerNumber)
+        public StartingMenu(int playerNumber,int cardNumber)
         {
             InitializeComponent();
-            this.playerNumber = playerNumber;
-
+            
+            {
+                this.playerNumber = playerNumber;
+                
+                this.cardNumber = cardNumber;
+                
+            }
             
         }
         private void LoadGame(object sender, EventArgs e)
         {
-            NewGame gameWindow = new NewGame(playerNumber);
+            NewGame gameWindow = new NewGame(playerNumber,cardNumber);
             gameWindow.Show();
             this.Visible = false;
         }

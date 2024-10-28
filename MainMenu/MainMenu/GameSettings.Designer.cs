@@ -132,8 +132,9 @@
             this.radioButton1.Size = new System.Drawing.Size(59, 24);
             this.radioButton1.TabIndex = 12;
             this.radioButton1.TabStop = true;
-            this.radioButton1.Text = "6x6";
+            this.radioButton1.Text = "2x2";
             this.radioButton1.UseVisualStyleBackColor = true;
+            this.radioButton1.CheckedChanged += new System.EventHandler(this.radioButtonChanged);
             // 
             // radioButton2
             // 
@@ -143,19 +144,21 @@
             this.radioButton2.Size = new System.Drawing.Size(59, 24);
             this.radioButton2.TabIndex = 13;
             this.radioButton2.TabStop = true;
-            this.radioButton2.Text = "8x8";
+            this.radioButton2.Text = "4x4";
             this.radioButton2.UseVisualStyleBackColor = true;
+            this.radioButton2.CheckedChanged += new System.EventHandler(this.radioButtonChanged);
             // 
             // radioButton3
             // 
             this.radioButton3.AutoSize = true;
             this.radioButton3.Location = new System.Drawing.Point(645, 205);
             this.radioButton3.Name = "radioButton3";
-            this.radioButton3.Size = new System.Drawing.Size(77, 24);
+            this.radioButton3.Size = new System.Drawing.Size(59, 24);
             this.radioButton3.TabIndex = 14;
             this.radioButton3.TabStop = true;
-            this.radioButton3.Text = "10x10";
+            this.radioButton3.Text = "6x6";
             this.radioButton3.UseVisualStyleBackColor = true;
+            this.radioButton3.CheckedChanged += new System.EventHandler(this.radioButtonChanged);
             // 
             // GameSettings
             // 
@@ -174,6 +177,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.checkBox1);
             this.Name = "GameSettings";
+            this.ShowIcon = false;
             this.Text = "GameSettings";
             this.Load += new System.EventHandler(this.GameSettings_Load);
             this.ResumeLayout(false);
