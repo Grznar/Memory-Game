@@ -3,10 +3,14 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static MainMenu.NewGame;
+
 
 namespace MainMenu
 {
@@ -57,6 +61,46 @@ namespace MainMenu
             Score score = new Score();
             score.Show();
             this.Visible = false;
+        }
+
+        private void loadGame()
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "Herní soubory (*.hra)|*.hra",
+                Title = "Načíst uloženou hru"
+
+            };
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    using (FileStream fs = new FileStream(openFileDialog.FileName, FileMode.Open))
+                    {
+                        BinaryFormatter formatter = new BinaryFormatter();
+                        GameState loadedGameState = (GameState)formatter.Deserialize(fs);
+                        NewGame gameWindow = new NewGame(
+                        loadedGameState.PlayerNumber,
+                        loadedGameState.CardNumber,
+                        loadedGameState.PcPlayer,
+                        loadedGameState.Difficulty
+
+
+                            );
+                        gameWindow.Load(loadedGameState);
+                        gameWindow.Show();
+                        this.Hide();
+                    }
+                }
+                catch(Exception)
+                {
+                    MessageBox.Show("Chyba při načítaní uložené hry");
+                }
+            }
+        }
+        private void button4_Click(object sender, EventArgs e)
+        {
+            loadGame();
         }
     }
 }
