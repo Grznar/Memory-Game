@@ -256,7 +256,6 @@
             this.Name = "GameSettings";
             this.ShowIcon = false;
             this.Text = "GameSettings";
-            this.Load += new System.EventHandler(this.GameSettings_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);

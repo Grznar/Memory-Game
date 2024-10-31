@@ -39,7 +39,8 @@ namespace MainMenu
             UpdateScoreLabel();
 
         }
-
+        
+        
         Random rnd = new Random();
         List<string> icons6x6 = new List<string>()
             {
@@ -82,9 +83,11 @@ namespace MainMenu
                     btn.Text = "Ok";
                     btn.DialogResult = DialogResult.OK;
                     btn.Location = new Point(10, 60);
+                    
                     nameInputForm.Controls.Add(label);
                     nameInputForm.Controls.Add(textbox);
                     nameInputForm.Controls.Add(btn);
+                    
 
                     if(nameInputForm.ShowDialog() == DialogResult.OK)
                     {
@@ -129,25 +132,17 @@ namespace MainMenu
         }
         private void DisplayScores()
         {
-            int[] playerNumeros = new int[playerNumber];
-            for (int i = 0; i < playerNumber; i++)
-            {
-                playerNumeros[i] = i;
-            }
-
-
-            Array.Sort(score, playerNumeros);
+            string[] namesClone = names;
+            Array.Sort(score, namesClone);
+            Array.Reverse(namesClone);
             Array.Reverse(score);
-
-
-            string scoreText = "Pořadí hráčů:\n";
-
+            string output = null;
             for (int i = 0; i < playerNumber; i++)
             {
-                scoreText += "Hráč " + (playerNumeros[i] + 1) + ": " + score[i] + " bodů\n";
+                output += "Hráč " + namesClone[i] + " , měl skoré: " + score[i] + "\n";
             }
-
-            MessageBox.Show(scoreText, "Konečné skóre");
+                
+            MessageBox.Show(output, "Konečné skóre");
         }
 
         private void label_Click(object sender, EventArgs e)
@@ -285,8 +280,10 @@ namespace MainMenu
 
 
         }
+        
         private int GetRight()
         {
+
             switch (difficulty)
             {
                 case 1:
@@ -296,12 +293,12 @@ namespace MainMenu
                     }
                 case 2:
                     {
-                        return 35;
+                        return 25;
 
                     }
                 case 3:
                     {
-                        return 75;
+                        return 50;
 
                     }
                 default: return 10;

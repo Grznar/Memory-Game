@@ -23,10 +23,6 @@ namespace MainMenu
         private int cardNumber = 4;
         private bool pcPlayer = false;
         private int difficulty = 2;
-        private void button1_Click(object sender, EventArgs e)
-        {
-
-        }
         private void LoadMenu(object sender, EventArgs e)
         {
             
@@ -49,11 +45,6 @@ namespace MainMenu
                 pcPlayer = true;
             }
             else pcPlayer = false;
-        }
-
-        private void GameSettings_Load(object sender, EventArgs e)
-        {
-
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
