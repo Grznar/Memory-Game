@@ -83,7 +83,8 @@ namespace MainMenu
                         loadedGameState.PlayerNumber,
                         loadedGameState.CardNumber,
                         loadedGameState.PcPlayer,
-                        loadedGameState.Difficulty
+                        loadedGameState.Difficulty, 
+                        true
 
 
                             );

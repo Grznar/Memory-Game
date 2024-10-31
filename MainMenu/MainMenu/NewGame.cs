@@ -20,7 +20,7 @@ namespace MainMenu
         private int difficulty;
         private bool playerRound;
         private string[] names;
-        public NewGame(int playerNumber, int cardNumber, bool pcPlayer, int obtiznost)
+        public NewGame(int playerNumber, int cardNumber, bool pcPlayer, int obtiznost, bool isLoading=false)
         {
             InitializeComponent();
             this.playerNumber = playerNumber;
@@ -35,7 +35,15 @@ namespace MainMenu
             tableLayoutPanel1.Padding = new Padding(0, 0, 0, statusStrip1.Height);
             tableLayoutPanel1.Padding = new Padding(0, toolStrip1.Height, 0,0);
             playerCurrent = 1;
-            names = GetNames(playerNumber, pcPlayer);
+            if(!isLoading)names = GetNames(playerNumber, pcPlayer);
+            else
+            {
+                names = new string[playerNumber];
+                for(int i=0;i<playerNumber;i++)
+                {
+                    names[i] = "Hráč " + (i + 1);
+                }
+            }
             UpdateScoreLabel();
 
         }
@@ -56,14 +64,11 @@ namespace MainMenu
             };
         private string[] GetNames(int playerNumber,bool pcPlayer)
         {
+            if (this.names != null) return this.names;
             string[] names = new string[playerNumber];
             for(int i=0;i<playerNumber;i++)
             {
-                if(!string.IsNullOrEmpty(names[i]))
-                {
-                    names[i] = this.names[i];
-                    continue;
-                }
+                
                 if (pcPlayer && i == 1)
                 {
                     names[i] = "PC";
@@ -96,6 +101,7 @@ namespace MainMenu
 
             }
             }
+            this.names = names;
             return names;
         }
         private void SizeOfTable()
@@ -326,7 +332,7 @@ namespace MainMenu
                 CardIcons = cardIcons;
                 CardNumber = cardNumber;
                 CardVisibility = cardVisibility;
-                Names = Names;
+                Names = names;
 
             }
            
@@ -388,8 +394,15 @@ namespace MainMenu
             this.difficulty = loadedGameState.Difficulty;
             this.score = loadedGameState.Scores;
             this.playerCurrent = loadedGameState.PlayerCurrent;
-            this.names = loadedGameState.Names.ToArray();
-            
+            if(loadedGameState.Names!=null) this.names = loadedGameState.Names.ToArray();
+            else
+            {
+                this.names = new string[playerNumber];
+                for(int i=0;i<playerNumber;i++)
+                {
+                    this.names[i]="Hráč "+(i+1);
+                }
+            }
             SetCardIcons(loadedGameState.CardIcons);
             UpdateScoreLabel();
             SetCardVisibility(loadedGameState.CardVisibility);
