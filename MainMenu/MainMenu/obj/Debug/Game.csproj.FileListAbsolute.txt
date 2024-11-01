@@ -11,3 +11,7 @@ C:\Users\Admin\Documents\GitHub\Pexeso---ROP\MainMenu\MainMenu\obj\Debug\Game.cs
 C:\Users\Admin\Documents\GitHub\Pexeso---ROP\MainMenu\MainMenu\obj\Debug\MainMenu.exe
 C:\Users\Admin\Documents\GitHub\Pexeso---ROP\MainMenu\MainMenu\obj\Debug\MainMenu.pdb
 C:\Users\Admin\Documents\GitHub\Pexeso---ROP\MainMenu\MainMenu\obj\Debug\MainMenu.GameSettings.resources
+C:\Users\Admin\Documents\GitHub\Pexeso---ROP\MainMenu\MainMenu\obj\Debug\MainMenu.Score.resources
+C:\Users\Admin\Documents\GitHub\Pexeso---ROP\MainMenu\MainMenu\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Admin\Documents\GitHub\Pexeso---ROP\MainMenu\MainMenu\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Admin\Documents\GitHub\Pexeso---ROP\MainMenu\MainMenu\obj\Debug\Game.csproj.Up2Date

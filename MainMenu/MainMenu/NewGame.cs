@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using System.Xml;
+using Newtonsoft.Json;
 namespace MainMenu
 {
     public partial class NewGame : Form
@@ -20,7 +22,7 @@ namespace MainMenu
         private int difficulty;
         private bool playerRound;
         private string[] names;
-        public NewGame(int playerNumber, int cardNumber, bool pcPlayer, int obtiznost, bool isLoading=false)
+        public NewGame(int playerNumber, int cardNumber, bool pcPlayer, int obtiznost, bool isLoading = false)
         {
             InitializeComponent();
             this.playerNumber = playerNumber;
@@ -31,15 +33,15 @@ namespace MainMenu
             playerRound = true;
             SizeOfTable();
             IconsToPlace();
-            
+
             tableLayoutPanel1.Padding = new Padding(0, 0, 0, statusStrip1.Height);
-            tableLayoutPanel1.Padding = new Padding(0, toolStrip1.Height, 0,0);
+            tableLayoutPanel1.Padding = new Padding(0, toolStrip1.Height, 0, 0);
             playerCurrent = 1;
-            if(!isLoading)names = GetNames(playerNumber, pcPlayer);
+            if (!isLoading) names = GetNames(playerNumber, pcPlayer);
             else
             {
                 names = new string[playerNumber];
-                for(int i=0;i<playerNumber;i++)
+                for (int i = 0; i < playerNumber; i++)
                 {
                     names[i] = "Hráč " + (i + 1);
                 }
@@ -47,8 +49,8 @@ namespace MainMenu
             UpdateScoreLabel();
 
         }
-        
-        
+
+
         Random rnd = new Random();
         List<string> icons6x6 = new List<string>()
             {
@@ -62,25 +64,25 @@ namespace MainMenu
             {
             "a","a","b","b","c","c","d","d","e","e","f","f","g","g","h","h"
             };
-        private string[] GetNames(int playerNumber,bool pcPlayer)
+        private string[] GetNames(int playerNumber, bool pcPlayer)
         {
             if (this.names != null) return this.names;
             string[] names = new string[playerNumber];
-            for(int i=0;i<playerNumber;i++)
+            for (int i = 0; i < playerNumber; i++)
             {
-                
+
                 if (pcPlayer && i == 1)
                 {
                     names[i] = "PC";
                     continue;
                 }
-            using(Form nameInputForm = new Form())
-            {
+                using (Form nameInputForm = new Form())
+                {
                     nameInputForm.Text = "Zadejte jméno pro hráče " + (i + 1);
                     Label label = new Label();
                     label.Text = "Hráč " + (i + 1);
                     label.AutoSize = true;
-                    label.Location =new Point (10, 10);
+                    label.Location = new Point(10, 10);
                     TextBox textbox = new TextBox();
                     textbox.Width = 200;
                     textbox.Location = new Point(10, 30);
@@ -88,18 +90,18 @@ namespace MainMenu
                     btn.Text = "Ok";
                     btn.DialogResult = DialogResult.OK;
                     btn.Location = new Point(10, 60);
-                    
+
                     nameInputForm.Controls.Add(label);
                     nameInputForm.Controls.Add(textbox);
                     nameInputForm.Controls.Add(btn);
-                    
 
-                    if(nameInputForm.ShowDialog() == DialogResult.OK)
+
+                    if (nameInputForm.ShowDialog() == DialogResult.OK)
                     {
                         names[i] = textbox.Text;
                     }
 
-            }
+                }
             }
             this.names = names;
             return names;
@@ -129,11 +131,11 @@ namespace MainMenu
         }
         private void UpdateScoreLabel()
         {
-            if (names[playerCurrent-1]==string.Empty)
+            if (names[playerCurrent - 1] == string.Empty)
             {
-                toolStripStatusLabel1.Text = "Hráč " + (playerCurrent-1) + " je na tahu. " + " Počet jeho bodů: " + score[playerCurrent - 1];
+                toolStripStatusLabel1.Text = "Hráč " + (playerCurrent - 1) + " je na tahu. " + " Počet jeho bodů: " + score[playerCurrent - 1];
             }
-            toolStripStatusLabel1.Text = "Hráč " + names[playerCurrent-1] + " je na tahu. " + " Počet jeho bodů: " + score[playerCurrent - 1];
+            toolStripStatusLabel1.Text = "Hráč " + names[playerCurrent - 1] + " je na tahu. " + " Počet jeho bodů: " + score[playerCurrent - 1];
 
         }
         private void DisplayScores()
@@ -147,8 +149,11 @@ namespace MainMenu
             {
                 output += "Hráč " + namesClone[i] + " , měl skoré: " + score[i] + "\n";
             }
-                
+
             MessageBox.Show(output, "Konečné skóre");
+            Score scoreboard = new Score();
+            scoreboard.LoadScoreData();
+            scoreboard.ShowDialog();
         }
 
         private void label_Click(object sender, EventArgs e)
@@ -216,7 +221,7 @@ namespace MainMenu
                 }
             }
 
-
+            SaveGameDetails();
             DisplayScores();
 
 
@@ -286,7 +291,7 @@ namespace MainMenu
 
 
         }
-        
+
         private int GetRight()
         {
 
@@ -310,7 +315,8 @@ namespace MainMenu
                 default: return 10;
             }
         }
-        [Serializable]public class GameState
+        [Serializable]
+        public class GameState
         {
             public int PlayerNumber { get; set; }
             public int[] Scores { get; set; }
@@ -322,11 +328,11 @@ namespace MainMenu
             public List<bool> CardVisibility { get; set; }
             public List<string> Names { get; set; }
 
-            public GameState(List<bool>cardVisibility,int playerNumber, int[] scores,int playerCurrent,int difficulty,bool pcPlayer,int cardNumber,List<string>cardIcons,List<string> names)
+            public GameState(List<bool> cardVisibility, int playerNumber, int[] scores, int playerCurrent, int difficulty, bool pcPlayer, int cardNumber, List<string> cardIcons, List<string> names)
             {
                 PlayerNumber = playerNumber;
-                Scores=scores;
-                PlayerCurrent=playerCurrent;
+                Scores = scores;
+                PlayerCurrent = playerCurrent;
                 Difficulty = difficulty;
                 PcPlayer = pcPlayer;
                 CardIcons = cardIcons;
@@ -335,17 +341,17 @@ namespace MainMenu
                 Names = names;
 
             }
-           
+
 
         }
         private List<string> GetCardIcons()
         {
             List<string> icons = new List<string>();
-            foreach(Control control in tableLayoutPanel1.Controls)
+            foreach (Control control in tableLayoutPanel1.Controls)
             {
-                if(control is Label label)
+                if (control is Label label)
                 {
-                icons.Add(label.Text);
+                    icons.Add(label.Text);
                 }
             }
             return icons;
@@ -366,7 +372,7 @@ namespace MainMenu
 
 
                 );
-            using (FileStream fs = new FileStream(filePath, FileMode.Create)) 
+            using (FileStream fs = new FileStream(filePath, FileMode.Create))
             {
                 BinaryFormatter formatter = new BinaryFormatter();
                 formatter.Serialize(fs, gamestate);
@@ -374,18 +380,18 @@ namespace MainMenu
 
         }
 
-    private void buttonSave_Click(object sender, EventArgs e)
-    {
-        SaveFileDialog saveFileDialog = new SaveFileDialog
+        private void buttonSave_Click(object sender, EventArgs e)
         {
-            Filter = "Herní soubory (*hra)|*.hra",
-            Title = "Uložit hru"
-        };
-        if (saveFileDialog.ShowDialog(this) == DialogResult.OK)
-        {
-            SaveGame(saveFileDialog.FileName);
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                Filter = "Herní soubory (*hra)|*.hra",
+                Title = "Uložit hru"
+            };
+            if (saveFileDialog.ShowDialog(this) == DialogResult.OK)
+            {
+                SaveGame(saveFileDialog.FileName);
+            }
         }
-    }
         public void Load(GameState loadedGameState)
         {
             this.playerNumber = loadedGameState.PlayerNumber;
@@ -394,20 +400,20 @@ namespace MainMenu
             this.difficulty = loadedGameState.Difficulty;
             this.score = loadedGameState.Scores;
             this.playerCurrent = loadedGameState.PlayerCurrent;
-            if(loadedGameState.Names!=null) this.names = loadedGameState.Names.ToArray();
+            if (loadedGameState.Names != null) this.names = loadedGameState.Names.ToArray();
             else
             {
                 this.names = new string[playerNumber];
-                for(int i=0;i<playerNumber;i++)
+                for (int i = 0; i < playerNumber; i++)
                 {
-                    this.names[i]="Hráč "+(i+1);
+                    this.names[i] = "Hráč " + (i + 1);
                 }
             }
             SetCardIcons(loadedGameState.CardIcons);
             UpdateScoreLabel();
             SetCardVisibility(loadedGameState.CardVisibility);
 
-            
+
         }
         private void SetCardVisibility(List<bool> cardVisibility)
         {
@@ -415,7 +421,7 @@ namespace MainMenu
             {
                 if (tableLayoutPanel1.Controls[i] is Label label)
                 {
-                    label.ForeColor = cardVisibility[i] ? Color.White : label.BackColor; 
+                    label.ForeColor = cardVisibility[i] ? Color.White : label.BackColor;
                 }
             }
         }
@@ -426,7 +432,7 @@ namespace MainMenu
                 if (tableLayoutPanel1.Controls[i] is Label label)
                 {
                     label.Text = cardIcons[i];
-                    label.ForeColor = label.BackColor; 
+                    label.ForeColor = label.BackColor;
                 }
             }
         }
@@ -437,7 +443,7 @@ namespace MainMenu
             {
                 if (control is Label label)
                 {
-                    visibility.Add(label.ForeColor == Color.White); 
+                    visibility.Add(label.ForeColor == Color.White);
                 }
             }
             return visibility;
@@ -451,122 +457,190 @@ namespace MainMenu
         }
 
         private async void ComputerTurn()
-    {
-        playerRound = false;
-
-        if (timer1.Enabled)
         {
-            timer1.Stop();
-        }
+            playerRound = false;
 
-        await Task.Delay(1000);
-        List<Label> hiddenLab = new List<Label>();
-        foreach (Control control in tableLayoutPanel1.Controls)
-        {
-            if (control is Label label && label.ForeColor != Color.White)
+            if (timer1.Enabled)
             {
-                hiddenLab.Add(label);
+                timer1.Stop();
             }
-        }
-
-
-        if (hiddenLab.Count == 0)
-        {
-
-            playerCurrent = (playerCurrent % playerNumber) + 1;
-            UpdateScoreLabel();
-            return;
-        }
-
-
-        Random random = new Random();
-        int firstIndex = random.Next(hiddenLab.Count);
-        Label firstLabel = hiddenLab[firstIndex];
-
-
-        firstLabel.ForeColor = Color.White;
-
-
-
-
-        await Task.Delay(1000);
-        bool isMatch = false;
-
-
-        if (random.Next(100) < GetRight())
-        {
-
-            foreach (Control control in tableLayoutPanel1.Controls)
-            {
-                if (control is Label label && label.ForeColor != Color.White && label.Text == firstLabel.Text)
-                {
-
-                    isMatch = true;
-                    break;
-                }
-            }
-        }
-
-
-        Label secondLabel;
-        if (isMatch)
-        {
-            secondLabel = hiddenLab.First(label => label.Text == firstLabel.Text && label.ForeColor != Color.White);
-        }
-        else
-        {
-            hiddenLab.Remove(firstLabel);
-            secondLabel = hiddenLab[random.Next(hiddenLab.Count)];
-        }
-
-        await Task.Delay(1000);
-        secondLabel.ForeColor = Color.White;
-
-
-        if (firstLabel.Text == secondLabel.Text)
-        {
-            score[playerCurrent - 1]++;
-            UpdateScoreLabel();
-            WinnerCheck();
-            ComputerTurn();
-        }
-        else
-        {
 
             await Task.Delay(1000);
+            List<Label> hiddenLab = new List<Label>();
+            foreach (Control control in tableLayoutPanel1.Controls)
             {
-                if (firstLabel != null)
+                if (control is Label label && label.ForeColor != Color.White)
                 {
-                    firstLabel.ForeColor = firstLabel.BackColor;
+                    hiddenLab.Add(label);
                 }
+            }
 
-                if (secondLabel != null)
-                {
-                    secondLabel.ForeColor = secondLabel.BackColor;
-                }
 
+            if (hiddenLab.Count == 0)
+            {
 
                 playerCurrent = (playerCurrent % playerNumber) + 1;
                 UpdateScoreLabel();
-            };
+                return;
+            }
+
+
+            Random random = new Random();
+            int firstIndex = random.Next(hiddenLab.Count);
+            Label firstLabel = hiddenLab[firstIndex];
+
+
+            firstLabel.ForeColor = Color.White;
+
+
+
+
+            await Task.Delay(1000);
+            bool isMatch = false;
+
+
+            if (random.Next(100) < GetRight())
+            {
+
+                foreach (Control control in tableLayoutPanel1.Controls)
+                {
+                    if (control is Label label && label.ForeColor != Color.White && label.Text == firstLabel.Text)
+                    {
+
+                        isMatch = true;
+                        break;
+                    }
+                }
+            }
+
+
+            Label secondLabel;
+            if (isMatch)
+            {
+                secondLabel = hiddenLab.First(label => label.Text == firstLabel.Text && label.ForeColor != Color.White);
+            }
+            else
+            {
+                hiddenLab.Remove(firstLabel);
+                secondLabel = hiddenLab[random.Next(hiddenLab.Count)];
+            }
+
+            await Task.Delay(1000);
+            secondLabel.ForeColor = Color.White;
+
+
+            if (firstLabel.Text == secondLabel.Text)
+            {
+                score[playerCurrent - 1]++;
+                UpdateScoreLabel();
+                WinnerCheck();
+                ComputerTurn();
+            }
+            else
+            {
+
+                await Task.Delay(1000);
+                {
+                    if (firstLabel != null)
+                    {
+                        firstLabel.ForeColor = firstLabel.BackColor;
+                    }
+
+                    if (secondLabel != null)
+                    {
+                        secondLabel.ForeColor = secondLabel.BackColor;
+                    }
+
+
+                    playerCurrent = (playerCurrent % playerNumber) + 1;
+                    UpdateScoreLabel();
+                };
+            }
+            playerRound = true;
         }
-        playerRound = true;
+        [Serializable]
+        public class GameData
+        {
+            public string PlayerName { get; set; }
+            public int Wins { get; set; }
+            public int Loses { get; set; }
+            public int PairsFound { get; set; }
+            public int TotalCards { get; set; }
+
+            public GameData(string playerName, int pairsFound, int totalCards)
+            {
+                PlayerName = playerName;
+                PairsFound = pairsFound;
+                TotalCards = totalCards;
+
+            }
+        }
+        private void SaveGameDetails()
+        {
+            string file = "gameResult.json";
+            List<GameData> gameResults;
+
+            if (File.Exists(file))
+            {
+                string json = File.ReadAllText(file);
+                gameResults = JsonConvert.DeserializeObject<List<GameData>>(json);
+            }
+            else
+            {
+                gameResults = new List<GameData>();
+            }
+
+            int maxScore = score.Max();
+            int minScore = score.Min();
+
+            for (int i = 0; i < playerNumber; i++)
+            {
+                var existingPlayer = gameResults.FirstOrDefault(r => r.PlayerName == names[i]);
+                if (existingPlayer != null)
+                {
+                    existingPlayer.PairsFound += score[i];
+                    existingPlayer.TotalCards += cardNumber * cardNumber;
+
+                    if (score[i] == maxScore)
+                    {
+                        existingPlayer.Wins += 1;
+                    }
+                    else if (score[i] == minScore)
+                    {
+                        existingPlayer.Loses += 1;
+                    }
+                }
+                else
+                {
+                    var gameData = new GameData(
+                        playerName: names[i],
+                        pairsFound: score[i],
+                        totalCards: cardNumber * cardNumber
+                    );
+
+                    if (score[i] == maxScore)
+                    {
+                        gameData.Wins = 1;
+                        gameData.Loses = 0;
+                    }
+                    else if (score[i] == minScore)
+                    {
+                        gameData.Wins = 0;
+                        gameData.Loses = 1;
+                    }
+                    else
+                    {
+                        gameData.Wins = 0;
+                        gameData.Loses = 0;
+                    }
+
+                    gameResults.Add(gameData);
+                }
+            }
+
+            string updatedJson = JsonConvert.SerializeObject(gameResults, Newtonsoft.Json.Formatting.Indented);
+            File.WriteAllText(file, updatedJson);
+        }
+
     }
-}
-        }
-    
-
-
-
-
-
-
-
-
-
-
-
-
-    
-
-
+    }

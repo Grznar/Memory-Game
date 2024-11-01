@@ -1,0 +1,30 @@
+[
+  {
+    "PlayerName": "jedna",
+    "Wins": 1,
+    "Loses": 0,
+    "PairsFound": 5,
+    "TotalCards": 16
+  },
+  {
+    "PlayerName": "dva",
+    "Wins": 1,
+    "Loses": 0,
+    "PairsFound": 3,
+    "TotalCards": 16
+  },
+  {
+    "PlayerName": "JEDEN",
+    "Wins": 1,
+    "Loses": 1,
+    "PairsFound": 8,
+    "TotalCards": 32
+  },
+  {
+    "PlayerName": "DVA",
+    "Wins": 1,
+    "Loses": 1,
+    "PairsFound": 8,
+    "TotalCards": 32
+  }
+]
