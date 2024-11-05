@@ -4,9 +4,11 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace MainMenu
 {
@@ -15,11 +17,23 @@ namespace MainMenu
         public GameSettings()
         {
             InitializeComponent();
-            radioButton2.Checked = true;
-            checkBox1.Checked = false;
-            radioButton5.Checked = true;
+
             
+
         }
+        public class GameConfig
+        {
+            public int Difficult { get; set; } = 2;
+            public int CardsCount { get; set; } = 4;
+            public bool IsPcPlayer { get; set; } = false;
+            public bool IsSound { get; set; } = true;
+            public int PlayerNumber { get; set; } = 2;
+        }
+        public static class ConfigManager
+        {
+            public static GameConfig CurrentSettings { get; set; } = new GameConfig();
+        }
+
         private int playerNumber = 2;
         private int cardNumber = 4;
         private bool pcPlayer = false;
@@ -29,6 +43,7 @@ namespace MainMenu
         {
             
             StartingMenu startingMenu = new StartingMenu(playerNumber,cardNumber,pcPlayer,difficulty,isSound);
+            ;
             startingMenu.Show();
             this.Visible = false;
 

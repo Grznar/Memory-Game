@@ -23,6 +23,7 @@ namespace MainMenu
         private bool playerRound;
         private string[] names;
         private bool isSound;
+        private List<Label> flippedLabels = new List<Label>();
         public NewGame(int playerNumber, int cardNumber, bool pcPlayer, int obtiznost, bool isSound, bool isLoading = false)
         {
             InitializeComponent();
@@ -180,18 +181,21 @@ namespace MainMenu
             {
                 first = clickedLabel;
                 first.ForeColor = Color.White;
+                flippedLabels.Add(first);
                 return;
             }
 
             second = clickedLabel;
             second.ForeColor = Color.White;
+            flippedLabels.Add(second);
 
 
             if (first.Text == second.Text)
             {
                 score[playerCurrent - 1]++;
                 UpdateScoreLabel();
-
+                flippedLabels.Remove(first);
+                flippedLabels.Remove(second);
 
                 first = null;
                 second = null;
@@ -303,20 +307,20 @@ namespace MainMenu
             {
                 case 1:
                     {
-                        return 10;
+                        return 30;
 
                     }
                 case 2:
                     {
-                        return 25;
+                        return 60;
 
                     }
                 case 3:
                     {
-                        return 50;
+                        return 100;
 
                     }
-                default: return 10;
+                default: return 60;
             }
         }
         [Serializable]
@@ -481,88 +485,147 @@ namespace MainMenu
                 }
             }
 
-
             if (hiddenLab.Count == 0)
             {
-
                 playerCurrent = (playerCurrent % playerNumber) + 1;
                 UpdateScoreLabel();
                 return;
             }
 
-
             Random random = new Random();
-            int firstIndex = random.Next(hiddenLab.Count);
-            Label firstLabel = hiddenLab[firstIndex];
-
-
-            firstLabel.ForeColor = Color.White;
-
-
-
-
-            await Task.Delay(1000);
-            bool isMatch = false;
-
-
-            if (random.Next(100) < GetRight())
+            Label firstLabel = null;
+            Label secondLabel = null;
+            bool found = false;
+            bool pokracovat = GetRight() >= random.Next(100);
+            if (pokracovat)
             {
-
-                foreach (Control control in tableLayoutPanel1.Controls)
+                
+                for (int i = 0; i < flippedLabels.Count; i++)
                 {
-                    if (control is Label label && label.ForeColor != Color.White && label.Text == firstLabel.Text)
+                    for (int j = i + 1; j < flippedLabels.Count; j++)
                     {
-
-                        isMatch = true;
-                        break;
+                        if (flippedLabels[i].Text == flippedLabels[j].Text && flippedLabels[i] != flippedLabels[j])
+                        {
+                            firstLabel = flippedLabels[i];
+                            secondLabel = flippedLabels[j];
+                            found = true;
+                            break;
+                        }
                     }
+                    if (found) break;
                 }
             }
 
-
-            Label secondLabel;
-            if (isMatch)
+            if (found && firstLabel != null && secondLabel != null)
             {
-                secondLabel = hiddenLab.First(label => label.Text == firstLabel.Text && label.ForeColor != Color.White);
-            }
-            else
-            {
-                hiddenLab.Remove(firstLabel);
-                secondLabel = hiddenLab[random.Next(hiddenLab.Count)];
-            }
-
-            await Task.Delay(1000);
-            secondLabel.ForeColor = Color.White;
-
-
-            if (firstLabel.Text == secondLabel.Text)
-            {
+                
+                firstLabel.ForeColor = Color.White;
+                await Task.Delay(1000);
+                secondLabel.ForeColor = Color.White;
+                await Task.Delay(1000);
+                flippedLabels.Remove(firstLabel);
+                flippedLabels.Remove(secondLabel);
                 score[playerCurrent - 1]++;
                 UpdateScoreLabel();
-                WinnerCheck();
-                ComputerTurn();
+                
+            }
+            else if(pokracovat && !found)
+            {
+                int firstIndex = random.Next(hiddenLab.Count);
+                firstLabel = hiddenLab[firstIndex];
+                hiddenLab.RemoveAt(firstIndex);
+                firstLabel.ForeColor = Color.White;
+                await Task.Delay(1000);
+                bool found2 = false;
+                foreach(Label label in flippedLabels)
+                {
+                    if(label.Text==firstLabel.Text&&label!=firstLabel)
+                    {
+                        secondLabel = label;
+                        await Task.Delay(1000);
+                        secondLabel.ForeColor= Color.White;
+                        await Task.Delay(1000);
+                        flippedLabels.Remove(secondLabel);
+                        score[playerCurrent - 1]++;
+                        UpdateScoreLabel();
+                        
+                        found2 = true;
+                        break;
+                    }
+                }
+                if(!found2)
+                {
+                    if (hiddenLab.Count > 0)
+                    {
+                        int secondIndex = random.Next(hiddenLab.Count);
+                        secondLabel = hiddenLab[secondIndex];
+                        await Task.Delay(1000);
+                        secondLabel.ForeColor = Color.White;
+                        hiddenLab.Remove(secondLabel);
+                        await Task.Delay(1000);
+                    }
+                    else
+                    {
+
+                        playerCurrent = (playerCurrent % playerNumber) + 1;
+                        UpdateScoreLabel();
+                        return;
+                    }
+
+                    flippedLabels.Add(firstLabel);
+                    flippedLabels.Add(secondLabel);
+                }
             }
             else
             {
+                
+                int firstIndex = random.Next(hiddenLab.Count);
+                firstLabel = hiddenLab[firstIndex];
+                hiddenLab.RemoveAt(firstIndex);
+                firstLabel.ForeColor = Color.White;
+                await Task.Delay(1000); 
 
-                await Task.Delay(1000);
+                if (hiddenLab.Count > 0) 
                 {
-                    if (firstLabel != null)
-                    {
-                        firstLabel.ForeColor = firstLabel.BackColor;
-                    }
-
-                    if (secondLabel != null)
-                    {
-                        secondLabel.ForeColor = secondLabel.BackColor;
-                    }
-
-
+                    int secondIndex = random.Next(hiddenLab.Count);
+                    await Task.Delay(1000);
+                    secondLabel = hiddenLab[secondIndex]; 
+                    secondLabel.ForeColor = Color.White;
+                    hiddenLab.Remove(secondLabel);
+                    await Task.Delay(1000);
+                }
+                else
+                {
+                    
                     playerCurrent = (playerCurrent % playerNumber) + 1;
                     UpdateScoreLabel();
-                };
+                    return;
+                }
+
+                flippedLabels.Add(firstLabel);
+                flippedLabels.Add(secondLabel);
             }
-            playerRound = true;
+
+            
+            if (firstLabel != null && secondLabel != null && firstLabel.Text == secondLabel.Text)
+            {
+                
+                WinnerCheck();
+                ComputerTurn(); 
+            }
+            else
+            {
+                
+                await Task.Delay(1000);
+                firstLabel.ForeColor = firstLabel.BackColor; 
+                secondLabel.ForeColor = secondLabel.BackColor; 
+
+                playerCurrent = (playerCurrent % playerNumber) + 1;
+                UpdateScoreLabel();
+                playerRound = true;
+            }
+
+            
         }
         [Serializable]
         public class GameData

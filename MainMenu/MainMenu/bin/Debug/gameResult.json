@@ -26,5 +26,19 @@
     "Loses": 1,
     "PairsFound": 8,
     "TotalCards": 32
+  },
+  {
+    "PlayerName": "",
+    "Wins": 0,
+    "Loses": 4,
+    "PairsFound": 5,
+    "TotalCards": 64
+  },
+  {
+    "PlayerName": "PC",
+    "Wins": 4,
+    "Loses": 0,
+    "PairsFound": 22,
+    "TotalCards": 64
   }
 ]
