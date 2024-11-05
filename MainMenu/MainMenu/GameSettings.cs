@@ -18,15 +18,17 @@ namespace MainMenu
             radioButton2.Checked = true;
             checkBox1.Checked = false;
             radioButton5.Checked = true;
+            
         }
         private int playerNumber = 2;
         private int cardNumber = 4;
         private bool pcPlayer = false;
         private int difficulty = 2;
+        private bool isSound = true;
         private void LoadMenu(object sender, EventArgs e)
         {
             
-            StartingMenu startingMenu = new StartingMenu(playerNumber,cardNumber,pcPlayer,difficulty);
+            StartingMenu startingMenu = new StartingMenu(playerNumber,cardNumber,pcPlayer,difficulty,isSound);
             startingMenu.Show();
             this.Visible = false;
 
@@ -121,6 +123,12 @@ namespace MainMenu
             {
                 difficulty = 3;
             }
+        }
+
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+            if(checkBox2.Checked) isSound = true;
+            else isSound  = false;
         }
     }
 }

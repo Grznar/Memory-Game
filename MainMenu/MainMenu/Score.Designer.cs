@@ -31,6 +31,7 @@
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.button1 = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
+            this.button2 = new System.Windows.Forms.Button();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
@@ -58,18 +59,28 @@
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(568, 48);
+            this.textBox1.Location = new System.Drawing.Point(670, 94);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(100, 26);
             this.textBox1.TabIndex = 2;
             // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(674, 135);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.TabIndex = 4;
+            this.button2.Text = "button2";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.buttonFilter);
+            // 
             // comboBox1
             // 
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(667, 83);
+            this.comboBox1.Location = new System.Drawing.Point(670, 176);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(121, 28);
-            this.comboBox1.TabIndex = 3;
+            this.comboBox1.TabIndex = 5;
             // 
             // Score
             // 
@@ -77,6 +88,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.comboBox1);
+            this.Controls.Add(this.button2);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.dataGridView1);
@@ -93,6 +105,7 @@
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Button button2;
         private System.Windows.Forms.ComboBox comboBox1;
     }
 }

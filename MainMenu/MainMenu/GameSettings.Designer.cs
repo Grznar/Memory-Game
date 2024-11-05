@@ -34,7 +34,6 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.radioButton1 = new System.Windows.Forms.RadioButton();
             this.radioButton2 = new System.Windows.Forms.RadioButton();
@@ -45,6 +44,7 @@
             this.label5 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -113,13 +113,6 @@
             this.button1.Text = "Hlavní nabídka";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.LoadMenu);
-            // 
-            // progressBar1
-            // 
-            this.progressBar1.Location = new System.Drawing.Point(407, 248);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(177, 23);
-            this.progressBar1.TabIndex = 10;
             // 
             // textBox1
             // 
@@ -237,16 +230,29 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "groupBox2";
             // 
+            // checkBox2
+            // 
+            this.checkBox2.AutoSize = true;
+            this.checkBox2.Checked = true;
+            this.checkBox2.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox2.Location = new System.Drawing.Point(407, 248);
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.Size = new System.Drawing.Size(113, 24);
+            this.checkBox2.TabIndex = 21;
+            this.checkBox2.Text = "checkBox2";
+            this.checkBox2.UseVisualStyleBackColor = true;
+            this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
+            // 
             // GameSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(944, 487);
+            this.Controls.Add(this.checkBox2);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
@@ -273,7 +279,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.ComboBox comboKarty;
         private System.Windows.Forms.RadioButton radioButton1;
@@ -285,5 +290,6 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.CheckBox checkBox2;
     }
 }

@@ -16,11 +16,13 @@ namespace MainMenu
     public partial class Score : Form
     {
         private DataTable scoreTable;
+        private List<GameData> gameResults;
         public Score()
         {
             InitializeComponent();
             ScoreScore();
             LoadScoreData();
+            
         }
         public void ScoreScore()
         {
@@ -29,6 +31,24 @@ namespace MainMenu
             dataGridView1.Columns.Add("Losses", "Prohry");
             dataGridView1.Columns.Add("PairsFound", "Nasbírané páry"); 
             dataGridView1.Columns.Add("TotalCards", "Celkový počet karet"); 
+        }
+
+        private void DisplayData(List<GameData> data)
+        {
+            dataGridView1.Rows.Clear();
+            foreach (var item in data)
+            {
+                dataGridView1.Rows.Add(item.PlayerName, item.Wins, item.Loses, item.PairsFound, item.TotalCards);
+            }
+        }
+        private void InitializeComboBox()
+        {
+            comboBox1.Items.Add("Jméno hráče");
+            comboBox1.Items.Add("Výhry");
+            comboBox1.Items.Add("Prohry");
+            comboBox1.Items.Add("Nasbírané páry");
+            comboBox1.Items.Add("Celkový počet karet");
+            comboBox1.SelectedIndex = 0; 
         }
         public void LoadScoreData()
         {
@@ -95,6 +115,46 @@ namespace MainMenu
                 File.Delete(file); 
             }
         }
+
+        private void buttonFilter(object sender, EventArgs e)
+        {
+            string filterText = textBox1.Text.ToLower();
+            List<GameData> filteredResults = new List<GameData>();
+
+            string selectedFilter = comboBox1.SelectedItem.ToString();
+
+            foreach (var game in gameResults)
+            {
+                bool match = false;
+
+                switch (selectedFilter)
+                {
+                    case "Jméno hráče":
+                        match = game.PlayerName.ToLower().Contains(filterText);
+                        break;
+                    case "Výhry":
+                        match = game.Wins.ToString().Contains(filterText);
+                        break;
+                    case "Prohry":
+                        match = game.Loses.ToString().Contains(filterText);
+                        break;
+                    case "Nasbírané páry":
+                        match = game.PairsFound.ToString().Contains(filterText);
+                        break;
+                    case "Celkový počet karet":
+                        match = game.TotalCards.ToString().Contains(filterText);
+                        break;
+                }
+
+                if (match)
+                {
+                    filteredResults.Add(game);
+                }
+            }
+
+            DisplayData(filteredResults);
+        
+    }
     }
 }
 

@@ -22,18 +22,20 @@ namespace MainMenu
         private int difficulty;
         private bool playerRound;
         private string[] names;
-        public NewGame(int playerNumber, int cardNumber, bool pcPlayer, int obtiznost, bool isLoading = false)
+        private bool isSound;
+        public NewGame(int playerNumber, int cardNumber, bool pcPlayer, int obtiznost, bool isSound, bool isLoading = false)
         {
             InitializeComponent();
             this.playerNumber = playerNumber;
             this.pcPlayer = pcPlayer;
             this.cardNumber = cardNumber;
             this.difficulty = obtiznost;
+            this.isSound = isSound;
             score = new int[playerNumber];
             playerRound = true;
             SizeOfTable();
             IconsToPlace();
-
+            
             tableLayoutPanel1.Padding = new Padding(0, 0, 0, statusStrip1.Height);
             tableLayoutPanel1.Padding = new Padding(0, toolStrip1.Height, 0, 0);
             playerCurrent = 1;
@@ -64,6 +66,7 @@ namespace MainMenu
             {
             "a","a","b","b","c","c","d","d","e","e","f","f","g","g","h","h"
             };
+        
         private string[] GetNames(int playerNumber, bool pcPlayer)
         {
             if (this.names != null) return this.names;
@@ -108,6 +111,7 @@ namespace MainMenu
         }
         private void SizeOfTable()
         {
+            
             int rows = cardNumber;
             int columns = cardNumber;
             tableLayoutPanel1.RowCount = rows;
@@ -327,8 +331,8 @@ namespace MainMenu
             public List<string> CardIcons { get; set; }
             public List<bool> CardVisibility { get; set; }
             public List<string> Names { get; set; }
-
-            public GameState(List<bool> cardVisibility, int playerNumber, int[] scores, int playerCurrent, int difficulty, bool pcPlayer, int cardNumber, List<string> cardIcons, List<string> names)
+            public bool IsSound { get; set; }
+            public GameState(List<bool> cardVisibility, int playerNumber, int[] scores, int playerCurrent, int difficulty, bool pcPlayer, int cardNumber, List<string> cardIcons, List<string> names, bool isSound)
             {
                 PlayerNumber = playerNumber;
                 Scores = scores;
@@ -339,8 +343,8 @@ namespace MainMenu
                 CardNumber = cardNumber;
                 CardVisibility = cardVisibility;
                 Names = names;
-
-            }
+                IsSound = isSound;
+             }
 
 
         }
@@ -368,7 +372,8 @@ namespace MainMenu
             playerCurrent: this.playerCurrent,
             cardIcons: GetCardIcons(),
             cardVisibility: GetCardVisibility(),
-            names: this.names.ToList()
+            names: this.names.ToList(),
+            isSound : this.isSound
 
 
                 );
@@ -400,6 +405,7 @@ namespace MainMenu
             this.difficulty = loadedGameState.Difficulty;
             this.score = loadedGameState.Scores;
             this.playerCurrent = loadedGameState.PlayerCurrent;
+            this.isSound = loadedGameState.IsSound;
             if (loadedGameState.Names != null) this.names = loadedGameState.Names.ToArray();
             else
             {

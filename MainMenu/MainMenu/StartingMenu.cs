@@ -24,11 +24,12 @@ namespace MainMenu
         private int playerNumber = 2;
         private int cardNumber = 4;
         private bool pcPlayer = false;
+        private bool isSound = true;
         private void QuitApp(object sender, EventArgs e)
         {
             Application.Exit();
         }
-        public StartingMenu(int playerNumber,int cardNumber,bool pcPlayer,int obtiznost)
+        public StartingMenu(int playerNumber,int cardNumber,bool pcPlayer,int obtiznost,bool isSound)
         {
             InitializeComponent();
             
@@ -37,12 +38,14 @@ namespace MainMenu
                 this.difficulty = obtiznost;
                 this.cardNumber = cardNumber;
                 this.pcPlayer = pcPlayer;
+                this.isSound = isSound;
+                
             }
             
         }
         private void LoadGame(object sender, EventArgs e)
         {
-            NewGame gameWindow = new NewGame(playerNumber,cardNumber,pcPlayer,difficulty);
+            NewGame gameWindow = new NewGame(playerNumber,cardNumber,pcPlayer,difficulty,isSound,false);
             gameWindow.Show();
             this.Visible = false;
         }
@@ -84,6 +87,7 @@ namespace MainMenu
                         loadedGameState.CardNumber,
                         loadedGameState.PcPlayer,
                         loadedGameState.Difficulty, 
+                        loadedGameState.IsSound,
                         true
 
 
