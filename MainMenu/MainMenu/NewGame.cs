@@ -5,6 +5,7 @@ using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
@@ -24,6 +25,7 @@ namespace MainMenu
         private string[] names;
         private bool isSound;
         private List<Label> flippedLabels = new List<Label>();
+       public List<int> FlippedLabelsIndex { get; set; }
         public NewGame(int playerNumber, int cardNumber, bool pcPlayer, int obtiznost, bool isSound, bool isLoading = false)
         {
             InitializeComponent();
@@ -32,6 +34,7 @@ namespace MainMenu
             this.cardNumber = cardNumber;
             this.difficulty = obtiznost;
             this.isSound = isSound;
+            FlippedLabelsIndex = new List<int>();
             score = new int[playerNumber];
             playerRound = true;
             SizeOfTable();
@@ -323,141 +326,158 @@ namespace MainMenu
                 default: return 60;
             }
         }
-        [Serializable]
-        public class GameState
-        {
-            public int PlayerNumber { get; set; }
-            public int[] Scores { get; set; }
-            public int PlayerCurrent { get; set; }
-            public int Difficulty { get; set; }
-            public bool PcPlayer { get; set; }
-            public int CardNumber { get; set; }
-            public List<string> CardIcons { get; set; }
-            public List<bool> CardVisibility { get; set; }
-            public List<string> Names { get; set; }
-            public bool IsSound { get; set; }
-            public GameState(List<bool> cardVisibility, int playerNumber, int[] scores, int playerCurrent, int difficulty, bool pcPlayer, int cardNumber, List<string> cardIcons, List<string> names, bool isSound)
-            {
-                PlayerNumber = playerNumber;
-                Scores = scores;
-                PlayerCurrent = playerCurrent;
-                Difficulty = difficulty;
-                PcPlayer = pcPlayer;
-                CardIcons = cardIcons;
-                CardNumber = cardNumber;
-                CardVisibility = cardVisibility;
-                Names = names;
-                IsSound = isSound;
-             }
-
-
-        }
-        private List<string> GetCardIcons()
-        {
-            List<string> icons = new List<string>();
-            foreach (Control control in tableLayoutPanel1.Controls)
-            {
-                if (control is Label label)
+                [Serializable]
+                public class GameState
                 {
-                    icons.Add(label.Text);
+                    public int PlayerNumber { get; set; }
+                    public int[] Scores { get; set; }
+                    public int PlayerCurrent { get; set; }
+                    public int Difficulty { get; set; }
+                    public bool PcPlayer { get; set; }
+                    public int CardNumber { get; set; }
+                    public List<string> CardIcons { get; set; }
+                    public List<bool> CardVisibility { get; set; }
+                    public List<string> Names { get; set; }
+                    public bool IsSound { get; set; }
+                    public List<int> FlippedLabelsIndex { get; set; }
+                    public GameState(List<bool> cardVisibility, int playerNumber, int[] scores, int playerCurrent, int difficulty, bool pcPlayer, int cardNumber, List<string> cardIcons, List<string> names, bool isSound, List<int> flippedLabelsIndex)
+                    {
+                        PlayerNumber = playerNumber;
+                        Scores = scores;
+                        PlayerCurrent = playerCurrent;
+                        Difficulty = difficulty;
+                        PcPlayer = pcPlayer;
+                        CardIcons = cardIcons;
+                        CardNumber = cardNumber;
+                        CardVisibility = cardVisibility;
+                        Names = names;
+                        IsSound = isSound;
+                        FlippedLabelsIndex = flippedLabelsIndex;
+                    }
+
+
                 }
-            }
-            return icons;
-        }
-
-        public void SaveGame(string filePath)
-        {
-            GameState gamestate = new GameState(
-            playerNumber: this.playerNumber, // : je jako this.neco = 
-            scores: this.score,
-            cardNumber: this.cardNumber,
-            pcPlayer: this.pcPlayer,
-            difficulty: this.difficulty,
-            playerCurrent: this.playerCurrent,
-            cardIcons: GetCardIcons(),
-            cardVisibility: GetCardVisibility(),
-            names: this.names.ToList(),
-            isSound : this.isSound
-
-
-                );
-            using (FileStream fs = new FileStream(filePath, FileMode.Create))
-            {
-                BinaryFormatter formatter = new BinaryFormatter();
-                formatter.Serialize(fs, gamestate);
-            }
-
-        }
-
-        private void buttonSave_Click(object sender, EventArgs e)
-        {
-            SaveFileDialog saveFileDialog = new SaveFileDialog
-            {
-                Filter = "Herní soubory (*hra)|*.hra",
-                Title = "Uložit hru"
-            };
-            if (saveFileDialog.ShowDialog(this) == DialogResult.OK)
-            {
-                SaveGame(saveFileDialog.FileName);
-            }
-        }
-        public void Load(GameState loadedGameState)
-        {
-            this.playerNumber = loadedGameState.PlayerNumber;
-            this.cardNumber = loadedGameState.CardNumber;
-            this.pcPlayer = loadedGameState.PcPlayer;
-            this.difficulty = loadedGameState.Difficulty;
-            this.score = loadedGameState.Scores;
-            this.playerCurrent = loadedGameState.PlayerCurrent;
-            this.isSound = loadedGameState.IsSound;
-            if (loadedGameState.Names != null) this.names = loadedGameState.Names.ToArray();
-            else
-            {
-                this.names = new string[playerNumber];
-                for (int i = 0; i < playerNumber; i++)
+                private List<string> GetCardIcons()
                 {
-                    this.names[i] = "Hráč " + (i + 1);
+                    List<string> icons = new List<string>();
+                    foreach (Control control in tableLayoutPanel1.Controls)
+                    {
+                        if (control is Label label)
+                        {
+                            icons.Add(label.Text);
+                        }
+                    }
+                    return icons;
                 }
-            }
-            SetCardIcons(loadedGameState.CardIcons);
-            UpdateScoreLabel();
-            SetCardVisibility(loadedGameState.CardVisibility);
+
+                public void SaveGame(string filePath)
+                {
+                    List<int> flippedLabelsIndex= new List<int>();
+                    foreach(Label label in flippedLabels)
+                    {
+                    int index = tableLayoutPanel1.Controls.IndexOf(label);
+                    flippedLabelsIndex.Add(index);    
+                    }
+                    GameState gamestate = new GameState(
+                    playerNumber: this.playerNumber, // : je jako this.neco = 
+                    scores: this.score,
+                    cardNumber: this.cardNumber,
+                    pcPlayer: this.pcPlayer,
+                    difficulty: this.difficulty,
+                    playerCurrent: this.playerCurrent,
+                    cardIcons: GetCardIcons(),
+                    cardVisibility: GetCardVisibility(),
+                    names: this.names.ToList(),
+                    isSound : this.isSound,
+                    flippedLabelsIndex: flippedLabelsIndex
+            
 
 
-        }
-        private void SetCardVisibility(List<bool> cardVisibility)
-        {
-            for (int i = 0; i < cardVisibility.Count; i++)
-            {
-                if (tableLayoutPanel1.Controls[i] is Label label)
-                {
-                    label.ForeColor = cardVisibility[i] ? Color.White : label.BackColor;
+
+                        );
+                    using (FileStream fs = new FileStream(filePath, FileMode.Create))
+                    {
+                        BinaryFormatter formatter = new BinaryFormatter();
+                        formatter.Serialize(fs, gamestate);
+                    }
+
                 }
-            }
-        }
-        private void SetCardIcons(List<string> cardIcons)
-        {
-            for (int i = 0; i < cardIcons.Count; i++)
-            {
-                if (tableLayoutPanel1.Controls[i] is Label label)
+
+                private void buttonSave_Click(object sender, EventArgs e)
                 {
-                    label.Text = cardIcons[i];
-                    label.ForeColor = label.BackColor;
+                    SaveFileDialog saveFileDialog = new SaveFileDialog
+                    {
+                        Filter = "Herní soubory (*hra)|*.hra",
+                        Title = "Uložit hru"
+                    };
+                    if (saveFileDialog.ShowDialog(this) == DialogResult.OK)
+                    {
+                        SaveGame(saveFileDialog.FileName);
+                    }
                 }
-            }
-        }
-        private List<bool> GetCardVisibility()
-        {
-            List<bool> visibility = new List<bool>();
-            foreach (Control control in tableLayoutPanel1.Controls)
-            {
-                if (control is Label label)
+                public void Load(GameState loadedGameState)
                 {
-                    visibility.Add(label.ForeColor == Color.White);
+                    this.playerNumber = loadedGameState.PlayerNumber;
+                    this.cardNumber = loadedGameState.CardNumber;
+                    this.pcPlayer = loadedGameState.PcPlayer;
+                    this.difficulty = loadedGameState.Difficulty;
+                    this.score = loadedGameState.Scores;
+                    this.playerCurrent = loadedGameState.PlayerCurrent;
+                    this.isSound = loadedGameState.IsSound;
+                    this.FlippedLabelsIndex = loadedGameState.FlippedLabelsIndex;
+                    if (loadedGameState.Names != null) this.names = loadedGameState.Names.ToArray();
+                    else
+                    {
+                        this.names = new string[playerNumber];
+                        for (int i = 0; i < playerNumber; i++)
+                        {
+                            this.names[i] = "Hráč " + (i + 1);
+                        }
+                    }
+                    SetCardIcons(loadedGameState.CardIcons);
+                    UpdateScoreLabel();
+                    SetCardVisibility(loadedGameState.CardVisibility);
+                    flippedLabels.Clear();
+                    foreach (int i in loadedGameState.FlippedLabelsIndex)
+                    {
+                        Label label = tableLayoutPanel1.Controls[i] as Label;
+                        if (label != null) this.flippedLabels.Add(label);
+                    }
+
                 }
-            }
-            return visibility;
-        }
+                private void SetCardVisibility(List<bool> cardVisibility)
+                {
+                    for (int i = 0; i < cardVisibility.Count; i++)
+                    {
+                        if (tableLayoutPanel1.Controls[i] is Label label)
+                        {
+                            label.ForeColor = cardVisibility[i] ? Color.White : label.BackColor;
+                        }
+                    }
+                }
+                private void SetCardIcons(List<string> cardIcons)
+                {
+                    for (int i = 0; i < cardIcons.Count; i++)
+                    {
+                        if (tableLayoutPanel1.Controls[i] is Label label)
+                        {
+                            label.Text = cardIcons[i];
+                            label.ForeColor = label.BackColor;
+                        }
+                    }
+                }
+                private List<bool> GetCardVisibility()
+                {
+                    List<bool> visibility = new List<bool>();
+                    foreach (Control control in tableLayoutPanel1.Controls)
+                    {
+                        if (control is Label label)
+                        {
+                            visibility.Add(label.ForeColor == Color.White);
+                        }
+                    }
+                    return visibility;
+                }
 
         private void btnMenu_Click(object sender, EventArgs e)
         {

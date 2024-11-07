@@ -30,16 +30,16 @@
   {
     "PlayerName": "",
     "Wins": 0,
-    "Loses": 4,
+    "Loses": 5,
     "PairsFound": 5,
-    "TotalCards": 64
+    "TotalCards": 80
   },
   {
     "PlayerName": "PC",
-    "Wins": 5,
-    "Loses": 0,
-    "PairsFound": 34,
-    "TotalCards": 100
+    "Wins": 6,
+    "Loses": 1,
+    "PairsFound": 44,
+    "TotalCards": 132
   },
   {
     "PlayerName": "Johanka princezna",
@@ -47,5 +47,12 @@
     "Loses": 1,
     "PairsFound": 8,
     "TotalCards": 36
+  },
+  {
+    "PlayerName": "plešoun",
+    "Wins": 1,
+    "Loses": 0,
+    "PairsFound": 6,
+    "TotalCards": 16
   }
 ]

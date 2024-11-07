@@ -40,6 +40,8 @@ namespace MainMenu
                 this.pcPlayer = pcPlayer;
                 this.isSound = isSound;
                 
+                
+                
             }
             
         }
@@ -53,7 +55,7 @@ namespace MainMenu
         
         private void LoadSettings(object sender, EventArgs e)
         {
-            GameSettings gameSettings = new GameSettings();
+            GameSettings gameSettings = new GameSettings(playerNumber, cardNumber, pcPlayer, difficulty, isSound);
             gameSettings.Show();
             this.Visible = false;
         }

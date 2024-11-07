@@ -14,31 +14,38 @@ namespace MainMenu
 {
     public partial class GameSettings : Form
     {
-        public GameSettings()
-        {
-            InitializeComponent();
-
-            
-
-        }
-        public class GameConfig
-        {
-            public int Difficult { get; set; } = 2;
-            public int CardsCount { get; set; } = 4;
-            public bool IsPcPlayer { get; set; } = false;
-            public bool IsSound { get; set; } = true;
-            public int PlayerNumber { get; set; } = 2;
-        }
-        public static class ConfigManager
-        {
-            public static GameConfig CurrentSettings { get; set; } = new GameConfig();
-        }
-
         private int playerNumber = 2;
         private int cardNumber = 4;
         private bool pcPlayer = false;
         private int difficulty = 2;
         private bool isSound = true;
+        public GameSettings(int playerNumber, int cardNumber, bool pcPlayer, int obtiznost, bool isSound)
+        {
+            InitializeComponent();
+
+            this.playerNumber = playerNumber;
+            this.difficulty = obtiznost;
+            this.cardNumber = cardNumber;
+            this.pcPlayer = pcPlayer;
+            this.isSound = isSound;
+            textBox1.Text = playerNumber.ToString();
+            if(cardNumber==2)radioButton1.Checked = true;
+            else if (cardNumber == 4) radioButton2.Checked = true;
+            else if (cardNumber == 6) radioButton3.Checked = true;
+            if (isSound) checkBox2.Checked = true;
+            else checkBox2.Checked = false;
+            if (pcPlayer) checkBox1.Checked = true;
+            else checkBox1.Checked = false;
+            if (difficulty == 1) radioButton4.Checked = true;
+            else if (difficulty == 2) radioButton5.Checked = true;
+            else if (difficulty == 3) radioButton6.Checked = true;
+
+
+
+        }
+        
+
+        
         private void LoadMenu(object sender, EventArgs e)
         {
             
