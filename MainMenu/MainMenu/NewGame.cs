@@ -9,7 +9,6 @@
     using System.Threading.Tasks;
     using System.Windows.Forms;
     using System.Xml;
-    using Newtonsoft.Json;
     namespace MainMenu
     {
         public partial class NewGame : Form
@@ -358,7 +357,7 @@
                     public int PlayerNumber { get; set; }
                     public int[] Scores { get; set; }
                     public int PlayerCurrent { get; set; }
-                    public int Difficulty { get; set; }
+                    public int Difficulty { get; set; } 
                     public bool PcPlayer { get; set; }
                     public int CardNumber { get; set; }
                     public List<string> CardIcons { get; set; }
@@ -385,16 +384,25 @@
                 }
                 private List<string> GetCardIcons()
                 {
-                    List<string> icons = new List<string>();
-                    foreach (Control control in tableLayoutPanel1.Controls)
+            List<string> icons = new List<string>();
+            foreach (Control control in tableLayoutPanel1.Controls)
+            {
+                if (control is Label label && label.Image != null)
+                {
+                    using (MemoryStream ms = new MemoryStream())
                     {
-                        if (control is Label label)
-                        {
-                            icons.Add(label.Text);
-                        }
+                        label.Image.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                        string base64String = Convert.ToBase64String(ms.ToArray());
+                        icons.Add(base64String);
                     }
-                    return icons;
                 }
+                else
+                {
+                    icons.Add(null); 
+                }
+            }
+            return icons;
+        }
 
                 public void SaveGame(string filePath)
                 {
@@ -405,7 +413,7 @@
                     flippedLabelsIndex.Add(index);    
                     }
                     GameState gamestate = new GameState(
-                    playerNumber: this.playerNumber, // : je jako this.neco = 
+                    playerNumber: this.playerNumber, 
                     scores: this.score,
                     cardNumber: this.cardNumber,
                     pcPlayer: this.pcPlayer,
@@ -441,8 +449,10 @@
                         SaveGame(saveFileDialog.FileName);
                     }
                 }
-                public void Load(GameState loadedGameState)
-                {
+        public void LoadGameDetails(GameState loadedGameState)
+        {
+           
+
                     this.playerNumber = loadedGameState.PlayerNumber;
                     this.cardNumber = loadedGameState.CardNumber;
                     this.pcPlayer = loadedGameState.PcPlayer;
@@ -451,7 +461,10 @@
                     this.playerCurrent = loadedGameState.PlayerCurrent;
                     this.isSound = loadedGameState.IsSound;
                     this.FlippedLabelsIndex = loadedGameState.FlippedLabelsIndex;
-                    if (loadedGameState.Names != null) this.names = loadedGameState.Names.ToArray();
+
+                    
+                    if (loadedGameState.Names != null)
+                        this.names = loadedGameState.Names.ToArray();
                     else
                     {
                         this.names = new string[playerNumber];
@@ -460,38 +473,61 @@
                             this.names[i] = "Hráč " + (i + 1);
                         }
                     }
+
+                    
                     SetCardIcons(loadedGameState.CardIcons);
                     UpdateScoreLabel();
+
+                    
                     SetCardVisibility(loadedGameState.CardVisibility);
+
+                    
                     flippedLabels.Clear();
                     foreach (int i in loadedGameState.FlippedLabelsIndex)
                     {
                         Label label = tableLayoutPanel1.Controls[i] as Label;
-                        if (label != null) this.flippedLabels.Add(label);
+                        if (label != null)
+                            this.flippedLabels.Add(label);
                     }
-
-                }
-                private void SetCardVisibility(List<bool> cardVisibility)
+            
+        }
+        private void SetCardVisibility(List<bool> cardVisibility)
                 {
                     for (int i = 0; i < cardVisibility.Count; i++)
                     {
                         if (tableLayoutPanel1.Controls[i] is Label label)
                         {
-                            label.ForeColor = cardVisibility[i] ? Color.White : label.BackColor;
-                        }
-                    }
-                }
-                private void SetCardIcons(List<string> cardIcons)
-                {
-                    for (int i = 0; i < cardIcons.Count; i++)
+                    if (cardVisibility[i])
                     {
-                        if (tableLayoutPanel1.Controls[i] is Label label)
-                        {
-                            label.Text = cardIcons[i];
-                            label.ForeColor = label.BackColor;
+                        label.Image = label.Tag as Image;
+                    }
+                    else label.Image = backImage;
                         }
                     }
                 }
+        private void SetCardIcons(List<string> cardIcons)
+        {
+            for (int i = 0; i < cardIcons.Count; i++)
+            {
+                if (tableLayoutPanel1.Controls[i] is Label label)
+                {
+                    if (cardIcons[i] != null)
+                    {
+                        byte[] imageBytes = Convert.FromBase64String(cardIcons[i]);
+                        using (MemoryStream ms = new MemoryStream(imageBytes))
+                        {
+                            Image cardImage = Image.FromStream(ms);
+                            label.Tag = cardImage; 
+                            label.Image = cardImage;
+                        } 
+                    } else
+                        {
+                            label.Image = null;
+                        }
+                    }
+                }
+            }
+        
                 private List<bool> GetCardVisibility()
                 {
                     List<bool> visibility = new List<bool>();
@@ -499,7 +535,8 @@
                     {
                         if (control is Label label)
                         {
-                            visibility.Add(label.ForeColor == Color.White);
+                    if (label.Image == backImage) visibility.Add(false);
+                    else if (label.Image==label.Tag) visibility.Add(true);
                         }
                     }
                     return visibility;
@@ -692,13 +729,17 @@
         }
         private void SaveGameDetails()
         {
-            string file = "gameResult.json";
+            string file = "gameResult.dat";
             List<GameData> gameResults;
 
+            
             if (File.Exists(file))
             {
-                string json = File.ReadAllText(file);
-                gameResults = JsonConvert.DeserializeObject<List<GameData>>(json);
+                using (FileStream fs = new FileStream(file, FileMode.Open, FileAccess.Read))
+                {
+                    BinaryFormatter formatter = new BinaryFormatter();
+                    gameResults = (List<GameData>)formatter.Deserialize(fs);
+                }
             }
             else
             {
@@ -708,11 +749,24 @@
             int maxScore = score.Max();
             int minScore = score.Min();
 
+            
             for (int i = 0; i < playerNumber; i++)
             {
-                var existingPlayer = gameResults.FirstOrDefault(r => r.PlayerName == names[i]);
+                GameData existingPlayer = null;
+
+                
+                foreach (GameData player in gameResults)
+                {
+                    if (player.PlayerName == names[i])
+                    {
+                        existingPlayer = player;
+                        break;
+                    }
+                }
+
                 if (existingPlayer != null)
                 {
+                    
                     existingPlayer.PairsFound += score[i];
                     existingPlayer.TotalCards += cardNumber * cardNumber;
 
@@ -727,7 +781,8 @@
                 }
                 else
                 {
-                    var gameData = new GameData(
+                    
+                    GameData gameData = new GameData(
                         playerName: names[i],
                         pairsFound: score[i],
                         totalCards: cardNumber * cardNumber
@@ -753,8 +808,12 @@
                 }
             }
 
-            string updatedJson = JsonConvert.SerializeObject(gameResults, Newtonsoft.Json.Formatting.Indented);
-            File.WriteAllText(file, updatedJson);
+            
+            using (FileStream fs = new FileStream(file, FileMode.Create, FileAccess.Write))
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                formatter.Serialize(fs, gameResults);
+            }
         }
 
     }

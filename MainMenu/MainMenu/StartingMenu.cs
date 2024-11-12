@@ -72,36 +72,46 @@ namespace MainMenu
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
-                Filter = "Herní soubory (*.hra)|*.hra",
-                Title = "Načíst uloženou hru"
-
+                Filter = "Herní soubory (*.hra)|*.hra", 
+                Title = "Načíst uloženou hru" 
             };
+
+            
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 try
                 {
-                    using (FileStream fs = new FileStream(openFileDialog.FileName, FileMode.Open))
+                    string filePath = openFileDialog.FileName;
+
+                    
+                    using (FileStream fs = new FileStream(filePath, FileMode.Open))
                     {
+                        
                         BinaryFormatter formatter = new BinaryFormatter();
                         GameState loadedGameState = (GameState)formatter.Deserialize(fs);
+
+                        
                         NewGame gameWindow = new NewGame(
-                        loadedGameState.PlayerNumber,
-                        loadedGameState.CardNumber,
-                        loadedGameState.PcPlayer,
-                        loadedGameState.Difficulty, 
-                        loadedGameState.IsSound,
-                        true
+                            loadedGameState.PlayerNumber,
+                            loadedGameState.CardNumber,
+                            loadedGameState.PcPlayer,
+                            loadedGameState.Difficulty,
+                            loadedGameState.IsSound,
+                            true 
+                        );
 
+                        
+                        gameWindow.LoadGameDetails(loadedGameState);
 
-                            );
-                        gameWindow.Load(loadedGameState);
+                        
                         gameWindow.Show();
                         this.Hide();
                     }
                 }
-                catch(Exception)
+                catch (Exception)
                 {
-                    MessageBox.Show("Chyba při načítaní uložené hry");
+                   
+                    MessageBox.Show("Chyba při načítání uložené hry");
                 }
             }
         }
