@@ -1,223 +1,258 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Text;
-using System.IO;
-using System.Linq;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Xml;
-using Newtonsoft.Json;
-namespace MainMenu
-{
-    public partial class NewGame : Form
+﻿    using System;
+    using System.Collections.Generic;
+    using System.Drawing;
+    using System.Drawing.Text;
+    using System.IO;
+    using System.Linq;
+    using System.Runtime.Serialization.Formatters.Binary;
+    using System.Security.Cryptography.X509Certificates;
+    using System.Threading.Tasks;
+    using System.Windows.Forms;
+    using System.Xml;
+    using Newtonsoft.Json;
+    namespace MainMenu
     {
-        Label first, second;
-        private int[] score;
-        private int playerNumber;
-        private int playerCurrent = 1;
-        private int cardNumber;
-        private bool pcPlayer;
-        private int difficulty;
-        private bool playerRound;
-        private string[] names;
-        private bool isSound;
-        private List<Label> flippedLabels = new List<Label>();
-       public List<int> FlippedLabelsIndex { get; set; }
-        public NewGame(int playerNumber, int cardNumber, bool pcPlayer, int obtiznost, bool isSound, bool isLoading = false)
+        public partial class NewGame : Form
         {
-            InitializeComponent();
-            this.playerNumber = playerNumber;
-            this.pcPlayer = pcPlayer;
-            this.cardNumber = cardNumber;
-            this.difficulty = obtiznost;
-            this.isSound = isSound;
-            FlippedLabelsIndex = new List<int>();
-            score = new int[playerNumber];
-            playerRound = true;
-            SizeOfTable();
-            IconsToPlace();
+            Label first, second;
+            private int[] score;
+            private int playerNumber;
+            private int playerCurrent = 1;
+            private int cardNumber;
+            private bool pcPlayer;
+            private int difficulty;
+            private bool playerRound;
+            private string[] names;
+            private bool isSound;
+            private List<Label> flippedLabels = new List<Label>();
+        private List<Image> cardImages= new List<Image>();
+        private Image backImage;
+           public List<int> FlippedLabelsIndex { get; set; }
+            public NewGame(int playerNumber, int cardNumber, bool pcPlayer, int obtiznost, bool isSound, bool isLoading = false)
+            {
+                InitializeComponent();
+                this.playerNumber = playerNumber;
+                this.pcPlayer = pcPlayer;
+                this.cardNumber = cardNumber;
+                this.difficulty = obtiznost;
+                this.isSound = isSound;
+                FlippedLabelsIndex = new List<int>();
+                score = new int[playerNumber];
+                playerRound = true;
+            LoadImages();
+                SizeOfTable();
+                IconsToPlace();
             
-            tableLayoutPanel1.Padding = new Padding(0, 0, 0, statusStrip1.Height);
-            tableLayoutPanel1.Padding = new Padding(0, toolStrip1.Height, 0, 0);
-            playerCurrent = 1;
-            if (!isLoading) names = GetNames(playerNumber, pcPlayer);
-            else
-            {
-                names = new string[playerNumber];
-                for (int i = 0; i < playerNumber; i++)
+                tableLayoutPanel1.Padding = new Padding(0, 0, 0, statusStrip1.Height);
+                tableLayoutPanel1.Padding = new Padding(0, toolStrip1.Height, 0, 0);
+                playerCurrent = 1;
+                if (!isLoading) names = GetNames(playerNumber, pcPlayer);
+                else
                 {
-                    names[i] = "Hráč " + (i + 1);
+                    names = new string[playerNumber];
+                    for (int i = 0; i < playerNumber; i++)
+                    {
+                        names[i] = "Hráč " + (i + 1);
+                    }
                 }
+                UpdateScoreLabel();
+
             }
-            UpdateScoreLabel();
-
-        }
 
 
-        Random rnd = new Random();
-        List<string> icons6x6 = new List<string>()
-            {
-            "a","a","b","b","c","c","d","d","e","e","f","f","g","g","h","h","i","i","j","j","k","k","l","l","m","m","n","n","o","o","p","p","q","q","r","r"
-            };
-        List<string> icons2x2 = new List<string>()
-            {
-            "a","a","b","b"
-            };
-        List<string> icons4x4 = new List<string>()
-            {
-            "a","a","b","b","c","c","d","d","e","e","f","f","g","g","h","h"
-            };
-        
-        private string[] GetNames(int playerNumber, bool pcPlayer)
-        {
-            if (this.names != null) return this.names;
-            string[] names = new string[playerNumber];
-            for (int i = 0; i < playerNumber; i++)
-            {
-
-                if (pcPlayer && i == 1)
+            Random rnd = new Random();
+            List<string> icons6x6 = new List<string>()
                 {
-                    names[i] = "PC";
+                "a","a","b","b","c","c","d","d","e","e","f","f","g","g","h","h","i","i","j","j","k","k","l","l","m","m","n","n","o","o","p","p","q","q","r","r"
+                };
+            List<string> icons2x2 = new List<string>()
+                {
+                "a","a","b","b"
+                };
+            List<string> icons4x4 = new List<string>()
+                {
+                "a","a","b","b","c","c","d","d","e","e","f","f","g","g","h","h"
+                };
+        private void LoadImages()
+        {
+            
+            string imagesPath = Path.Combine(Application.StartupPath, "Images");
+
+            
+            if (!Directory.Exists(imagesPath))
+            {
+                MessageBox.Show("Složka images neexsituje!!");
+                return;
+            }
+
+            
+            string[] imageFiles = Directory.GetFiles(imagesPath, "*.png"); 
+
+            for (int i = 0; i < imageFiles.Length; i++)
+            {
+               
+                if (Path.GetFileName(imageFiles[i]).Equals("BackImage.png", StringComparison.OrdinalIgnoreCase))
+                {
+                    backImage = Image.FromFile(imageFiles[i]);
                     continue;
                 }
-                using (Form nameInputForm = new Form())
+
+                
+                cardImages.Add(Image.FromFile(imageFiles[i]));
+            }
+
+            if (cardImages.Count < 18)
+            {
+                MessageBox.Show("Není dost obrázků!");
+            }
+        }
+        private string[] GetNames(int playerNumber, bool pcPlayer)
+            {
+                if (this.names != null) return this.names;
+                string[] names = new string[playerNumber];
+                for (int i = 0; i < playerNumber; i++)
                 {
-                    nameInputForm.Text = "Zadejte jméno pro hráče " + (i + 1);
-                    Label label = new Label();
-                    label.Text = "Hráč " + (i + 1);
-                    label.AutoSize = true;
-                    label.Location = new Point(10, 10);
-                    TextBox textbox = new TextBox();
-                    textbox.Width = 200;
-                    textbox.Location = new Point(10, 30);
-                    Button btn = new Button();
-                    btn.Text = "Ok";
-                    btn.DialogResult = DialogResult.OK;
-                    btn.Location = new Point(10, 60);
 
-                    nameInputForm.Controls.Add(label);
-                    nameInputForm.Controls.Add(textbox);
-                    nameInputForm.Controls.Add(btn);
-
-
-                    if (nameInputForm.ShowDialog() == DialogResult.OK)
+                    if (pcPlayer && i == 1)
                     {
-                        names[i] = textbox.Text;
+                        names[i] = "PC";
+                        continue;
                     }
+                    using (Form nameInputForm = new Form())
+                    {
+                        nameInputForm.Text = "Zadejte jméno pro hráče " + (i + 1);
+                        Label label = new Label();
+                        label.Text = "Hráč " + (i + 1);
+                        label.AutoSize = true;
+                        label.Location = new Point(10, 10);
+                        TextBox textbox = new TextBox();
+                        textbox.Width = 200;
+                        textbox.Location = new Point(10, 30);
+                        Button btn = new Button();
+                        btn.Text = "Ok";
+                        btn.DialogResult = DialogResult.OK;
+                        btn.Location = new Point(10, 60);
 
+                        nameInputForm.Controls.Add(label);
+                        nameInputForm.Controls.Add(textbox);
+                        nameInputForm.Controls.Add(btn);
+
+
+                        if (nameInputForm.ShowDialog() == DialogResult.OK)
+                        {
+                            names[i] = textbox.Text;
+                        }
+
+                    }
                 }
+                this.names = names;
+                return names;
             }
-            this.names = names;
-            return names;
-        }
-        private void SizeOfTable()
-        {
+            private void SizeOfTable()
+            {
             
-            int rows = cardNumber;
-            int columns = cardNumber;
-            tableLayoutPanel1.RowCount = rows;
-            tableLayoutPanel1.ColumnCount = columns;
-            tableLayoutPanel1.ColumnStyles.Clear();
-            tableLayoutPanel1.RowStyles.Clear();
-            tableLayoutPanel1.Dock = DockStyle.Fill;
+                int rows = cardNumber;
+                int columns = cardNumber;
+                tableLayoutPanel1.RowCount = rows;
+                tableLayoutPanel1.ColumnCount = columns;
+                tableLayoutPanel1.ColumnStyles.Clear();
+                tableLayoutPanel1.RowStyles.Clear();
+                tableLayoutPanel1.Dock = DockStyle.Fill;
 
 
-            for (int i = 0; i < columns; i++)
+                for (int i = 0; i < columns; i++)
+                {
+                    tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f / columns));
+                }
+
+
+                for (int i = 0; i < rows; i++)
+                {
+                    tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100f / rows));
+                }
+
+            }
+            private void UpdateScoreLabel()
             {
-                tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f / columns));
+                if (names[playerCurrent - 1] == string.Empty)
+                {
+                    toolStripStatusLabel1.Text = "Hráč " + (playerCurrent - 1) + " je na tahu. " + " Počet jeho bodů: " + score[playerCurrent - 1];
+                }
+                toolStripStatusLabel1.Text = "Hráč " + names[playerCurrent - 1] + " je na tahu. " + " Počet jeho bodů: " + score[playerCurrent - 1];
+
+            }
+            private void DisplayScores()
+            {
+                string[] namesClone = names;
+                Array.Sort(score, namesClone);
+                Array.Reverse(namesClone);
+                Array.Reverse(score);
+                string output = null;
+                for (int i = 0; i < playerNumber; i++)
+                {
+                    output += "Hráč " + namesClone[i] + " , měl skoré: " + score[i] + "\n";
+                }
+
+                MessageBox.Show(output, "Konečné skóre");
+                Score scoreboard = new Score();
+                scoreboard.LoadScoreData();
+                scoreboard.ShowDialog();
             }
 
-
-            for (int i = 0; i < rows; i++)
+            private void label_Click(object sender, EventArgs e)
             {
-                tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100f / rows));
+                if (!playerRound) return;
+                if (first != null && second != null)
+                {
+                    return;
+                }
+                Label clickedLabel = sender as Label;
+                if (clickedLabel == null)
+                {
+                    return;
+                }
+                if (clickedLabel.ForeColor == Color.White)
+                {
+                    return;
+                }
+                if (first == null)
+                {
+                    first = clickedLabel;
+                    first.ForeColor = Color.White;
+                    flippedLabels.Add(first);
+                    return;
+                }
+
+                second = clickedLabel;
+                second.ForeColor = Color.White;
+                flippedLabels.Add(second);
+
+
+                if (first.Text == second.Text)
+                {
+                    score[playerCurrent - 1]++;
+                    UpdateScoreLabel();
+                    flippedLabels.Remove(first);
+                    flippedLabels.Remove(second);
+
+                    first = null;
+                    second = null;
+
+
+                    WinnerCheck();
+                }
+                else
+                {
+                    timer1.Start();
+
+                    playerCurrent = (playerCurrent % playerNumber) + 1;
+                    UpdateScoreLabel();
+                }
+
+
             }
 
-        }
-        private void UpdateScoreLabel()
-        {
-            if (names[playerCurrent - 1] == string.Empty)
-            {
-                toolStripStatusLabel1.Text = "Hráč " + (playerCurrent - 1) + " je na tahu. " + " Počet jeho bodů: " + score[playerCurrent - 1];
-            }
-            toolStripStatusLabel1.Text = "Hráč " + names[playerCurrent - 1] + " je na tahu. " + " Počet jeho bodů: " + score[playerCurrent - 1];
-
-        }
-        private void DisplayScores()
-        {
-            string[] namesClone = names;
-            Array.Sort(score, namesClone);
-            Array.Reverse(namesClone);
-            Array.Reverse(score);
-            string output = null;
-            for (int i = 0; i < playerNumber; i++)
-            {
-                output += "Hráč " + namesClone[i] + " , měl skoré: " + score[i] + "\n";
-            }
-
-            MessageBox.Show(output, "Konečné skóre");
-            Score scoreboard = new Score();
-            scoreboard.LoadScoreData();
-            scoreboard.ShowDialog();
-        }
-
-        private void label_Click(object sender, EventArgs e)
-        {
-            if (!playerRound) return;
-            if (first != null && second != null)
-            {
-                return;
-            }
-            Label clickedLabel = sender as Label;
-            if (clickedLabel == null)
-            {
-                return;
-            }
-            if (clickedLabel.ForeColor == Color.White)
-            {
-                return;
-            }
-            if (first == null)
-            {
-                first = clickedLabel;
-                first.ForeColor = Color.White;
-                flippedLabels.Add(first);
-                return;
-            }
-
-            second = clickedLabel;
-            second.ForeColor = Color.White;
-            flippedLabels.Add(second);
-
-
-            if (first.Text == second.Text)
-            {
-                score[playerCurrent - 1]++;
-                UpdateScoreLabel();
-                flippedLabels.Remove(first);
-                flippedLabels.Remove(second);
-
-                first = null;
-                second = null;
-
-
-                WinnerCheck();
-            }
-            else
-            {
-                timer1.Start();
-
-                playerCurrent = (playerCurrent % playerNumber) + 1;
-                UpdateScoreLabel();
-            }
-
-
-        }
-
-        private void WinnerCheck()
+            private void WinnerCheck()
         {
             Label label;
 
