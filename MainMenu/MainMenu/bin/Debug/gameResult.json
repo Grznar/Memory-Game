@@ -29,17 +29,17 @@
   },
   {
     "PlayerName": "",
-    "Wins": 0,
-    "Loses": 5,
-    "PairsFound": 5,
-    "TotalCards": 80
+    "Wins": 9,
+    "Loses": 13,
+    "PairsFound": 29,
+    "TotalCards": 352
   },
   {
     "PlayerName": "PC",
-    "Wins": 6,
+    "Wins": 7,
     "Loses": 1,
-    "PairsFound": 44,
-    "TotalCards": 132
+    "PairsFound": 49,
+    "TotalCards": 148
   },
   {
     "PlayerName": "Johanka princezna",

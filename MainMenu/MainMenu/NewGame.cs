@@ -39,7 +39,7 @@
                 FlippedLabelsIndex = new List<int>();
                 score = new int[playerNumber];
                 playerRound = true;
-            LoadImages();
+                LoadImages();
                 SizeOfTable();
                 IconsToPlace();
             
@@ -61,18 +61,7 @@
 
 
             Random rnd = new Random();
-            List<string> icons6x6 = new List<string>()
-                {
-                "a","a","b","b","c","c","d","d","e","e","f","f","g","g","h","h","i","i","j","j","k","k","l","l","m","m","n","n","o","o","p","p","q","q","r","r"
-                };
-            List<string> icons2x2 = new List<string>()
-                {
-                "a","a","b","b"
-                };
-            List<string> icons4x4 = new List<string>()
-                {
-                "a","a","b","b","c","c","d","d","e","e","f","f","g","g","h","h"
-                };
+            
         private void LoadImages()
         {
             
@@ -199,7 +188,7 @@
                 scoreboard.ShowDialog();
             }
 
-            private void label_Click(object sender, EventArgs e)
+            private async void label_Click(object sender, EventArgs e)
             {
                 if (!playerRound) return;
                 if (first != null && second != null)
@@ -207,28 +196,25 @@
                     return;
                 }
                 Label clickedLabel = sender as Label;
-                if (clickedLabel == null)
+                if (clickedLabel == null || clickedLabel.Image != backImage)
                 {
                     return;
                 }
-                if (clickedLabel.ForeColor == Color.White)
-                {
-                    return;
-                }
+                
                 if (first == null)
                 {
                     first = clickedLabel;
-                    first.ForeColor = Color.White;
+                    first.Image = clickedLabel.Tag as Image;
                     flippedLabels.Add(first);
                     return;
                 }
 
                 second = clickedLabel;
-                second.ForeColor = Color.White;
-                flippedLabels.Add(second);
+             second.Image = clickedLabel.Tag as Image;
+            flippedLabels.Add(second);
 
 
-                if (first.Text == second.Text)
+                if (first.Image == second.Image)
                 {
                     score[playerCurrent - 1]++;
                     UpdateScoreLabel();
@@ -243,6 +229,7 @@
                 }
                 else
                 {
+                await Task.Delay(1000);
                     timer1.Start();
 
                     playerCurrent = (playerCurrent % playerNumber) + 1;
@@ -260,7 +247,7 @@
             for (int i = 0; i < tableLayoutPanel1.Controls.Count; i++)
             {
                 label = tableLayoutPanel1.Controls[i] as Label;
-                if (label != null && label.ForeColor == label.BackColor)
+                if (label != null && label.Image == backImage)
                 {
 
                     return;
@@ -275,11 +262,11 @@
         private void timer1_Tick(object sender, EventArgs e)
         {
             timer1.Stop();
-            if (first != null)
+            if (first != null && first.Image != backImage)
             {
-                first.ForeColor = first.BackColor;
+                first.Image = backImage;
             }
-            if (second != null) second.ForeColor = second.BackColor;
+            if (second != null && second.Image != backImage) second.Image = backImage;
 
 
             first = null;
@@ -295,44 +282,48 @@
         private void IconsToPlace()
         {
             Label label;
-            int rndnumber;
-            List<string> icons = null;
-            switch (cardNumber)
+            
+            List<int> icons = new List<int>();
+            Random rnd = new Random();
+            for(int i=0;i<(cardNumber*cardNumber)/2;i++)
             {
-                case 2:
-                    {
-                        icons = icons2x2;
-                        break;
-                    }
-                case 4:
-                    {
-                        icons = icons4x4;
-                        break;
-                    }
-                case 6:
-                    {
-                        icons = icons6x6;
-                        break;
-                    }
+                
+                
+                icons.Add(i);
+                icons.Add(i);
+            }
+
+            List<int> randIcons = new List<int>();
+
+            
+            while (icons.Count > 0)
+            {
+                int randIndex = rnd.Next(icons.Count);  
+                randIcons.Add(icons[randIndex]);  
+                icons.RemoveAt(randIndex);  
             }
             tableLayoutPanel1.Controls.Clear();
+
+            
             for (int i = 0; i < cardNumber * cardNumber; i++)
             {
-                label = new Label();
-                label.TextAlign = ContentAlignment.MiddleCenter;
-                label.ImageAlign = ContentAlignment.MiddleCenter;
-                label.BackColor = Color.LightSkyBlue;
-                label.ForeColor = label.BackColor;
-                label.Font = new Font("Webdings", 48);
-                label.AutoSize = true;
-                label.Dock = DockStyle.Fill;
-                rndnumber = rnd.Next(0, icons.Count);
-                label.Text = icons[rndnumber];
-                icons.RemoveAt(rndnumber);
+                label = new Label
+                {
+                    Image = backImage,
+                    Tag=cardImages[randIcons[i]],
+                    ImageAlign = ContentAlignment.MiddleCenter,
+                    AutoSize = false,
+                    Size=new Size(100,100),
+                    Dock = DockStyle.Fill
+                };
 
+                
+                
+
+                
+                
                 label.Click += label_Click;
                 tableLayoutPanel1.Controls.Add(label);
-
             }
 
 
@@ -534,7 +525,7 @@
             List<Label> hiddenLab = new List<Label>();
             foreach (Control control in tableLayoutPanel1.Controls)
             {
-                if (control is Label label && label.ForeColor != Color.White)
+                if (control is Label label && label.Image == backImage)
                 {
                     hiddenLab.Add(label);
                 }
@@ -559,7 +550,7 @@
                 {
                     for (int j = i + 1; j < flippedLabels.Count; j++)
                     {
-                        if (flippedLabels[i].Text == flippedLabels[j].Text && flippedLabels[i] != flippedLabels[j])
+                        if (flippedLabels[i].Tag == flippedLabels[j].Tag && flippedLabels[i] != flippedLabels[j])
                         {
                             firstLabel = flippedLabels[i];
                             secondLabel = flippedLabels[j];
@@ -573,10 +564,10 @@
 
             if (found && firstLabel != null && secondLabel != null)
             {
-                
-                firstLabel.ForeColor = Color.White;
+
+                firstLabel.Image = firstLabel.Tag as Image;
                 await Task.Delay(1000);
-                secondLabel.ForeColor = Color.White;
+                secondLabel.Image = secondLabel.Tag as Image;
                 await Task.Delay(1000);
                 flippedLabels.Remove(firstLabel);
                 flippedLabels.Remove(secondLabel);
@@ -589,16 +580,16 @@
                 int firstIndex = random.Next(hiddenLab.Count);
                 firstLabel = hiddenLab[firstIndex];
                 hiddenLab.RemoveAt(firstIndex);
-                firstLabel.ForeColor = Color.White;
+                firstLabel.Image = firstLabel.Tag as Image;
                 await Task.Delay(1000);
                 bool found2 = false;
                 foreach(Label label in flippedLabels)
                 {
-                    if(label.Text==firstLabel.Text&&label!=firstLabel)
+                    if(label.Tag==firstLabel.Tag&&label!=firstLabel)
                     {
                         secondLabel = label;
                         await Task.Delay(1000);
-                        secondLabel.ForeColor= Color.White;
+                        secondLabel.Image= secondLabel.Tag as Image;
                         await Task.Delay(1000);
                         flippedLabels.Remove(secondLabel);
                         score[playerCurrent - 1]++;
@@ -615,7 +606,7 @@
                         int secondIndex = random.Next(hiddenLab.Count);
                         secondLabel = hiddenLab[secondIndex];
                         await Task.Delay(1000);
-                        secondLabel.ForeColor = Color.White;
+                        secondLabel.Image = secondLabel.Tag as Image;
                         hiddenLab.Remove(secondLabel);
                         await Task.Delay(1000);
                     }
@@ -637,7 +628,7 @@
                 int firstIndex = random.Next(hiddenLab.Count);
                 firstLabel = hiddenLab[firstIndex];
                 hiddenLab.RemoveAt(firstIndex);
-                firstLabel.ForeColor = Color.White;
+                firstLabel.Image = firstLabel.Tag as Image;
                 await Task.Delay(1000); 
 
                 if (hiddenLab.Count > 0) 
@@ -645,7 +636,7 @@
                     int secondIndex = random.Next(hiddenLab.Count);
                     await Task.Delay(1000);
                     secondLabel = hiddenLab[secondIndex]; 
-                    secondLabel.ForeColor = Color.White;
+                    secondLabel.Image = secondLabel.Tag as Image;
                     hiddenLab.Remove(secondLabel);
                     await Task.Delay(1000);
                 }
@@ -662,7 +653,7 @@
             }
 
             
-            if (firstLabel != null && secondLabel != null && firstLabel.Text == secondLabel.Text)
+            if (firstLabel != null && secondLabel != null && firstLabel.Tag == secondLabel.Tag)
             {
                 
                 WinnerCheck();
@@ -672,8 +663,8 @@
             {
                 
                 await Task.Delay(1000);
-                firstLabel.ForeColor = firstLabel.BackColor; 
-                secondLabel.ForeColor = secondLabel.BackColor; 
+                firstLabel.Image = backImage;
+                secondLabel.Image = backImage;
 
                 playerCurrent = (playerCurrent % playerNumber) + 1;
                 UpdateScoreLabel();
