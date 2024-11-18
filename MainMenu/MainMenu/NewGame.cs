@@ -1,17 +1,14 @@
-﻿    using System;
-    using System.Collections.Generic;
-    using System.Drawing;
-    using System.Drawing.Text;
-    using System.IO;
-    using System.Linq;
-    using System.Runtime.Serialization.Formatters.Binary;
-    using System.Security.Cryptography.X509Certificates;
-    using System.Threading.Tasks;
-    using System.Windows.Forms;
-    using System.Xml;
-    namespace MainMenu
-    {
-        public partial class NewGame : Form
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+namespace MainMenu
+{
+    public partial class NewGame : Form
         {
             Label first, second;
             private int[] score;
@@ -26,7 +23,9 @@
             private List<Label> flippedLabels = new List<Label>();
         private List<Image> cardImages= new List<Image>();
         private Image backImage;
-           public List<int> FlippedLabelsIndex { get; set; }
+        private List<int> cardImagesIds = new List<int>();
+        public List<int> FlippedLabelsIndex { get; set; }
+        private int backImageId = -1;
             public NewGame(int playerNumber, int cardNumber, bool pcPlayer, int obtiznost, bool isSound, bool isLoading = false)
             {
                 InitializeComponent();
@@ -69,7 +68,7 @@
             
             if (!Directory.Exists(imagesPath))
             {
-                MessageBox.Show("Složka images neexsituje!!");
+                MessageBox.Show("Složka images neexisituje!!");
                 return;
             }
 
@@ -78,15 +77,18 @@
 
             for (int i = 0; i < imageFiles.Length; i++)
             {
-               
+
                 if (Path.GetFileName(imageFiles[i]).Equals("BackImage.png", StringComparison.OrdinalIgnoreCase))
                 {
                     backImage = Image.FromFile(imageFiles[i]);
+                    backImageId = -1;
                     continue;
                 }
-
                 
-                cardImages.Add(Image.FromFile(imageFiles[i]));
+                {
+                    cardImages.Add(Image.FromFile(imageFiles[i]));
+                    cardImagesIds.Add(i);
+                }
             }
 
             if (cardImages.Count < 18)
@@ -158,8 +160,8 @@
                 {
                     tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100f / rows));
                 }
-
-            }
+            tableLayoutPanel1.Controls.Clear();
+        }
             private void UpdateScoreLabel()
             {
                 if (names[playerCurrent - 1] == string.Empty)
@@ -195,25 +197,27 @@
                     return;
                 }
                 Label clickedLabel = sender as Label;
-                if (clickedLabel == null || clickedLabel.Image != backImage)
-                {
-                    return;
+                if (clickedLabel == null || (int)clickedLabel.Tag == backImageId)
+            {
+                Console.WriteLine("Karta je neaktivní nebo zobrazuje backImage. Ignoruji kliknutí.");
+                return;
                 }
-                
-                if (first == null)
+           
+ Console.WriteLine($"Kliknuto na kartu s Tag: {clickedLabel.Tag}, Enabled: {clickedLabel.Enabled}");
+            if (first == null)
                 {
                     first = clickedLabel;
-                    first.Image = clickedLabel.Tag as Image;
-                    flippedLabels.Add(first);
+                    first.Image = cardImages[(int)first.Tag];
+                flippedLabels.Add(first);
                     return;
                 }
 
                 second = clickedLabel;
-             second.Image = clickedLabel.Tag as Image;
+             second.Image = cardImages[(int)second.Tag];
             flippedLabels.Add(second);
 
 
-                if (first.Image == second.Image)
+                if ((int)first.Tag == (int)second.Tag)
                 {
                     score[playerCurrent - 1]++;
                     UpdateScoreLabel();
@@ -246,7 +250,7 @@
             for (int i = 0; i < tableLayoutPanel1.Controls.Count; i++)
             {
                 label = tableLayoutPanel1.Controls[i] as Label;
-                if (label != null && label.Image == backImage)
+                if (label != null && (int)label.Tag == backImageId)
                 {
 
                     return;
@@ -261,11 +265,18 @@
         private void timer1_Tick(object sender, EventArgs e)
         {
             timer1.Stop();
-            if (first != null && first.Image != backImage)
+            if (first != null && (int)first.Tag != backImageId)
             {
+                
                 first.Image = backImage;
+                
             }
-            if (second != null && second.Image != backImage) second.Image = backImage;
+            if (second != null && (int)second.Tag != backImageId)
+            {
+                
+                second.Image = backImage;  
+                
+            }
 
 
             first = null;
@@ -306,22 +317,36 @@
             
             for (int i = 0; i < cardNumber * cardNumber; i++)
             {
+                
                 label = new Label
                 {
                     Image = backImage,
-                    Tag=cardImages[randIcons[i]],
+                    Tag = randIcons[i],
                     ImageAlign = ContentAlignment.MiddleCenter,
                     AutoSize = false,
-                    Size=new Size(100,100),
-                    Dock = DockStyle.Fill
+                    Size = new Size(100, 100),
+                    Dock = DockStyle.Fill,
+                    BorderStyle = BorderStyle.FixedSingle,
+                    Enabled = true
                 };
 
-                
-                
+
+                Console.WriteLine($"Přiřazuji kartu {i} s Tag: {randIcons[i]}");
 
                 
-                
-                label.Click += label_Click;
+                if (label != null)
+                {
+                    label.Click += label_Click;
+                    Console.WriteLine($"Click událost přiřazena kartě {i}");
+                }
+                else
+                {
+                    Console.WriteLine($"Karta {i} je null a nemá Click událost!");
+                }
+
+
+
+               
                 tableLayoutPanel1.Controls.Add(label);
             }
 
@@ -548,9 +573,11 @@
             startingMenu.Show();
             this.Visible = false;
         }
-
+        
         private async void ComputerTurn()
         {
+
+
             playerRound = false;
 
             if (timer1.Enabled)
@@ -559,157 +586,123 @@
             }
 
             await Task.Delay(1000);
-            List<Label> hiddenLab = new List<Label>();
+            List<Label> hiddenLabels = new List<Label>();
             foreach (Control control in tableLayoutPanel1.Controls)
             {
-                if (control is Label label && label.Image == backImage)
+                if (control is Label label && label.ForeColor != Color.White)
                 {
-                    hiddenLab.Add(label);
+                    hiddenLabels.Add(label);
                 }
             }
 
-            if (hiddenLab.Count == 0)
+            if (hiddenLabels.Count == 0)
             {
                 playerCurrent = (playerCurrent % playerNumber) + 1;
                 UpdateScoreLabel();
+                playerRound = true;
                 return;
             }
 
-            Random random = new Random();
             Label firstLabel = null;
             Label secondLabel = null;
             bool found = false;
-            bool pokracovat = GetRight() >= random.Next(100);
-            if (pokracovat)
+            bool chance = GetRight() >= rnd.Next(100);
+            if (chance)
             {
-                
-                for (int i = 0; i < flippedLabels.Count; i++)
+                foreach (Label label in flippedLabels)
                 {
-                    for (int j = i + 1; j < flippedLabels.Count; j++)
+                    foreach (Label label1 in flippedLabels)
                     {
-                        if (flippedLabels[i].Tag == flippedLabels[j].Tag && flippedLabels[i] != flippedLabels[j])
+                        if (label.Tag == label1.Tag && label != label1)
                         {
-                            firstLabel = flippedLabels[i];
-                            secondLabel = flippedLabels[j];
+                            firstLabel = label;
+                            secondLabel = label1;
+                            hiddenLabels.Remove(firstLabel);
+                            hiddenLabels.Remove(secondLabel);
                             found = true;
                             break;
                         }
                     }
                     if (found) break;
                 }
-            }
-
-            if (found && firstLabel != null && secondLabel != null)
-            {
-
-                firstLabel.Image = firstLabel.Tag as Image;
-                await Task.Delay(1000);
-                secondLabel.Image = secondLabel.Tag as Image;
-                await Task.Delay(1000);
-                flippedLabels.Remove(firstLabel);
-                flippedLabels.Remove(secondLabel);
-                score[playerCurrent - 1]++;
-                UpdateScoreLabel();
+                
                 
             }
-            else if(pokracovat && !found)
+            if (firstLabel == null)
             {
-                int firstIndex = random.Next(hiddenLab.Count);
-                firstLabel = hiddenLab[firstIndex];
-                hiddenLab.RemoveAt(firstIndex);
-                firstLabel.Image = firstLabel.Tag as Image;
-                await Task.Delay(1000);
-                bool found2 = false;
-                foreach(Label label in flippedLabels)
+                int indexF = rnd.Next(hiddenLabels.Count);
+                firstLabel = hiddenLabels[indexF];
+                hiddenLabels.RemoveAt(indexF);
+                flippedLabels.Add(firstLabel);
+                if (chance)
                 {
-                    if(label.Tag==firstLabel.Tag&&label!=firstLabel)
+                    foreach (Label label in flippedLabels)
                     {
-                        secondLabel = label;
-                        await Task.Delay(1000);
-                        secondLabel.Image= secondLabel.Tag as Image;
-                        await Task.Delay(1000);
-                        flippedLabels.Remove(secondLabel);
-                        score[playerCurrent - 1]++;
-                        UpdateScoreLabel();
-                        
-                        found2 = true;
-                        break;
+                        if (label.Tag == firstLabel.Tag && label!=firstLabel)
+                        {
+                            secondLabel = label;
+                            hiddenLabels.Remove(secondLabel);
+                            flippedLabels.Add(secondLabel);
+                            break;
+                        }
                     }
                 }
-                if(!found2)
+                
+                if(secondLabel==null)
                 {
-                    if (hiddenLab.Count > 0)
-                    {
-                        int secondIndex = random.Next(hiddenLab.Count);
-                        secondLabel = hiddenLab[secondIndex];
-                        await Task.Delay(1000);
-                        secondLabel.Image = secondLabel.Tag as Image;
-                        hiddenLab.Remove(secondLabel);
-                        await Task.Delay(1000);
-                    }
-                    else
-                    {
-
-                        playerCurrent = (playerCurrent % playerNumber) + 1;
-                        UpdateScoreLabel();
-                        return;
-                    }
-
-                    flippedLabels.Add(firstLabel);
+                    int indexS = rnd.Next(hiddenLabels.Count);
+                    secondLabel = hiddenLabels[indexS];
+                    hiddenLabels.RemoveAt(indexS);
                     flippedLabels.Add(secondLabel);
                 }
-            }
-            else
-            {
                 
-                int firstIndex = random.Next(hiddenLab.Count);
-                firstLabel = hiddenLab[firstIndex];
-                hiddenLab.RemoveAt(firstIndex);
-                firstLabel.Image = firstLabel.Tag as Image;
-                await Task.Delay(1000); 
-
-                if (hiddenLab.Count > 0) 
-                {
-                    int secondIndex = random.Next(hiddenLab.Count);
-                    await Task.Delay(1000);
-                    secondLabel = hiddenLab[secondIndex]; 
-                    secondLabel.Image = secondLabel.Tag as Image;
-                    hiddenLab.Remove(secondLabel);
-                    await Task.Delay(1000);
-                }
-                else
-                {
-                    
-                    playerCurrent = (playerCurrent % playerNumber) + 1;
-                    UpdateScoreLabel();
-                    return;
-                }
-
-                flippedLabels.Add(firstLabel);
-                flippedLabels.Add(secondLabel);
             }
+            Console.WriteLine("First label tag: " + firstLabel.Tag);
+            Console.WriteLine("Second label tag: " + secondLabel.Tag);
+            await Task.Delay(1000);
+            firstLabel.Image = cardImages[(int)firstLabel.Tag];
+            await Task.Delay(1000);
+            secondLabel.Image = cardImages[(int)secondLabel.Tag];
+            await Task.Delay(1000);
 
-            
-            if (firstLabel != null && secondLabel != null && firstLabel.Tag == secondLabel.Tag)
+            if (firstLabel.Tag==secondLabel.Tag)
             {
+                score[playerCurrent - 1]++;
+                UpdateScoreLabel();
+                flippedLabels.Remove(firstLabel);
+                flippedLabels.Remove(secondLabel);
                 
                 WinnerCheck();
-                ComputerTurn(); 
             }
             else
             {
-                
                 await Task.Delay(1000);
-                firstLabel.Image = backImage;
-                secondLabel.Image = backImage;
+                
+                
 
+                    firstLabel.Image = backImage;
+                    secondLabel.Image = backImage;
+                
                 playerCurrent = (playerCurrent % playerNumber) + 1;
                 UpdateScoreLabel();
-                playerRound = true;
-            }
 
-            
+
+
+                firstLabel = null;
+                secondLabel= null;
+
+            }
+            playerRound = true;
+
+
+
+
         }
+
+
+
+        
+
         [Serializable]
         public class GameData
         {

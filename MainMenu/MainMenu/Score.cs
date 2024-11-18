@@ -6,6 +6,7 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -26,7 +27,7 @@ namespace MainMenu
         }
         public void ScoreScore()
         {
-            dataGridView1.Columns.Add("PlayerName", "Jméno hráče");
+            dataGridView1.Columns.Add("PlayerName", "Jméno hráče");     
             dataGridView1.Columns.Add("Wins", "Výhry");
             dataGridView1.Columns.Add("Losses", "Prohry");
             dataGridView1.Columns.Add("PairsFound", "Nasbírané páry"); 
@@ -52,39 +53,43 @@ namespace MainMenu
         }
         public void LoadScoreData()
         {
-            string file = "gameResult.json";
+            string file = "gameResult.dat"; 
 
             if (File.Exists(file))
             {
-                string json = File.ReadAllText(file);
-                List<GameData> gameResults = JsonConvert.DeserializeObject<List<GameData>>(json);
-
-                var aggregatedResults = new Dictionary<string, GameData>();
-
-                
-                foreach (var result in gameResults)
+                using (FileStream fs = new FileStream(file, FileMode.Open, FileAccess.Read))
                 {
-                    if (!aggregatedResults.ContainsKey(result.PlayerName))
+                    BinaryFormatter formatter = new BinaryFormatter();
+                    gameResults = (List<GameData>)formatter.Deserialize(fs);
+
+
+                    var aggregatedResults = new Dictionary<string, GameData>();
+
+                    foreach (var result in gameResults)
                     {
-                        
-                        aggregatedResults[result.PlayerName] = new GameData(result.PlayerName, 0, 0);
+                        if (!aggregatedResults.ContainsKey(result.PlayerName))
+                        {
+                            aggregatedResults[result.PlayerName] = new GameData(result.PlayerName, 0, 0);
+                        }
+
+                        aggregatedResults[result.PlayerName].Wins += result.Wins;
+                        aggregatedResults[result.PlayerName].Loses += result.Loses;
+                        aggregatedResults[result.PlayerName].PairsFound += result.PairsFound;
+                        aggregatedResults[result.PlayerName].TotalCards += result.TotalCards;
                     }
 
-                   
-                    aggregatedResults[result.PlayerName].Wins += result.Wins;
-                    aggregatedResults[result.PlayerName].Loses += result.Loses;
-                    aggregatedResults[result.PlayerName].PairsFound += result.PairsFound;
-                    aggregatedResults[result.PlayerName].TotalCards += result.TotalCards;
+                    
+                    dataGridView1.Rows.Clear();
+                    foreach (var playerData in aggregatedResults.Values)
+                    {
+                        dataGridView1.Rows.Add(playerData.PlayerName, playerData.Wins, playerData.Loses, playerData.PairsFound, playerData.TotalCards);
+                    }
                 }
-
+            }
+            else
+            {
                 
-                dataGridView1.Rows.Clear();
-
-                
-                foreach (var playerData in aggregatedResults.Values)
-                {
-                    dataGridView1.Rows.Add(playerData.PlayerName, playerData.Wins, playerData.Loses, playerData.PairsFound, playerData.TotalCards);
-                }
+                MessageBox.Show("Game result file not found.");
             }
         }
         [Serializable]
