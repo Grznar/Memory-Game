@@ -306,7 +306,7 @@
             // 
             // timer1
             // 
-            this.timer1.Interval = 750;
+            this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // statusStrip1
@@ -336,7 +336,7 @@
             this.btnMenu});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(609, 33);
+            this.toolStrip1.Size = new System.Drawing.Size(609, 38);
             this.toolStrip1.TabIndex = 2;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -346,7 +346,7 @@
             this.buttonSave.Image = ((System.Drawing.Image)(resources.GetObject("buttonSave.Image")));
             this.buttonSave.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.buttonSave.Name = "buttonSave";
-            this.buttonSave.Size = new System.Drawing.Size(34, 28);
+            this.buttonSave.Size = new System.Drawing.Size(34, 33);
             this.buttonSave.Text = "Uložit";
             this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
             // 
@@ -356,7 +356,7 @@
             this.btnMenu.Image = ((System.Drawing.Image)(resources.GetObject("btnMenu.Image")));
             this.btnMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnMenu.Name = "btnMenu";
-            this.btnMenu.Size = new System.Drawing.Size(34, 28);
+            this.btnMenu.Size = new System.Drawing.Size(34, 33);
             this.btnMenu.Text = "Menu";
             this.btnMenu.Click += new System.EventHandler(this.btnMenu_Click);
             // 

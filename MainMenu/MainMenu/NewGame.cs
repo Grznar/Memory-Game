@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
+using System.Web;
 using System.Windows.Forms;
 namespace MainMenu
 {
@@ -25,6 +26,7 @@ namespace MainMenu
         private Image backImage;
         private List<int> cardImagesIds = new List<int>();
         public List<int> FlippedLabelsIndex { get; set; }
+        private List<Label> hiddenLabels = new List<Label>();
         private int backImageId = -1;
             public NewGame(int playerNumber, int cardNumber, bool pcPlayer, int obtiznost, bool isSound, bool isLoading = false)
             {
@@ -43,6 +45,7 @@ namespace MainMenu
             
                 tableLayoutPanel1.Padding = new Padding(0, 0, 0, statusStrip1.Height);
                 tableLayoutPanel1.Padding = new Padding(0, toolStrip1.Height, 0, 0);
+            
                 playerCurrent = 1;
                 if (!isLoading) names = GetNames(playerNumber, pcPlayer);
                 else
@@ -130,7 +133,12 @@ namespace MainMenu
 
                         if (nameInputForm.ShowDialog() == DialogResult.OK)
                         {
+                        if(textbox.Text!=string.Empty)
+                        {
                             names[i] = textbox.Text;
+                        }
+                        else names[i]= ((i+1).ToString());
+                            
                         }
 
                     }
@@ -160,17 +168,17 @@ namespace MainMenu
                 {
                     tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100f / rows));
                 }
+
             tableLayoutPanel1.Controls.Clear();
         }
             private void UpdateScoreLabel()
             {
-                if (names[playerCurrent - 1] == string.Empty)
-                {
-                    toolStripStatusLabel1.Text = "Hráč " + (playerCurrent - 1) + " je na tahu. " + " Počet jeho bodů: " + score[playerCurrent - 1];
-                }
-                toolStripStatusLabel1.Text = "Hráč " + names[playerCurrent - 1] + " je na tahu. " + " Počet jeho bodů: " + score[playerCurrent - 1];
+            string playerName = names[playerCurrent - 1];
+            
 
-            }
+            toolStripStatusLabel1.Text = "Hráč " + playerName + " je na tahu. Počet jeho bodů: " + score[playerCurrent - 1];
+
+        }
             private void DisplayScores()
             {
                 string[] namesClone = names;
@@ -191,30 +199,29 @@ namespace MainMenu
 
             private async void label_Click(object sender, EventArgs e)
             {
-                if (!playerRound) return;
-                if (first != null && second != null)
-                {
-                    return;
-                }
+                if (!playerRound || first != null && second != null) return;
+            
                 Label clickedLabel = sender as Label;
                 if (clickedLabel == null || (int)clickedLabel.Tag == backImageId)
-            {
-                Console.WriteLine("Karta je neaktivní nebo zobrazuje backImage. Ignoruji kliknutí.");
+                {
+                
                 return;
                 }
            
- Console.WriteLine($"Kliknuto na kartu s Tag: {clickedLabel.Tag}, Enabled: {clickedLabel.Enabled}");
+
             if (first == null)
                 {
                     first = clickedLabel;
                     first.Image = cardImages[(int)first.Tag];
-                flippedLabels.Add(first);
+                    flippedLabels.Add(first);
+                    hiddenLabels.Remove(first);
                     return;
                 }
 
                 second = clickedLabel;
-             second.Image = cardImages[(int)second.Tag];
-            flippedLabels.Add(second);
+                second.Image = cardImages[(int)second.Tag];
+                flippedLabels.Add(second);
+                hiddenLabels.Remove(second);
 
 
                 if ((int)first.Tag == (int)second.Tag)
@@ -223,7 +230,7 @@ namespace MainMenu
                     UpdateScoreLabel();
                     flippedLabels.Remove(first);
                     flippedLabels.Remove(second);
-
+                
                     first = null;
                     second = null;
 
@@ -243,25 +250,18 @@ namespace MainMenu
             }
 
             private void WinnerCheck()
-        {
-            Label label;
-
-
-            for (int i = 0; i < tableLayoutPanel1.Controls.Count; i++)
             {
-                label = tableLayoutPanel1.Controls[i] as Label;
-                if (label != null && (int)label.Tag == backImageId)
-                {
+            
 
-                    return;
-                }
+
+            if (flippedLabels.Count() == cardNumber * cardNumber)
+            {
+                SaveGameDetails();
+                DisplayScores();
             }
 
-            SaveGameDetails();
-            DisplayScores();
 
-
-        }
+             }
         private void timer1_Tick(object sender, EventArgs e)
         {
             timer1.Stop();
@@ -327,27 +327,26 @@ namespace MainMenu
                     Size = new Size(100, 100),
                     Dock = DockStyle.Fill,
                     BorderStyle = BorderStyle.FixedSingle,
-                    Enabled = true
+                    Enabled = true,
+                    
                 };
 
 
-                Console.WriteLine($"Přiřazuji kartu {i} s Tag: {randIcons[i]}");
+                
 
                 
                 if (label != null)
                 {
                     label.Click += label_Click;
-                    Console.WriteLine($"Click událost přiřazena kartě {i}");
+                    
                 }
-                else
-                {
-                    Console.WriteLine($"Karta {i} je null a nemá Click událost!");
-                }
+                
 
 
 
                
                 tableLayoutPanel1.Controls.Add(label);
+                hiddenLabels.Add(label);
             }
 
 
@@ -579,21 +578,14 @@ namespace MainMenu
 
 
             playerRound = false;
-
+           
             if (timer1.Enabled)
             {
                 timer1.Stop();
             }
 
             await Task.Delay(1000);
-            List<Label> hiddenLabels = new List<Label>();
-            foreach (Control control in tableLayoutPanel1.Controls)
-            {
-                if (control is Label label && label.ForeColor != Color.White)
-                {
-                    hiddenLabels.Add(label);
-                }
-            }
+            
 
             if (hiddenLabels.Count == 0)
             {
@@ -607,18 +599,22 @@ namespace MainMenu
             Label secondLabel = null;
             bool found = false;
             bool chance = GetRight() >= rnd.Next(100);
+            Console.WriteLine("šance " + chance);
             if (chance)
             {
                 foreach (Label label in flippedLabels)
                 {
                     foreach (Label label1 in flippedLabels)
                     {
-                        if (label.Tag == label1.Tag && label != label1)
+                        Console.WriteLine("Prochazim to ");
+                        if ((int)label.Tag == (int)label1.Tag && label != label1)
                         {
+                            Console.WriteLine("Nasel ");
                             firstLabel = label;
                             secondLabel = label1;
                             hiddenLabels.Remove(firstLabel);
                             hiddenLabels.Remove(secondLabel);
+                            
                             found = true;
                             break;
                         }
@@ -632,13 +628,13 @@ namespace MainMenu
             {
                 int indexF = rnd.Next(hiddenLabels.Count);
                 firstLabel = hiddenLabels[indexF];
-                hiddenLabels.RemoveAt(indexF);
+                hiddenLabels.Remove(firstLabel);
                 flippedLabels.Add(firstLabel);
                 if (chance)
                 {
                     foreach (Label label in flippedLabels)
                     {
-                        if (label.Tag == firstLabel.Tag && label!=firstLabel)
+                        if ((int)label.Tag == (int)firstLabel.Tag && label!=firstLabel)
                         {
                             secondLabel = label;
                             hiddenLabels.Remove(secondLabel);
@@ -652,7 +648,7 @@ namespace MainMenu
                 {
                     int indexS = rnd.Next(hiddenLabels.Count);
                     secondLabel = hiddenLabels[indexS];
-                    hiddenLabels.RemoveAt(indexS);
+                    hiddenLabels.Remove(secondLabel);
                     flippedLabels.Add(secondLabel);
                 }
                 
@@ -665,14 +661,16 @@ namespace MainMenu
             secondLabel.Image = cardImages[(int)secondLabel.Tag];
             await Task.Delay(1000);
 
-            if (firstLabel.Tag==secondLabel.Tag)
+            if ((int)firstLabel.Tag== (int)secondLabel.Tag)    
             {
                 score[playerCurrent - 1]++;
                 UpdateScoreLabel();
                 flippedLabels.Remove(firstLabel);
                 flippedLabels.Remove(secondLabel);
-                
+                hiddenLabels.Remove(firstLabel);
+                hiddenLabels.Remove(secondLabel);
                 WinnerCheck();
+                ComputerTurn();
             }
             else
             {
