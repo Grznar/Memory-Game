@@ -385,12 +385,15 @@ namespace MainMenu
                     public int Difficulty { get; set; } 
                     public bool PcPlayer { get; set; }
                     public int CardNumber { get; set; }
-                    public List<string> CardIcons { get; set; }
+                    public List<int> CardIcons { get; set; }
                     public List<bool> CardVisibility { get; set; }
+                    public bool PlayerRound { get; set; }
                     public List<string> Names { get; set; }
                     public bool IsSound { get; set; }
                     public List<int> FlippedLabelsIndex { get; set; }
-                    public GameState(List<bool> cardVisibility, int playerNumber, int[] scores, int playerCurrent, int difficulty, bool pcPlayer, int cardNumber, List<string> cardIcons, List<string> names, bool isSound, List<int> flippedLabelsIndex)
+                    public List<int> HiddenLabelsIndex { get; set; }
+                    public bool CurrentGameState { get; set; }
+            public GameState(List<bool> cardVisibility, int playerNumber, int[] scores, int playerCurrent, int difficulty, bool pcPlayer, int cardNumber, List<int> cardIcons, List<string> names, bool isSound, List<int> flippedLabelsIndex)
                     {
                         PlayerNumber = playerNumber;
                         Scores = scores;
@@ -407,23 +410,18 @@ namespace MainMenu
 
 
                 }
-                private List<string> GetCardIcons()
+                private List<int> GetCardIcons()
                 {
-            List<string> icons = new List<string>();
+            List<int> icons = new List<int>();
             foreach (Control control in tableLayoutPanel1.Controls)
             {
                 if (control is Label label && label.Image != null)
                 {
-                    using (MemoryStream ms = new MemoryStream())
-                    {
-                        label.Image.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
-                        string base64String = Convert.ToBase64String(ms.ToArray());
-                        icons.Add(base64String);
-                    }
+                    icons.Add((int)label.Tag);
                 }
                 else
                 {
-                    icons.Add(null); 
+                    icons.Add(-1); 
                 }
             }
             return icons;
@@ -431,29 +429,30 @@ namespace MainMenu
 
                 public void SaveGame(string filePath)
                 {
-                    List<int> flippedLabelsIndex= new List<int>();
-                    foreach(Label label in flippedLabels)
+                    
+                    GameState gamestate = new GameState
                     {
-                    int index = tableLayoutPanel1.Controls.IndexOf(label);
-                    flippedLabelsIndex.Add(index);    
+                        PlayerNumber = this.playerNumber,                // Počet hráčů
+                        Scores = this.score,                             // Skóre hráčů
+                        PlayerCurrent = this.playerCurrent,              // Který hráč je na řadě
+                        Names = this.names.ToList(),                    // Jména hráčů
+                        CardNumber = this.cardNumber,                    // Počet karet
+                        CardIcons = GetCardIcons(),                      // Ikony karet
+                        CardVisibility = GetCardVisibility(),           // Viditelnost karet
+                        PlayerRound = this.playerRound,                  // Je na řadě hráč
+                        Difficulty = this.difficulty,                    // Obtížnost
+                        IsSound = this.isSound,                          // Stav zvuku
+                        PcPlayer = this.pcPlayer,                        // Je hráč proti počítači
+                        FlippedLabelsIndex = GetFlippedLabelsIndex(),    // Indexy otočených karet
+                        HiddenLabelsIndex = GetHiddenLabelsIndex(),      // Indexy skrytých karet
+                        CurrentGameState = this.currentGameState,       // Stav hry (aktivní/ukončená)
                     }
-                    GameState gamestate = new GameState(
-                    playerNumber: this.playerNumber, 
-                    scores: this.score,
-                    cardNumber: this.cardNumber,
-                    pcPlayer: this.pcPlayer,
-                    difficulty: this.difficulty,
-                    playerCurrent: this.playerCurrent,
-                    cardIcons: GetCardIcons(),
-                    cardVisibility: GetCardVisibility(),
-                    names: this.names.ToList(),
-                    isSound : this.isSound,
-                    flippedLabelsIndex: flippedLabelsIndex
+                    
             
 
 
 
-                        );
+                       
                     using (FileStream fs = new FileStream(filePath, FileMode.Create))
                     {
                         BinaryFormatter formatter = new BinaryFormatter();
@@ -560,13 +559,33 @@ namespace MainMenu
                     {
                         if (control is Label label)
                         {
-                    if (label.Image == backImage) visibility.Add(false);
-                    else if (label.Image==label.Tag) visibility.Add(true);
+                        if ((int)label.Tag == backImageId) visibility.Add(false);
+                    else visibility.Add(true);
                         }
                     }
                     return visibility;
                 }
+        private List<int> GetFlippedLabelsIndex()
+        {
+            List<int> flippedLabelsIndex = new List<int>();
+            foreach (Label label in flippedLabels)
+            {
+                int index = tableLayoutPanel1.Controls.IndexOf(label);
+                flippedLabelsIndex.Add(index); 
+            }
+            return flippedLabelsIndex;
+        }
 
+        private List<int> GetHiddenLabelsIndex()
+        {
+            List<int> hiddenLabelsIndex = new List<int>();
+            foreach (Label label in hiddenLabels)
+            {
+                int index = tableLayoutPanel1.Controls.IndexOf(label);
+                hiddenLabelsIndex.Add(index); 
+            }
+            return hiddenLabelsIndex;
+        }
         private void btnMenu_Click(object sender, EventArgs e)
         {
             StartingMenu startingMenu = new StartingMenu();
@@ -596,37 +615,42 @@ namespace MainMenu
                 return;
             }
 
+            
+            bool chance = GetRight() >= rnd.Next(100);
             Label firstLabel = null;
             Label secondLabel = null;
-            bool found = false;
-            bool chance = GetRight() >= rnd.Next(100);
+            
+            Dictionary<int, List<Label>> tagDictionary = new Dictionary<int, List<Label>>();
             
             if (chance)
-            {
-                Console.WriteLine("Šance" + chance);
-                foreach (Label label in flippedLabels)
                 {
-                    foreach (Label label1 in flippedLabels)
+                    Console.WriteLine("Šance" + chance);
+
+                    
+                    foreach (Label label in flippedLabels)
                     {
-                        
-                        if ((int)label.Tag == (int)label1.Tag && label != label1)
+                        int tag = (int)label.Tag;
+                        if (!tagDictionary.ContainsKey(tag))
+                            tagDictionary[tag] = new List<Label>();
+                        tagDictionary[tag].Add(label);
+                    }
+
+                
+
+                foreach (var tag in tagDictionary)
+                    {
+                        if (tag.Value.Count > 1)
                         {
-                            
-                            firstLabel = label;
-                            secondLabel = label1;
-                            hiddenLabels.Remove(firstLabel);
-                            hiddenLabels.Remove(secondLabel);
-                            Console.WriteLine("Nasel" + chance);
-                            found = true;
+                            firstLabel = tag.Value[0];
+                            secondLabel = tag.Value[1];
+                        
                             break;
                         }
                     }
-                    if (found) break;
+
+
                 }
-                
-                
-            }
-            if (firstLabel == null)
+            if (firstLabel==null)
             {
                 int indexF = rnd.Next(hiddenLabels.Count);
                 firstLabel = hiddenLabels[indexF];
@@ -636,13 +660,10 @@ namespace MainMenu
                 {
                     foreach (Label label in flippedLabels)
                     {
-                        if ((int)label.Tag == (int)firstLabel.Tag && label!=firstLabel)
+                        if((int)label.Tag==(int)firstLabel.Tag && firstLabel!=label)
                         {
                             secondLabel = label;
-                            hiddenLabels.Remove(secondLabel);
-                            flippedLabels.Add(secondLabel);
-                            Console.WriteLine("Našel po prvnim random");
-                            break;
+                           
                         }
                     }
                 }
@@ -696,7 +717,7 @@ namespace MainMenu
             }
             
 
-
+                
 
 
         }
