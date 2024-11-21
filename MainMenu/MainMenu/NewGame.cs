@@ -21,7 +21,8 @@ namespace MainMenu
             private bool playerRound;
             private string[] names;
             private bool isSound;
-            private List<Label> flippedLabels = new List<Label>();
+
+        private List<Label> flippedLabels = new List<Label>();
         private List<Image> cardImages= new List<Image>();
         private Image backImage;
         private List<int> cardImagesIds = new List<int>();
@@ -599,22 +600,23 @@ namespace MainMenu
             Label secondLabel = null;
             bool found = false;
             bool chance = GetRight() >= rnd.Next(100);
-            Console.WriteLine("šance " + chance);
+            
             if (chance)
             {
+                Console.WriteLine("Šance" + chance);
                 foreach (Label label in flippedLabels)
                 {
                     foreach (Label label1 in flippedLabels)
                     {
-                        Console.WriteLine("Prochazim to ");
+                        
                         if ((int)label.Tag == (int)label1.Tag && label != label1)
                         {
-                            Console.WriteLine("Nasel ");
+                            
                             firstLabel = label;
                             secondLabel = label1;
                             hiddenLabels.Remove(firstLabel);
                             hiddenLabels.Remove(secondLabel);
-                            
+                            Console.WriteLine("Nasel" + chance);
                             found = true;
                             break;
                         }
@@ -639,6 +641,7 @@ namespace MainMenu
                             secondLabel = label;
                             hiddenLabels.Remove(secondLabel);
                             flippedLabels.Add(secondLabel);
+                            Console.WriteLine("Našel po prvnim random");
                             break;
                         }
                     }
@@ -650,6 +653,7 @@ namespace MainMenu
                     secondLabel = hiddenLabels[indexS];
                     hiddenLabels.Remove(secondLabel);
                     flippedLabels.Add(secondLabel);
+                    Console.WriteLine("Random");
                 }
                 
             }
@@ -688,9 +692,9 @@ namespace MainMenu
 
                 firstLabel = null;
                 secondLabel= null;
-
+                playerRound = true;
             }
-            playerRound = true;
+            
 
 
 
