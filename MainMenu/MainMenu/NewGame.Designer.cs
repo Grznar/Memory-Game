@@ -53,6 +53,7 @@
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.buttonSave = new System.Windows.Forms.ToolStripButton();
             this.btnMenu = new System.Windows.Forms.ToolStripButton();
+            this.loadButton = new System.Windows.Forms.ToolStripButton();
             this.tableLayoutPanel1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -333,7 +334,8 @@
             this.toolStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.buttonSave,
-            this.btnMenu});
+            this.btnMenu,
+            this.loadButton});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(609, 38);
@@ -359,6 +361,16 @@
             this.btnMenu.Size = new System.Drawing.Size(34, 33);
             this.btnMenu.Text = "Menu";
             this.btnMenu.Click += new System.EventHandler(this.btnMenu_Click);
+            // 
+            // loadButton
+            // 
+            this.loadButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.loadButton.Image = ((System.Drawing.Image)(resources.GetObject("loadButton.Image")));
+            this.loadButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.loadButton.Name = "loadButton";
+            this.loadButton.Size = new System.Drawing.Size(34, 33);
+            this.loadButton.Text = "Load";
+            this.loadButton.Click += new System.EventHandler(this.loadButton_Click);
             // 
             // NewGame
             // 
@@ -406,5 +418,6 @@
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton buttonSave;
         private System.Windows.Forms.ToolStripButton btnMenu;
+        private System.Windows.Forms.ToolStripButton loadButton;
     }
 }

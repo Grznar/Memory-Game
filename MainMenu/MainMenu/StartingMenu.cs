@@ -79,9 +79,38 @@
             }
         private void LoadGameDetails()
         {
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.Filter = "Pexeso Saved Game Files|*.save";
+                openFileDialog.Title = "Načíst hru";
+
+                // Pokud uživatel vybere soubor
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        // Načteme a deserializujeme uložený soubor
+                        using (FileStream fs = new FileStream(openFileDialog.FileName, FileMode.Open))
+                        {
+                            BinaryFormatter formatter = new BinaryFormatter();
+                            GameSave gameSave = (GameSave)formatter.Deserialize(fs);
+
+                            // Předáme uložený stav do formuláře pro novou hru
+                            StartGameFromSavedState(gameSave);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Chyba při načítání hry: " + ex.Message);
+                    }
+                }
+            }
+        }
+
+        private void StartGameFromSavedState(GameSave gameSave)
+        {
             
-
-
         }
     }
     }
+    

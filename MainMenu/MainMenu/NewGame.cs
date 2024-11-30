@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
 using System.Web;
@@ -22,7 +23,7 @@ namespace MainMenu
         private bool playerRound;
         private string[] names;
         private bool isSound;
-
+        private bool isLoading = false;
         private List<Label> flippedLabels = new List<Label>();
         private List<Image> cardImages = new List<Image>();
         private Image backImage;
@@ -30,7 +31,8 @@ namespace MainMenu
         public List<int> FlippedLabelsIndex { get; set; }
         private List<Label> hiddenLabels = new List<Label>();
         private int backImageId = -1;
-
+        List<int> rightFlipped = new List<int>();
+        
         public NewGame(int playerNumber, int cardNumber, bool pcPlayer, int obtiznost, bool isSound, bool isLoading = false)
         {
             InitializeComponent();
@@ -42,6 +44,8 @@ namespace MainMenu
             FlippedLabelsIndex = new List<int>();
             score = new int[playerNumber];
             playerRound = true;
+
+
             LoadImages();
             SizeOfTable();
             IconsToPlace();
@@ -218,6 +222,7 @@ namespace MainMenu
             {
                 first = clickedLabel;
                 first.Image = cardImages[(int)first.Tag];
+                rightFlipped.Add(tableLayoutPanel1.Controls.IndexOf(first));
                 flippedLabels.Add(first);
                 hiddenLabels.Remove(first);
                 return;
@@ -227,7 +232,7 @@ namespace MainMenu
             second.Image = cardImages[(int)second.Tag];
             flippedLabels.Add(second);
             hiddenLabels.Remove(second);
-
+            
 
             if ((int)first.Tag == (int)second.Tag)
             {
@@ -235,7 +240,7 @@ namespace MainMenu
                 UpdateScoreLabel();
                 flippedLabels.Remove(first);
                 flippedLabels.Remove(second);
-
+                rightFlipped.Add(tableLayoutPanel1.Controls.IndexOf(second));
                 first = null;
                 second = null;
 
@@ -262,13 +267,15 @@ namespace MainMenu
             if (flippedLabels.Count() == cardNumber * cardNumber)
             {
 
-                DisplayScores();
+                // DisplayScores();
             }
 
 
         }
         private void timer1_Tick(object sender, EventArgs e)
         {
+            rightFlipped.Remove(tableLayoutPanel1.Controls.IndexOf(first));
+            rightFlipped.Remove(tableLayoutPanel1.Controls.IndexOf(second));
             timer1.Stop();
             if (first != null && (int)first.Tag != backImageId)
             {
@@ -297,65 +304,81 @@ namespace MainMenu
         private void IconsToPlace()
         {
             Label label;
-
             List<int> icons = new List<int>();
             Random rnd = new Random();
-            for (int i = 0; i < (cardNumber * cardNumber) / 2; i++)
+
+            // Pokud je hra načtena, použijeme uložené hodnoty
+            if (isLoading)
             {
+                List<int> randIcons = new List<int>(cardImagesIds); // Použijeme ID karet, která byla uložena
 
+                tableLayoutPanel1.Controls.Clear();
 
-                icons.Add(i);
-                icons.Add(i);
-            }
-
-            List<int> randIcons = new List<int>();
-
-
-            while (icons.Count > 0)
-            {
-                int randIndex = rnd.Next(icons.Count);
-                randIcons.Add(icons[randIndex]);
-                icons.RemoveAt(randIndex);
-            }
-            tableLayoutPanel1.Controls.Clear();
-
-
-            for (int i = 0; i < cardNumber * cardNumber; i++)
-            {
-
-                label = new Label
+                // Rozmístíme karty podle uložených ID
+                for (int i = 0; i < cardNumber * cardNumber; i++)
                 {
-                    Image = backImage,
-                    Tag = randIcons[i],
-                    ImageAlign = ContentAlignment.MiddleCenter,
-                    AutoSize = false,
-                    Size = new Size(100, 100),
-                    Dock = DockStyle.Fill,
-                    BorderStyle = BorderStyle.FixedSingle,
-                    Enabled = true,
+                    label = new Label
+                    {
+                        Image = backImage, // Nastavíme zadní obrázek jako výchozí
+                        Tag = randIcons[i], // ID uložené karty
+                        ImageAlign = ContentAlignment.MiddleCenter,
+                        AutoSize = false,
+                        Size = new Size(100, 100),
+                        Dock = DockStyle.Fill,
+                        BorderStyle = BorderStyle.FixedSingle,
+                        Enabled = true,
+                    };
 
-                };
-
-
-
-
-
-                if (label != null)
-                {
                     label.Click += label_Click;
+                    tableLayoutPanel1.Controls.Add(label);
+                    hiddenLabels.Add(label); // Přidáme do seznamu skrytých karet
 
+                    
+                }
+            }
+            else
+            {
+                // Pokud hra není načtena, generujeme náhodně karty
+                for (int i = 0; i < (cardNumber * cardNumber) / 2; i++)
+                {
+                    icons.Add(i);
+                    icons.Add(i); // Každý obrázek je dvakrát pro páry
                 }
 
+                List<int> randIcons = new List<int>();
 
+                // Mícháme karty pro náhodné rozmístění
+                while (icons.Count > 0)
+                {
+                    int randIndex = rnd.Next(icons.Count);
+                    randIcons.Add(icons[randIndex]);
+                    icons.RemoveAt(randIndex);
+                }
 
+                tableLayoutPanel1.Controls.Clear();
 
+                // Rozmístíme náhodně karty
+                for (int i = 0; i < cardNumber * cardNumber; i++)
+                {
+                    label = new Label
+                    {
+                        Image = backImage, // Zadní obrázek na začátku
+                        Tag = randIcons[i], // Náhodně rozmístěná karta
+                        ImageAlign = ContentAlignment.MiddleCenter,
+                        AutoSize = false,
+                        Size = new Size(100, 100),
+                        Dock = DockStyle.Fill,
+                        BorderStyle = BorderStyle.FixedSingle,
+                        Enabled = true,
+                    };
 
-                tableLayoutPanel1.Controls.Add(label);
-                hiddenLabels.Add(label);
+                    label.Click += label_Click;
+                    tableLayoutPanel1.Controls.Add(label);
+                    hiddenLabels.Add(label); // Přidáme do seznamu skrytých karet
+                }
             }
-
-
         }
+
 
         private int GetRight()
         {
@@ -530,11 +553,12 @@ namespace MainMenu
             public bool IsSound { get; set; }
             public List<int> CardImagesIds { get; set; }
             public List<string> CardImagePaths { get; set; }
-            public List<int> FlippedLabelsIndex { get; set; }  
+            public List<int> FlippedLabelsIndex { get; set; }
             public int[] Score { get; set; }
-            public List<int> HiddenLabelsIndex { get; set; } 
-            public List<bool> LabelVisibility { get; set; }
-           
+            public List<int> HiddenLabelsIndex { get; set; }
+            public List<int> RightFlipped { get; set; }
+            public List <int> CardPositions { get; set; }
+
         }
         private void SaveGame()
         {
@@ -543,36 +567,29 @@ namespace MainMenu
                 saveFileDialog.Filter = "Pexeso Saved Game Files|*.save";
                 saveFileDialog.Title = "Uložit hru";
 
-
                 if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     try
                     {
+
+                        List<int> cardPositions = new List<int>();
+                        foreach (Label label in tableLayoutPanel1.Controls)
+                        {
+                            cardPositions.Add((int)label.Tag); 
+                        }
+
                         GameSave gameSave = new GameSave
                         {
                             PlayerNumber = this.playerNumber,
                             CardNumber = this.cardNumber,
-                            PCPlayer = this.pcPlayer,
                             Difficulty = this.difficulty,
                             IsSound = this.isSound,
                             Score = this.score,
-                            HiddenLabelsIndex = this.hiddenLabels.Select(h => (int)h.Tag).ToList(),
-                            FlippedLabelsIndex = this.flippedLabels.Select(f => (int)f.Tag).ToList(),
-                            CardImagesIds = this.cardImagesIds,
-                            CardImagePaths = this.cardImages.Select(img => img.ToString()).ToList(),
-                            LabelVisibility = new List<bool>()
-
-
-
+                            CardImagesIds = cardImagesIds,
+                            RightFlipped = rightFlipped,
+                            CardPositions=cardPositions
+                            
                         };
-                        foreach (Label label in tableLayoutPanel1.Controls)
-                        {
-                            if ((int)label.Tag == backImageId)
-                            {
-                                gameSave.LabelVisibility.Add(false);
-                            }
-                            else gameSave.LabelVisibility.Add(true);
-                        }
 
                         using (FileStream fs = new FileStream(saveFileDialog.FileName, FileMode.Create))
                         {
@@ -580,13 +597,90 @@ namespace MainMenu
                             formatter.Serialize(fs, gameSave);
                         }
 
-                        MessageBox.Show("Hra byla uložena");
+                        MessageBox.Show("Hra byla úspěšně uložena.");
                     }
-                    catch (Exception ex) { MessageBox.Show("Špatně uložené detaily hry!!!"); }
-                    
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Došlo k chybě při ukládání hry: " + ex.Message);
+                    }
                 }
             }
         }
-    }
 
+
+
+
+        private void loadButton_Click(object sender, EventArgs e)
+        {
+            LoadGame();
+        }
+
+        private void LoadGame()
+        {
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.Filter = "Pexeso Saved Game Files|*.save";
+                openFileDialog.Title = "Načíst hru";
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        using (FileStream fs = new FileStream(openFileDialog.FileName, FileMode.Open))
+                        {
+                            BinaryFormatter formatter = new BinaryFormatter();
+                            GameSave loadedGame = (GameSave)formatter.Deserialize(fs);
+
+                            // Načteme hodnoty z uložené hry
+                            this.playerNumber = loadedGame.PlayerNumber;
+                            this.cardNumber = loadedGame.CardNumber;
+                            this.difficulty = loadedGame.Difficulty;
+                            this.isSound = loadedGame.IsSound;
+                            this.score = loadedGame.Score;
+                            this.cardImagesIds = loadedGame.CardImagesIds;
+                            this.rightFlipped = loadedGame.RightFlipped;
+
+                            // Nastavení velikosti tabulky a rozmístění ikon
+                            SizeOfTable();
+                            IconsToPlace();
+                            List<int> cardPositions = loadedGame.CardPositions;
+                            // Obnovíme karty podle uložených indexů a obrázků
+                            for (int i = 0; i < cardPositions.Count; i++)
+                            {
+                                Label label = tableLayoutPanel1.Controls[i] as Label;
+                                if (label != null)
+                                {
+                                    label.Tag = cardPositions[i]; // Nastavíme správné ID pro každou kartu
+                                    label.Image = backImage; // Ujistíme se, že karty začínají se zadní stranou
+                                    label.Enabled = true; // Umožníme karty kliknout (pokud nejsou otočené nebo skryté)
+                                }
+                            }
+
+                            // Obnovíme stav otočených karet
+                            foreach (int flippedIndex in rightFlipped)
+                            {
+                                Label label = tableLayoutPanel1.Controls[flippedIndex] as Label;
+                                if (label != null)
+                                {
+                                    int imageId = (int)label.Tag;  // Získáme ID obrázku karty
+                                    label.Image = cardImages[imageId];  // Otočíme kartu na správnou stranu
+                                }
+                            }
+
+                            UpdateScoreLabel();
+                            MessageBox.Show("Hra byla úspěšně načtena.");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Došlo k chybě při načítání hry: " + ex.Message);
+                    }
+                }
+            }
+        }
+
+
+    }
 }
+
+
