@@ -21,22 +21,22 @@
                 InitializeComponent();
             }
             private int difficulty = 2;
-            private int playerNumber = 2;
-            private int cardNumber = 4;
+            private int playerCount = 2;
+            private int cardCount = 4;
             private bool pcPlayer = false;
             private bool isSound = true;
             private void QuitApp(object sender, EventArgs e)
             {
                 Application.Exit();
             }
-            public StartingMenu(int playerNumber,int cardNumber,bool pcPlayer,int difficulty,bool isSound)
+            public StartingMenu(int playerCount,int cardCount,bool pcPlayer,int difficulty,bool isSound)
             {
                 InitializeComponent();
             
                 {
-                    this.playerNumber = playerNumber;
+                    this.playerCount = playerCount;
                     this.difficulty = difficulty;
-                    this.cardNumber = cardNumber;
+                    this.cardCount = cardCount;
                     this.pcPlayer = pcPlayer;
                     this.isSound = isSound;
                 
@@ -47,7 +47,7 @@
             }
             private void LoadGame(object sender, EventArgs e)
             {
-                NewGame gameWindow = new NewGame(playerNumber,cardNumber,pcPlayer,difficulty,isSound,false);
+                NewGame gameWindow = new NewGame(playerCount,cardCount,pcPlayer,difficulty,isSound,false);
                 gameWindow.Show();
                 this.Visible = false;
             }
@@ -55,7 +55,7 @@
         
             private void LoadSettings(object sender, EventArgs e)
             {
-                GameSettings gameSettings = new GameSettings(playerNumber, cardNumber, pcPlayer, difficulty, isSound);
+                GameSettings gameSettings = new GameSettings(playerCount, cardCount, pcPlayer, difficulty, isSound);
                 gameSettings.Show();
                 this.Visible = false;
             }
@@ -68,34 +68,34 @@
                 this.Visible = false;
             }
 
-            private void LoadGame()
-            {
-                
-                
-            }
-            private void button4_Click(object sender, EventArgs e)
-            {
-            LoadGameDetails();
-            }
-        private void LoadGameDetails()
+            
+            
+        
+
+        private void StartGameFromSavedState(GameSave gameSave)
+        {
+            
+        }
+
+        private void LoadGameDetails(object sender, EventArgs e)
         {
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
                 openFileDialog.Filter = "Pexeso Saved Game Files|*.save";
                 openFileDialog.Title = "Načíst hru";
 
-                // Pokud uživatel vybere soubor
+                
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     try
                     {
-                        // Načteme a deserializujeme uložený soubor
+                        
                         using (FileStream fs = new FileStream(openFileDialog.FileName, FileMode.Open))
                         {
                             BinaryFormatter formatter = new BinaryFormatter();
                             GameSave gameSave = (GameSave)formatter.Deserialize(fs);
 
-                            // Předáme uložený stav do formuláře pro novou hru
+                            
                             StartGameFromSavedState(gameSave);
                         }
                     }
@@ -105,11 +105,6 @@
                     }
                 }
             }
-        }
-
-        private void StartGameFromSavedState(GameSave gameSave)
-        {
-            
         }
     }
     }

@@ -93,7 +93,9 @@
             this.Controls.Add(this.button1);
             this.Controls.Add(this.dataGridView1);
             this.Name = "Score";
-            this.Text = "Score";
+            this.ShowIcon = false;
+            this.Text = "Tabulka skore";
+            this.Load += new System.EventHandler(this.Score_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

@@ -28,43 +28,43 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.isPcPlayer = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.radioButton1 = new System.Windows.Forms.RadioButton();
-            this.radioButton2 = new System.Windows.Forms.RadioButton();
-            this.radioButton3 = new System.Windows.Forms.RadioButton();
-            this.radioButton4 = new System.Windows.Forms.RadioButton();
-            this.radioButton5 = new System.Windows.Forms.RadioButton();
-            this.radioButton6 = new System.Windows.Forms.RadioButton();
-            this.label5 = new System.Windows.Forms.Label();
+            this.menuButton = new System.Windows.Forms.Button();
+            this.playerCountTextBox = new System.Windows.Forms.TextBox();
+            this.cardCountOne = new System.Windows.Forms.RadioButton();
+            this.cardCountTwo = new System.Windows.Forms.RadioButton();
+            this.cardCountThree = new System.Windows.Forms.RadioButton();
+            this.difficultyOne = new System.Windows.Forms.RadioButton();
+            this.difficultyTwo = new System.Windows.Forms.RadioButton();
+            this.difficultyThree = new System.Windows.Forms.RadioButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.volumeBool = new System.Windows.Forms.CheckBox();
+            this.label5 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
-            // checkBox1
+            // isPcPlayer
             // 
-            this.checkBox1.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.checkBox1.Location = new System.Drawing.Point(407, 301);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(24, 22);
-            this.checkBox1.TabIndex = 0;
-            this.checkBox1.UseVisualStyleBackColor = true;
-            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            this.isPcPlayer.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.isPcPlayer.Location = new System.Drawing.Point(397, 208);
+            this.isPcPlayer.Name = "isPcPlayer";
+            this.isPcPlayer.Size = new System.Drawing.Size(24, 22);
+            this.isPcPlayer.TabIndex = 0;
+            this.isPcPlayer.UseVisualStyleBackColor = true;
+            this.isPcPlayer.CheckedChanged += new System.EventHandler(this.isPcPlayerChecked);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.BackColor = System.Drawing.Color.Transparent;
             this.label1.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.label1.Location = new System.Drawing.Point(234, 144);
+            this.label1.Location = new System.Drawing.Point(49, 44);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(229, 31);
             this.label1.TabIndex = 2;
@@ -75,7 +75,7 @@
             this.label2.AutoSize = true;
             this.label2.BackColor = System.Drawing.Color.Transparent;
             this.label2.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.label2.Location = new System.Drawing.Point(266, 198);
+            this.label2.Location = new System.Drawing.Point(49, 97);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(158, 31);
             this.label2.TabIndex = 4;
@@ -86,7 +86,7 @@
             this.label3.AutoSize = true;
             this.label3.BackColor = System.Drawing.Color.Transparent;
             this.label3.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.label3.Location = new System.Drawing.Point(266, 296);
+            this.label3.Location = new System.Drawing.Point(49, 199);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(108, 31);
             this.label3.TabIndex = 6;
@@ -97,171 +97,170 @@
             this.label4.AutoSize = true;
             this.label4.BackColor = System.Drawing.Color.Transparent;
             this.label4.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.label4.Location = new System.Drawing.Point(266, 248);
+            this.label4.Location = new System.Drawing.Point(49, 147);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(81, 31);
             this.label4.TabIndex = 8;
             this.label4.Text = "Zvuk:";
             // 
-            // button1
+            // menuButton
             // 
-            this.button1.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.button1.Location = new System.Drawing.Point(708, 26);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(215, 128);
-            this.button1.TabIndex = 9;
-            this.button1.Text = "Hlavní nabídka";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.LoadMenu);
+            this.menuButton.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.menuButton.Location = new System.Drawing.Point(708, 26);
+            this.menuButton.Name = "menuButton";
+            this.menuButton.Size = new System.Drawing.Size(215, 128);
+            this.menuButton.TabIndex = 9;
+            this.menuButton.Text = "Hlavní nabídka";
+            this.menuButton.UseVisualStyleBackColor = true;
+            this.menuButton.Click += new System.EventHandler(this.LoadMenu);
             // 
-            // textBox1
+            // playerCountTextBox
             // 
-            this.textBox1.Font = new System.Drawing.Font("Franklin Gothic Medium", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.textBox1.Location = new System.Drawing.Point(469, 144);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 35);
-            this.textBox1.TabIndex = 11;
-            this.textBox1.Text = "2";
-            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
-            this.textBox1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox1_KeyPress);
+            this.playerCountTextBox.Font = new System.Drawing.Font("Franklin Gothic Medium", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.playerCountTextBox.Location = new System.Drawing.Point(358, 44);
+            this.playerCountTextBox.Name = "playerCountTextBox";
+            this.playerCountTextBox.Size = new System.Drawing.Size(100, 35);
+            this.playerCountTextBox.TabIndex = 11;
+            this.playerCountTextBox.Text = "2";
+            this.playerCountTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.playerCountTextBox.TextChanged += new System.EventHandler(this.PlayerCountChanged);
             // 
-            // radioButton1
+            // cardCountOne
             // 
-            this.radioButton1.AutoSize = true;
-            this.radioButton1.Location = new System.Drawing.Point(18, 20);
-            this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(59, 24);
-            this.radioButton1.TabIndex = 12;
-            this.radioButton1.TabStop = true;
-            this.radioButton1.Text = "2x2";
-            this.radioButton1.UseVisualStyleBackColor = true;
-            this.radioButton1.CheckedChanged += new System.EventHandler(this.radioButtonChanged);
+            this.cardCountOne.AutoSize = true;
+            this.cardCountOne.Location = new System.Drawing.Point(6, 11);
+            this.cardCountOne.Name = "cardCountOne";
+            this.cardCountOne.Size = new System.Drawing.Size(59, 24);
+            this.cardCountOne.TabIndex = 12;
+            this.cardCountOne.TabStop = true;
+            this.cardCountOne.Text = "2x2";
+            this.cardCountOne.UseVisualStyleBackColor = true;
+            this.cardCountOne.CheckedChanged += new System.EventHandler(this.CardCountChanged);
             // 
-            // radioButton2
+            // cardCountTwo
             // 
-            this.radioButton2.AutoSize = true;
-            this.radioButton2.Location = new System.Drawing.Point(91, 20);
-            this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(59, 24);
-            this.radioButton2.TabIndex = 13;
-            this.radioButton2.TabStop = true;
-            this.radioButton2.Text = "4x4";
-            this.radioButton2.UseVisualStyleBackColor = true;
-            this.radioButton2.CheckedChanged += new System.EventHandler(this.radioButtonChanged);
+            this.cardCountTwo.AutoSize = true;
+            this.cardCountTwo.Location = new System.Drawing.Point(92, 11);
+            this.cardCountTwo.Name = "cardCountTwo";
+            this.cardCountTwo.Size = new System.Drawing.Size(59, 24);
+            this.cardCountTwo.TabIndex = 13;
+            this.cardCountTwo.TabStop = true;
+            this.cardCountTwo.Text = "4x4";
+            this.cardCountTwo.UseVisualStyleBackColor = true;
+            this.cardCountTwo.CheckedChanged += new System.EventHandler(this.CardCountChanged);
             // 
-            // radioButton3
+            // cardCountThree
             // 
-            this.radioButton3.AutoSize = true;
-            this.radioButton3.Location = new System.Drawing.Point(173, 20);
-            this.radioButton3.Name = "radioButton3";
-            this.radioButton3.Size = new System.Drawing.Size(59, 24);
-            this.radioButton3.TabIndex = 14;
-            this.radioButton3.TabStop = true;
-            this.radioButton3.Text = "6x6";
-            this.radioButton3.UseVisualStyleBackColor = true;
-            this.radioButton3.CheckedChanged += new System.EventHandler(this.radioButtonChanged);
+            this.cardCountThree.AutoSize = true;
+            this.cardCountThree.Location = new System.Drawing.Point(177, 11);
+            this.cardCountThree.Name = "cardCountThree";
+            this.cardCountThree.Size = new System.Drawing.Size(59, 24);
+            this.cardCountThree.TabIndex = 14;
+            this.cardCountThree.TabStop = true;
+            this.cardCountThree.Text = "6x6";
+            this.cardCountThree.UseVisualStyleBackColor = true;
+            this.cardCountThree.CheckedChanged += new System.EventHandler(this.CardCountChanged);
             // 
-            // radioButton4
+            // difficultyOne
             // 
-            this.radioButton4.AutoSize = true;
-            this.radioButton4.Location = new System.Drawing.Point(6, 25);
-            this.radioButton4.Name = "radioButton4";
-            this.radioButton4.Size = new System.Drawing.Size(76, 24);
-            this.radioButton4.TabIndex = 15;
-            this.radioButton4.TabStop = true;
-            this.radioButton4.Text = "Lehký";
-            this.radioButton4.UseVisualStyleBackColor = true;
-            this.radioButton4.CheckedChanged += new System.EventHandler(this.radioChanged2);
+            this.difficultyOne.AutoSize = true;
+            this.difficultyOne.Location = new System.Drawing.Point(0, 6);
+            this.difficultyOne.Name = "difficultyOne";
+            this.difficultyOne.Size = new System.Drawing.Size(76, 24);
+            this.difficultyOne.TabIndex = 15;
+            this.difficultyOne.TabStop = true;
+            this.difficultyOne.Text = "Lehký";
+            this.difficultyOne.UseVisualStyleBackColor = true;
+            this.difficultyOne.CheckedChanged += new System.EventHandler(this.difficultyChanged);
             // 
-            // radioButton5
+            // difficultyTwo
             // 
-            this.radioButton5.AutoSize = true;
-            this.radioButton5.Location = new System.Drawing.Point(88, 25);
-            this.radioButton5.Name = "radioButton5";
-            this.radioButton5.Size = new System.Drawing.Size(85, 24);
-            this.radioButton5.TabIndex = 16;
-            this.radioButton5.TabStop = true;
-            this.radioButton5.Text = "Střední";
-            this.radioButton5.UseVisualStyleBackColor = true;
-            this.radioButton5.CheckedChanged += new System.EventHandler(this.radioChanged2);
+            this.difficultyTwo.AutoSize = true;
+            this.difficultyTwo.Location = new System.Drawing.Point(86, 6);
+            this.difficultyTwo.Name = "difficultyTwo";
+            this.difficultyTwo.Size = new System.Drawing.Size(85, 24);
+            this.difficultyTwo.TabIndex = 16;
+            this.difficultyTwo.TabStop = true;
+            this.difficultyTwo.Text = "Střední";
+            this.difficultyTwo.UseVisualStyleBackColor = true;
+            this.difficultyTwo.CheckedChanged += new System.EventHandler(this.difficultyChanged);
             // 
-            // radioButton6
+            // difficultyThree
             // 
-            this.radioButton6.AutoSize = true;
-            this.radioButton6.Location = new System.Drawing.Point(188, 26);
-            this.radioButton6.Name = "radioButton6";
-            this.radioButton6.Size = new System.Drawing.Size(88, 24);
-            this.radioButton6.TabIndex = 17;
-            this.radioButton6.TabStop = true;
-            this.radioButton6.Text = "Brutální";
-            this.radioButton6.UseVisualStyleBackColor = true;
-            this.radioButton6.CheckedChanged += new System.EventHandler(this.radioChanged2);
+            this.difficultyThree.AutoSize = true;
+            this.difficultyThree.Location = new System.Drawing.Point(192, 6);
+            this.difficultyThree.Name = "difficultyThree";
+            this.difficultyThree.Size = new System.Drawing.Size(88, 24);
+            this.difficultyThree.TabIndex = 17;
+            this.difficultyThree.TabStop = true;
+            this.difficultyThree.Text = "Brutální";
+            this.difficultyThree.UseVisualStyleBackColor = true;
+            this.difficultyThree.CheckedChanged += new System.EventHandler(this.difficultyChanged);
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.cardCountOne);
+            this.groupBox1.Controls.Add(this.cardCountTwo);
+            this.groupBox1.Controls.Add(this.cardCountThree);
+            this.groupBox1.Location = new System.Drawing.Point(307, 97);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(242, 35);
+            this.groupBox1.TabIndex = 19;
+            this.groupBox1.TabStop = false;
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.difficultyOne);
+            this.groupBox2.Controls.Add(this.difficultyTwo);
+            this.groupBox2.Controls.Add(this.difficultyThree);
+            this.groupBox2.Location = new System.Drawing.Point(307, 257);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(284, 30);
+            this.groupBox2.TabIndex = 20;
+            this.groupBox2.TabStop = false;
+            // 
+            // volumeBool
+            // 
+            this.volumeBool.AutoSize = true;
+            this.volumeBool.Checked = true;
+            this.volumeBool.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.volumeBool.Location = new System.Drawing.Point(397, 157);
+            this.volumeBool.Name = "volumeBool";
+            this.volumeBool.Size = new System.Drawing.Size(22, 21);
+            this.volumeBool.TabIndex = 21;
+            this.volumeBool.UseVisualStyleBackColor = true;
+            this.volumeBool.CheckedChanged += new System.EventHandler(this.VolumeChecked);
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(465, 299);
+            this.label5.BackColor = System.Drawing.Color.Transparent;
+            this.label5.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.label5.Location = new System.Drawing.Point(49, 256);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(77, 20);
-            this.label5.TabIndex = 18;
-            this.label5.Text = "Obtížnost";
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.radioButton1);
-            this.groupBox1.Controls.Add(this.radioButton2);
-            this.groupBox1.Controls.Add(this.radioButton3);
-            this.groupBox1.Location = new System.Drawing.Point(473, 185);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(242, 57);
-            this.groupBox1.TabIndex = 19;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "groupBox1";
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.radioButton4);
-            this.groupBox2.Controls.Add(this.radioButton5);
-            this.groupBox2.Controls.Add(this.radioButton6);
-            this.groupBox2.Location = new System.Drawing.Point(564, 277);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(298, 72);
-            this.groupBox2.TabIndex = 20;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "groupBox2";
-            // 
-            // checkBox2
-            // 
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.Checked = true;
-            this.checkBox2.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox2.Location = new System.Drawing.Point(407, 248);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(113, 24);
-            this.checkBox2.TabIndex = 21;
-            this.checkBox2.Text = "checkBox2";
-            this.checkBox2.UseVisualStyleBackColor = true;
-            this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
+            this.label5.Size = new System.Drawing.Size(140, 31);
+            this.label5.TabIndex = 22;
+            this.label5.Text = "Obtížnost:";
             // 
             // GameSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(944, 487);
-            this.Controls.Add(this.checkBox2);
             this.Controls.Add(this.label5);
+            this.Controls.Add(this.volumeBool);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.playerCountTextBox);
+            this.Controls.Add(this.menuButton);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.checkBox1);
+            this.Controls.Add(this.isPcPlayer);
             this.Name = "GameSettings";
             this.ShowIcon = false;
-            this.Text = "GameSettings";
+            this.Text = "Nastavení";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
@@ -273,23 +272,23 @@
 
         #endregion
 
-        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox isPcPlayer;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Button menuButton;
+        private System.Windows.Forms.TextBox playerCountTextBox;
         private System.Windows.Forms.ComboBox comboKarty;
-        private System.Windows.Forms.RadioButton radioButton1;
-        private System.Windows.Forms.RadioButton radioButton2;
-        private System.Windows.Forms.RadioButton radioButton3;
-        private System.Windows.Forms.RadioButton radioButton4;
-        private System.Windows.Forms.RadioButton radioButton5;
-        private System.Windows.Forms.RadioButton radioButton6;
-        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.RadioButton cardCountOne;
+        private System.Windows.Forms.RadioButton cardCountTwo;
+        private System.Windows.Forms.RadioButton cardCountThree;
+        private System.Windows.Forms.RadioButton difficultyOne;
+        private System.Windows.Forms.RadioButton difficultyTwo;
+        private System.Windows.Forms.RadioButton difficultyThree;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.CheckBox checkBox2;
+        private System.Windows.Forms.CheckBox volumeBool;
+        private System.Windows.Forms.Label label5;
     }
 }

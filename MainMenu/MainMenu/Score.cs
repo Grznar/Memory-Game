@@ -160,6 +160,11 @@ namespace MainMenu
             DisplayData(filteredResults);
         
     }
+
+        private void Score_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }
 

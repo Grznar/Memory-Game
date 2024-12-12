@@ -33,7 +33,7 @@
             this.settings = new System.Windows.Forms.Button();
             this.quitGame = new System.Windows.Forms.Button();
             this.loadSave = new System.Windows.Forms.Button();
-            this.button5 = new System.Windows.Forms.Button();
+            this.scorebtn = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // newGame
@@ -93,26 +93,26 @@
             this.loadSave.TabIndex = 6;
             this.loadSave.Text = "Otevření hry";
             this.loadSave.UseVisualStyleBackColor = false;
-            this.loadSave.Click += new System.EventHandler(this.button4_Click);
+            this.loadSave.Click += new System.EventHandler(this.LoadGameDetails);
             // 
-            // button5
+            // scorebtn
             // 
-            this.button5.BackColor = System.Drawing.Color.PowderBlue;
-            this.button5.Font = new System.Drawing.Font("Microsoft YaHei UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.button5.Location = new System.Drawing.Point(895, 417);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(174, 80);
-            this.button5.TabIndex = 7;
-            this.button5.Text = "Tabulka";
-            this.button5.UseVisualStyleBackColor = false;
-            this.button5.Click += new System.EventHandler(this.LoadScore);
+            this.scorebtn.BackColor = System.Drawing.Color.PowderBlue;
+            this.scorebtn.Font = new System.Drawing.Font("Microsoft YaHei UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.scorebtn.Location = new System.Drawing.Point(895, 417);
+            this.scorebtn.Name = "scorebtn";
+            this.scorebtn.Size = new System.Drawing.Size(174, 80);
+            this.scorebtn.TabIndex = 7;
+            this.scorebtn.Text = "Tabulka";
+            this.scorebtn.UseVisualStyleBackColor = false;
+            this.scorebtn.Click += new System.EventHandler(this.LoadScore);
             // 
             // StartingMenu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1081, 519);
-            this.Controls.Add(this.button5);
+            this.Controls.Add(this.scorebtn);
             this.Controls.Add(this.loadSave);
             this.Controls.Add(this.quitGame);
             this.Controls.Add(this.settings);
@@ -120,7 +120,7 @@
             this.Controls.Add(this.newGame);
             this.Name = "StartingMenu";
             this.ShowIcon = false;
-            this.Text = "Form1";
+            this.Text = "Menu";
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -133,7 +133,7 @@
         private System.Windows.Forms.Button settings;
         private System.Windows.Forms.Button quitGame;
         private System.Windows.Forms.Button loadSave;
-        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Button scorebtn;
     }
 }
 
