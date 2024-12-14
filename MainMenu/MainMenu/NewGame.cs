@@ -26,11 +26,13 @@ namespace MainMenu
         private bool isSound;
         private bool isLoading = false;
         private List<int> flippedLabels = new List<int>();
+
         private List<Image> cardImages = new List<Image>();
         private Image backImage;
         public List<int> cardImagesIds = new List<int>();
         public List<int> FlippedLabelsIndex { get; set; }
         private List<int> hiddenLabels = new List<int>();
+        private Dictionary<int, bool> alreadyFlipped;
         private int backImageId = -1;
         List<int> rightFlipped = new List<int>();
         
@@ -50,7 +52,7 @@ namespace MainMenu
             LoadImages();
             SizeOfTable();
             IconsToPlace();
-
+            AlreadyFlipped();
             tableLayoutPanel1.Padding = new Padding(0, 0, 0, statusStrip1.Height);
             tableLayoutPanel1.Padding = new Padding(0, toolStrip1.Height, 0, 0);
 
@@ -70,7 +72,14 @@ namespace MainMenu
 
 
         Random rnd = new Random();
-
+        private void AlreadyFlipped()
+        {
+            alreadyFlipped = new Dictionary<int, bool>();
+            for(int i=0;i<tableLayoutPanel1.Controls.Count;i++)
+            {
+                alreadyFlipped.Add(i, false);
+            }
+        }
         private void LoadImages()
         {
 
@@ -222,14 +231,33 @@ namespace MainMenu
                 first = clickedLabel;
                 first.Image = cardImages[(int)first.Tag];
                 rightFlipped.Add(tableLayoutPanel1.Controls.IndexOf(first));
-                flippedLabels.Add((int)first.Tag);
+                if(alreadyFlipped.TryGetValue(tableLayoutPanel1.Controls.IndexOf(first),out bool hodnotaF))
+                {
+                    if (hodnotaF == false)
+                    {
+                        alreadyFlipped[tableLayoutPanel1.Controls.IndexOf(first)] = true;
+                        flippedLabels.Add((int)first.Tag);
+                        Console.WriteLine("Pridana hodnota do flipped " + (int)first.Tag);
+                    }
+                
+                }
+                
                 hiddenLabels.Remove((int)first.Tag);
                 return;
             }
 
             second = clickedLabel;
             second.Image = cardImages[(int)second.Tag];
-            flippedLabels.Add((int)second.Tag);
+            if (alreadyFlipped.TryGetValue(tableLayoutPanel1.Controls.IndexOf(second), out bool hodnotaS))
+            {
+                if (hodnotaS == false)
+                {
+                    alreadyFlipped[tableLayoutPanel1.Controls.IndexOf(second)] = true;
+                    flippedLabels.Add((int)second.Tag);
+                    
+                    Console.WriteLine("Pridana hodnota do flipped " + (int)second.Tag);
+                }
+                }
             hiddenLabels.Remove((int)second.Tag);
             
 
@@ -317,6 +345,7 @@ namespace MainMenu
                 {
                     label = new Label
                     {
+                        
                         Image = backImage, 
                         Tag = randIcons[i], 
                         ImageAlign = ContentAlignment.MiddleCenter,
@@ -443,15 +472,18 @@ namespace MainMenu
             {
                 bool nasel = false;
                 Console.WriteLine("Šance: " + chance);
-                for(int i=0;i<flippedLabels.Count && !nasel;i++)
+                for (int i = 0; i < flippedLabels.Count && !nasel; i++)
                 {
-                    for (int j = i+1; j < flippedLabels.Count; j++)
+                    for (int j = i + 1; j < flippedLabels.Count; j++)
                     {
                         if (flippedLabels[i] == flippedLabels[j])
                         {
-                            indexFirstLabel= flippedLabels[i]; indexSecondLabel= flippedLabels[j];
+                            indexFirstLabel = flippedLabels[i]; indexSecondLabel = flippedLabels[j];
                             nasel = true;
                             Console.WriteLine("Našel stejný par ve flipped");
+
+
+
                             break;
                         }
                     }
@@ -486,31 +518,31 @@ namespace MainMenu
                 int indexFirstRandom = rnd.Next(hiddenLabels.Count);
                 indexFirstLabel = hiddenLabels[indexFirstRandom];
                 hiddenLabels.Remove(indexFirstLabel);
-                
+
                 bool foundSecond = false;
                 if (chance)
                 {
-                    
-                    for(int index =0;index<flippedLabels.Count-1&& !foundSecond;index++)
+
+                    for (int index = 0; index < flippedLabels.Count - 1 && !foundSecond; index++)
                     {
-                        if (flippedLabels[index]==indexFirstLabel)
+                        if (flippedLabels[index] == indexFirstLabel)
                         {
                             Console.WriteLine("Nasel second in flipped po prvnim random");
                             indexSecondLabel = flippedLabels[index];
                             foundSecond = true;
-                            
+
                         }
                     }
                 }
-                
+
 
 
                 if (indexSecondLabel == -1)
                 {
                     int indexS = rnd.Next(hiddenLabels.Count);
                     indexSecondLabel = hiddenLabels[indexS];
-                    hiddenLabels.Remove(indexSecondLabel);
-                    
+                    hiddenLabels.RemoveAt(indexS);
+
                     Console.WriteLine("Druhy je random");
                 }
 
@@ -521,31 +553,51 @@ namespace MainMenu
             flippedLabels.Add(indexSecondLabel);
 
 
-            await Task.Delay(1000);
+            await Task.Delay(1500);
 
             Label firstLabel = null;
-           
+
             Label secondLabel = null;
-            bool foundOne = false;
+            
+
             foreach (Label label in tableLayoutPanel1.Controls)
             {
-                if ((int)label.Tag == indexFirstLabel)
+                if (firstLabel != null && (int)label.Tag == indexSecondLabel)
+                {
+                    secondLabel = label;
+                    Console.WriteLine("Index druheho je " + tableLayoutPanel1.Controls.IndexOf(label));
+
+
+                }
+                if (firstLabel == null && (int)label.Tag == indexFirstLabel)
                 {
                     firstLabel = label;
-                    foundOne = true;
+                    Console.WriteLine("Index prvniho je " + tableLayoutPanel1.Controls.IndexOf(label));
+                   
+                }
+                
+                if (firstLabel != null && secondLabel != null)
+                {
+                    break;
                 }
 
-                if ((int)label.Tag == indexSecondLabel&& foundOne) secondLabel = label;
+
             }
-            firstLabel.Image = cardImages[indexFirstLabel];
+
+            if (firstLabel == null || secondLabel == null)
+            {
+                Console.WriteLine("Error: Could not find one or both labels");
+                return;
+            }
+            firstLabel.Image = cardImages[(int)firstLabel.Tag];
             await Task.Delay(1000);
-            secondLabel.Image = cardImages[indexSecondLabel];
+            secondLabel.Image = cardImages[(int)secondLabel.Tag];
             await Task.Delay(1000);
 
             if (indexFirstLabel == indexSecondLabel)
             {
-                flippedLabels.Remove(indexFirstLabel);
-                flippedLabels.Remove(indexSecondLabel);
+                flippedLabels.RemoveAll(l => l == indexFirstLabel);
+                flippedLabels.RemoveAll(l => l == indexFirstLabel);
                 score[currentPlayer - 1]++;
                 ShowScore();
                 WinnerCheck();
