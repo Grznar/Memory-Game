@@ -53,45 +53,9 @@ namespace MainMenu
         }
         public void LoadScoreData()
         {
-            string file = "gameResult.dat"; 
-
-            if (File.Exists(file))
-            {
-                using (FileStream fs = new FileStream(file, FileMode.Open, FileAccess.Read))
-                {
-                    BinaryFormatter formatter = new BinaryFormatter();
-                    gameResults = (List<GameData>)formatter.Deserialize(fs);
-
-
-                    var aggregatedResults = new Dictionary<string, GameData>();
-
-                    foreach (var result in gameResults)
-                    {
-                        if (!aggregatedResults.ContainsKey(result.PlayerName))
-                        {
-                            aggregatedResults[result.PlayerName] = new GameData(result.PlayerName, 0, 0);
-                        }
-
-                        aggregatedResults[result.PlayerName].Wins += result.Wins;
-                        aggregatedResults[result.PlayerName].Loses += result.Loses;
-                        aggregatedResults[result.PlayerName].PairsFound += result.PairsFound;
-                        aggregatedResults[result.PlayerName].TotalCards += result.TotalCards;
-                    }
-
-                    
-                    dataGridView1.Rows.Clear();
-                    foreach (var playerData in aggregatedResults.Values)
-                    {
-                        dataGridView1.Rows.Add(playerData.PlayerName, playerData.Wins, playerData.Loses, playerData.PairsFound, playerData.TotalCards);
-                    }
-                }
-            }
-            else
-            {
-                
-                MessageBox.Show("Game result file not found.");
-            }
+            
         }
+
         [Serializable]
         public class GameData
         {
