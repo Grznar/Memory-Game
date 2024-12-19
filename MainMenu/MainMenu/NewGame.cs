@@ -306,12 +306,13 @@ namespace MainMenu
 
         private void WinnerCheck()
         {
-
-
+            Console.WriteLine("Pocet hidden a flipped :");
+            Console.WriteLine(hiddenLabels.Count());
+            Console.WriteLine(flippedLabels.Count());
 
             if (hiddenLabels.Count+flippedLabels.Count==0)
             {
-
+                
                 EndScore();
             }
 
@@ -576,31 +577,34 @@ namespace MainMenu
             Label secondLabel = null;
 
 
-            foreach (Label label in tableLayoutPanel1.Controls)
-            {
-                if (secondLabel == null && (int)label.Tag == indexSecondLabel)
-                {
-                    secondLabel = label;
-                    Console.WriteLine("Index druheho je " + tableLayoutPanel1.Controls.IndexOf(label));
-                    Console.WriteLine("Tag druheho je " + secondLabel.Tag);
+            //foreach (Label label in tableLayoutPanel1.Controls.OfType<Label>())
+            //{
+            //    if (secondLabel == null && (int)label.Tag == indexSecondLabel)
+            //    {
+            //        secondLabel = label;
+            //        Console.WriteLine("Index druheho je " + tableLayoutPanel1.Controls.IndexOf(label));
+            //        Console.WriteLine("Tag druheho je " + secondLabel.Tag);
 
 
-                }
-                else if (firstLabel == null && (int)label.Tag == indexFirstLabel)
-                {
-                    firstLabel = label;
-                     Console.WriteLine("Index prvniho je " + tableLayoutPanel1.Controls.IndexOf(label));
-                    Console.WriteLine("Tag prvniho je " + firstLabel.Tag);
-                }
+            //    }
+            //    else if (firstLabel == null && (int)label.Tag == indexFirstLabel)
+            //    {
+            //        firstLabel = label;
+            //         Console.WriteLine("Index prvniho je " + tableLayoutPanel1.Controls.IndexOf(label));
+            //        Console.WriteLine("Tag prvniho je " + firstLabel.Tag);
+            //    }
 
-                if (firstLabel != null && secondLabel != null)
-                {
-                    break;
-                }
-                
+            //if (firstLabel != null && secondLabel != null)
+            //{
+            //    break;
+            //}
 
-            }
-            
+
+            List<Label> labels = tableLayoutPanel1.Controls.OfType<Label>().ToList();
+
+            firstLabel = labels.FirstOrDefault(label => label.Tag is int tag && tag == indexFirstLabel);
+            secondLabel = labels.Last(label => label.Tag is int tag && tag == indexSecondLabel);
+
             if (firstLabel == null || secondLabel == null)
             {
                 Console.WriteLine("Error: Could not find one or both labels");
@@ -615,7 +619,7 @@ namespace MainMenu
             if (indexFirstLabel == indexSecondLabel)
             {
                 flippedLabels.RemoveAll(l => l == indexFirstLabel);
-                flippedLabels.RemoveAll(l => l == indexFirstLabel);
+                flippedLabels.RemoveAll(l => l == indexSecondLabel);
                 score[currentPlayer - 1]++;
                 rightFlipped.Add(tableLayoutPanel1.Controls.IndexOf(firstLabel));
                 rightFlipped.Add(tableLayoutPanel1.Controls.IndexOf(secondLabel));
