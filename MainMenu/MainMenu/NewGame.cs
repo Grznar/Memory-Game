@@ -3,11 +3,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Runtime.InteropServices;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
-using System.Web;
 using System.Windows.Forms;
 using static MainMenu.NewGame;
 namespace MainMenu
@@ -27,20 +24,23 @@ namespace MainMenu
         private bool isSound;
         private bool isLoading = false;
         private bool locked = false;
+        private int backImageId = -1;
+        private Image backImage;
+
         private List<int> flippedLabels = new List<int>();
         Dictionary<int, Label> labelsForComputer = new Dictionary<int, Label>();
         private List<Image> cardImages = new List<Image>();
-        private Image backImage;
         public List<int> cardImagesIds = new List<int>();
         public List<int> FlippedLabelsIndex { get; set; }
         private List<int> hiddenLabels = new List<int>();
         private Dictionary<int, bool> alreadyFlipped;
-        private int backImageId = -1;
         List<int> rightFlipped = new List<int>();
-        
+        Random rnd = new Random();
+
         public NewGame(int playerNumber, int cardNumber, bool pcPlayer, int obtiznost, bool isSound, bool isLoading = false)
         {
             InitializeComponent();
+
             this.playerCount = playerNumber;
             this.pcPlayer = pcPlayer;
             this.cardCount = cardNumber;
@@ -74,7 +74,7 @@ namespace MainMenu
         }
 
 
-        Random rnd = new Random();
+
         private void AlreadyFlipped()
         {
             alreadyFlipped = new Dictionary<int, bool>();
