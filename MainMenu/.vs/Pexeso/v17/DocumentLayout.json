@@ -68,7 +68,7 @@
               "RelativeDocumentMoniker": "MainMenu\\NewGame.cs",
               "ToolTip": "C:\\Users\\Admin\\Documents\\GitHub\\Pexeso---ROP\\MainMenu\\MainMenu\\NewGame.cs",
               "RelativeToolTip": "MainMenu\\NewGame.cs",
-              "ViewState": "AgIAAE0AAAAAAAAAAIA5wFUAAAAhAAAAAAAAAA==",
+              "ViewState": "AgIAABEDAAAAAAAAAAAIwCADAAAZAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-12-05T08:05:37.603Z",
               "EditorCaption": ""
@@ -151,6 +151,16 @@
               "RelativeToolTip": "MainMenu\\NewGame.cs [N\u00E1vrh]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-10-03T16:10:19.842Z"
+            }
+          ]
+        },
+        {
+          "DockedWidth": 1217,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
             }
           ]
         }
