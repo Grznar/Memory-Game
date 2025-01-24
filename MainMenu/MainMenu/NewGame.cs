@@ -11,8 +11,13 @@ namespace MainMenu
 {
     public partial class NewGame : Form
     {
+
+        private GameBoard gameBoard;
+
+
+
         Label first, second;
-        
+         
         private int playerCount;
         public int[] score;
         private int currentPlayer = 1;
@@ -25,11 +30,11 @@ namespace MainMenu
         private bool isLoading = false;
         private bool locked = false;
         private int backImageId = -1;
-        private Image backImage;
+
+
 
         private List<int> flippedLabels = new List<int>();
-        Dictionary<int, Label> labelsForComputer = new Dictionary<int, Label>();
-        private List<Image> cardImages = new List<Image>();
+        
         public List<int> cardImagesIds = new List<int>();
         public List<int> FlippedLabelsIndex { get; set; }
         private List<int> hiddenLabels = new List<int>();
@@ -50,10 +55,12 @@ namespace MainMenu
             score = new int[playerNumber];
             playerRound = true;
 
-
-            LoadImages();
-            SizeOfTable();
-            IconsToPlace();
+            gameBoard = new GameBoard(cardCount, tableLayoutPanel1);
+            gameBoard.CardClicked += label_Click;
+            gameBoard.InitializeBoard(isLoading);
+            
+            
+            
             AlreadyFlipped();
             
             tableLayoutPanel1.Padding = new Padding(0, 0, 0, statusStrip1.Height);
@@ -83,44 +90,7 @@ namespace MainMenu
                 alreadyFlipped.Add(i, false);
             }
         }
-        private void LoadImages()
-        {
-
-            string imagesPath = Path.Combine(Application.StartupPath, "Images");
-
-
-            if (!Directory.Exists(imagesPath))
-            {
-                MessageBox.Show("Složka images neexisituje!!");
-                return;
-            }
-
-
-            string[] imageFiles = Directory.GetFiles(imagesPath, "*.png");
-
-            for (int i = 0; i < imageFiles.Length; i++)
-            {
-
-                if (Path.GetFileName(imageFiles[i]).Equals("BackImage.png", StringComparison.OrdinalIgnoreCase))
-                {
-                    backImage = Image.FromFile(imageFiles[i]);
-                    backImageId = -1;
-
-                    continue;
-                }
-
-                {
-                    cardImages.Add(Image.FromFile(imageFiles[i]));
-                    cardImagesIds.Add(i);
-                }
-
-            }
-
-            if (cardImages.Count < 18)
-            {
-                MessageBox.Show("Není dost obrázků!");
-            }
-        }
+       
         private string[] GetNames(int playerNumber, bool pcPlayer)
         {
             if (this.names != null) return this.names;
@@ -168,31 +138,7 @@ namespace MainMenu
             this.names = names;
             return names;
         }
-        private void SizeOfTable()
-        {
-
-            int rows = cardCount;
-            int columns = cardCount;
-            tableLayoutPanel1.RowCount = rows;
-            tableLayoutPanel1.ColumnCount = columns;
-            tableLayoutPanel1.ColumnStyles.Clear();
-            tableLayoutPanel1.RowStyles.Clear();
-            tableLayoutPanel1.Dock = DockStyle.Fill;
-
-
-            for (int i = 0; i < columns; i++)
-            {
-                tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f / columns));
-            }
-
-
-            for (int i = 0; i < rows; i++)
-            {
-                tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100f / rows));
-            }
-
-            tableLayoutPanel1.Controls.Clear();
-        }
+       
         private void ShowScore()
         {
             string playerName = names[currentPlayer - 1];
@@ -226,7 +172,7 @@ namespace MainMenu
             }
             
             Label clickedLabel = sender as Label;
-            if (clickedLabel == null || (int)clickedLabel.Tag == backImageId)
+            if (clickedLabel == null)
             {
                 
                 return;
@@ -236,7 +182,7 @@ namespace MainMenu
             if (first == null)
             {
                 first = clickedLabel;
-                first.Image = cardImages[(int)first.Tag];
+                gameBoard.FlipCardFront(first);
                 
                 if(alreadyFlipped.TryGetValue(tableLayoutPanel1.Controls.IndexOf(first),out bool hodnotaF))
                 {
@@ -244,7 +190,7 @@ namespace MainMenu
                     {
                         alreadyFlipped[tableLayoutPanel1.Controls.IndexOf(first)] = true;
                         flippedLabels.Add((int)first.Tag);
-                        //Console.WriteLine("Pridana hodnota do flipped " + (int)first.Tag);
+                        
                     }
                 
                 }
@@ -257,7 +203,7 @@ namespace MainMenu
             if (second == null)
             {
                 second = clickedLabel;
-                second.Image = cardImages[(int)second.Tag];
+                gameBoard.FlipCardFront(second);
                 if (alreadyFlipped.TryGetValue(tableLayoutPanel1.Controls.IndexOf(second), out bool hodnotaS))
                 {
                     if (hodnotaS == false)
@@ -325,13 +271,13 @@ namespace MainMenu
             if (first != null && (int)first.Tag != backImageId)
             {
 
-                first.Image = backImage;
+                gameBoard.FlipCardBack(first);
 
             }
             if (second != null && (int)second.Tag != backImageId)
             {
 
-                second.Image = backImage;
+                gameBoard.FlipCardBack(second);
 
             }
 
@@ -347,85 +293,7 @@ namespace MainMenu
 
         }
 
-        private void IconsToPlace()
-        {
-            Label label;
-            List<int> icons = new List<int>();
-            Random rnd = new Random();
-
-            
-            if (isLoading)
-            {
-                List<int> randIcons = new List<int>(cardImagesIds); 
-                tableLayoutPanel1.Controls.Clear();
-
-                
-                for (int i = 0; i < cardCount * cardCount; i++)
-                {
-                    label = new Label
-                    {
-                        
-                        Image = backImage, 
-                        Tag = randIcons[i], 
-                        ImageAlign = ContentAlignment.MiddleCenter,
-                        AutoSize = false,
-                        Size = new Size(100, 100),
-                        Dock = DockStyle.Fill,
-                        BorderStyle = BorderStyle.FixedSingle,
-                        Enabled = true,
-                    };
-
-                    label.Click += label_Click;
-                    tableLayoutPanel1.Controls.Add(label);
-                    hiddenLabels.Add((int)label.Tag); 
-
-                    
-                }
-            }
-            else
-            {
-                
-                for (int i = 0; i < (cardCount * cardCount) / 2; i++)
-                {
-                    icons.Add(i);
-                    icons.Add(i); 
-                }
-
-                List<int> randIcons = new List<int>();
-
-                
-                while (icons.Count > 0)
-                {
-                    int randIndex = rnd.Next(icons.Count);
-                    randIcons.Add(icons[randIndex]);
-                    icons.RemoveAt(randIndex);
-                }
-
-                tableLayoutPanel1.Controls.Clear();
-
-                
-                for (int i = 0; i < cardCount * cardCount; i++)
-                {
-                    label = new Label
-                    {
-                        Image = backImage, 
-                        Tag = randIcons[i], 
-                        ImageAlign = ContentAlignment.MiddleCenter,
-                        AutoSize = false,
-                        Size = new Size(100, 100),
-                        Dock = DockStyle.Fill,
-                        BorderStyle = BorderStyle.FixedSingle,
-                        Enabled = true,
-                    };
-
-                    label.Click += label_Click;
-                    tableLayoutPanel1.Controls.Add(label);
-                    hiddenLabels.Add((int)label.Tag); 
-
-                }
-            }
-        }
-
+        
 
         private int GetRight()
         {
@@ -564,8 +432,7 @@ namespace MainMenu
 
                 if (pridatFirst == true) flippedLabels.Add(indexFirstLabel);
             }
-            //Console.WriteLine("First label tag: " + indexFirstLabel);
-            //Console.WriteLine("Second label tag: " + indexSecondLabel);
+            
             
 
 
@@ -575,31 +442,6 @@ namespace MainMenu
             Label firstLabel = null;
 
             Label secondLabel = null;
-
-
-            //foreach (Label label in tableLayoutPanel1.Controls.OfType<Label>())
-            //{
-            //    if (secondLabel == null && (int)label.Tag == indexSecondLabel)
-            //    {
-            //        secondLabel = label;
-            //        Console.WriteLine("Index druheho je " + tableLayoutPanel1.Controls.IndexOf(label));
-            //        Console.WriteLine("Tag druheho je " + secondLabel.Tag);
-
-
-            //    }
-            //    else if (firstLabel == null && (int)label.Tag == indexFirstLabel)
-            //    {
-            //        firstLabel = label;
-            //         Console.WriteLine("Index prvniho je " + tableLayoutPanel1.Controls.IndexOf(label));
-            //        Console.WriteLine("Tag prvniho je " + firstLabel.Tag);
-            //    }
-
-            //if (firstLabel != null && secondLabel != null)
-            //{
-            //    break;
-            //}
-
-
             List<Label> labels = tableLayoutPanel1.Controls.OfType<Label>().ToList();
 
             firstLabel = labels.FirstOrDefault(label => label.Tag is int tag && tag == indexFirstLabel);
@@ -610,10 +452,10 @@ namespace MainMenu
                 Console.WriteLine("Error: Could not find one or both labels");
                 return;
             }
-            firstLabel.Image = cardImages[(int)firstLabel.Tag];
+            gameBoard.FlipCardFront(firstLabel);
             await Task.Delay(1000);
-            
-            secondLabel.Image = cardImages[(int)secondLabel.Tag];
+
+            gameBoard.FlipCardFront(secondLabel);
             await Task.Delay(1000);
            
             if (indexFirstLabel == indexSecondLabel)
@@ -636,8 +478,8 @@ namespace MainMenu
 
 
 
-                firstLabel.Image = backImage;
-                secondLabel.Image = backImage;
+                gameBoard.FlipCardBack(firstLabel);
+                gameBoard.FlipCardBack(secondLabel);
 
                 currentPlayer = (currentPlayer % playerCount) + 1;
                 ShowScore();
@@ -764,10 +606,10 @@ namespace MainMenu
                             this.score = loadedGame.Score;
                             this.cardImagesIds = loadedGame.CardImagesIds;
                             this.rightFlipped = loadedGame.RightFlipped;
+
+
+                            gameBoard.InitializeBoard(isLoading);
                             
-                            
-                            SizeOfTable();
-                            IconsToPlace();
                             List<int> cardPositions = loadedGame.CardPositions;
                             
                             for (int i = 0; i < cardPositions.Count; i++)
@@ -776,7 +618,7 @@ namespace MainMenu
                                 if (label != null)
                                 {
                                     label.Tag = cardPositions[i]; 
-                                    label.Image = backImage; 
+                                    label.Image = gameBoard.GetBackImage(); 
                                     label.Enabled = true; 
                                 }
                             }
@@ -787,14 +629,14 @@ namespace MainMenu
                                 Label label = tableLayoutPanel1.Controls[flippedIndex] as Label;
                                 if (label != null)
                                 {
-                                    int imageId = (int)label.Tag;  
-                                    label.Image = cardImages[imageId];  
+                                    int imageId = (int)label.Tag;
+                                    gameBoard.FlipCardFront(label); 
                                 }
                             }
                             if (loadedGame.IndexFirstFlipped != null)
                             {
                                 first = (Label)tableLayoutPanel1.Controls[loadedGame.IndexFirstFlipped];
-                                first.Image= cardImages[(int)first.Tag];
+                                gameBoard.FlipCardFront(first);
                             }
                             ShowScore();
                             MessageBox.Show("Hra byla úspěšně načtena.");

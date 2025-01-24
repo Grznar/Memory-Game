@@ -49,6 +49,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GameBoard.cs" />
+    <Compile Include="GameLogic.cs" />
+    <Compile Include="Player.cs" />
+    <Compile Include="SaveAndLoadManager.cs" />
     <Compile Include="StartingMenu.cs">
       <SubType>Form</SubType>
     </Compile>
