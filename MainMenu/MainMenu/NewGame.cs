@@ -13,34 +13,24 @@ namespace MainMenu
     {
 
         private GameBoard gameBoard;
+        private GameScoreManager scoreManager;
+        private GameLogic gameLogic;
 
-
-
-        Label first, second;
-         
         private int playerCount;
         public int[] score;
         private int currentPlayer = 1;
         private int cardCount;
         private bool pcPlayer;
         private int difficulty;
-        private bool playerRound;
+        
         private string[] names;
         private bool isSound;
         private bool isLoading = false;
-        private bool locked = false;
         private int backImageId = -1;
 
-
-
-        private List<int> flippedLabels = new List<int>();
-        
         public List<int> cardImagesIds = new List<int>();
         public List<int> FlippedLabelsIndex { get; set; }
         
-        private Dictionary<int, bool> alreadyFlipped;
-        List<int> rightFlipped = new List<int>();
-        Random rnd = new Random();
 
         public NewGame(int playerNumber, int cardNumber, bool pcPlayer, int obtiznost, bool isSound, bool isLoading = false)
         {
@@ -53,19 +43,13 @@ namespace MainMenu
             this.isSound = isSound;
             
             score = new int[playerNumber];
-            playerRound = true;
+            
 
             gameBoard = new GameBoard(cardCount, tableLayoutPanel1);
-            gameBoard.CardClicked += label_Click;
+            
             gameBoard.InitializeBoard(isLoading,statusStrip1,toolStrip1);
             
-            
-            
-            AlreadyFlipped();
-            
-            
 
-            currentPlayer = 1;
             if (!isLoading) names = GetNames(playerNumber, pcPlayer);
             else
             {
@@ -75,21 +59,25 @@ namespace MainMenu
                     names[i] = "Hráč " + (i + 1);
                 }
             }
+            scoreManager = new GameScoreManager(names);
+            gameLogic = new GameLogic(gameBoard, scoreManager,
+            playerNumber, cardCount, pcPlayer, obtiznost, isSound, isLoading);
+
+            gameBoard.CardClicked += async (sender, e) =>
+            {
+                Label clickedLabel = sender as Label;
+                if (clickedLabel != null)
+                {
+                    await gameLogic.OnCardClicked(clickedLabel);
+                    ShowScore();
+                }
+            };
+
+            currentPlayer = 1;
+
             ShowScore();
 
         }
-
-
-
-        private void AlreadyFlipped()
-        {
-            alreadyFlipped = new Dictionary<int, bool>();
-            for(int i=0;i<tableLayoutPanel1.Controls.Count;i++)
-            {
-                alreadyFlipped.Add(i, false);
-            }
-        }
-       
         private string[] GetNames(int playerNumber, bool pcPlayer)
         {
             if (this.names != null) return this.names;
@@ -124,7 +112,7 @@ namespace MainMenu
 
                     if (nameInputForm.ShowDialog() == DialogResult.OK)
                     {
-                        if (textbox.Text != string.Empty)
+                        if (textbox.Text != string.Empty)   
                         {
                             names[i] = textbox.Text;
                         }
@@ -140,187 +128,27 @@ namespace MainMenu
        
         private void ShowScore()
         {
-            string playerName = names[currentPlayer - 1];
-            toolStripStatusLabel1.Text = "Hráč " + playerName + " je na tahu. Počet jeho bodů: " + score[currentPlayer - 1];
+            int index = currentPlayer - 1;
+            string name = scoreManager.GetPlayerName(index);
+            int points = scoreManager.GetScore(index);
+            toolStripStatusLabel1.Text = "Hráč " + name + " je na tahu. Počet bodů: " + points ;
 
         }
-        private void EndScore()
-        {
-            string[] namesClone = names;
-            Array.Sort(score, namesClone);
-            Array.Reverse(namesClone);
-            Array.Reverse(score);
-            string output = null;
-            for (int i = 0; i < playerCount; i++)
-            {
-                output += "Hráč " + namesClone[i] + " , měl skoré: " + score[i] + "\n";
-            }
+       
 
-            MessageBox.Show(output, "Konečné skóre");
-            Score scoreboard = new Score();
-            scoreboard.LoadScoreData();
-            scoreboard.ShowDialog();
-        }
+        
 
-        private async void label_Click(object sender, EventArgs e)
-        {
-            locked = false;
-            if (locked || !playerRound || first != null && second != null) return;
-            {
-
-            }
-
-            Label clickedLabel = sender as Label;
-            if (clickedLabel == null)
-            {
-
-                return;
-            }
-            if((int)clickedLabel.Tag==backImageId)
-            {
-                return;
-            }
-
-            if (first == null)
-            {
-                first = clickedLabel;
-                gameBoard.FlipCardFront(first);
-                Console.WriteLine("Pridana hodnota do flipped " + (int)first.Tag);
-                if (alreadyFlipped.TryGetValue(tableLayoutPanel1.Controls.IndexOf(first),out bool hodnotaF))
-                {
-                    if (hodnotaF == false)
-                    {
-                        alreadyFlipped[tableLayoutPanel1.Controls.IndexOf(first)] = true;
-                        flippedLabels.Add((int)first.Tag);
-                        
-                    }
-                
-                }
-                
-                gameBoard.HiddenLabels.Remove((int)first.Tag);
-                
-                return;
-            }
-
-            if (second == null)
-            {
-                second = clickedLabel;
-                gameBoard.FlipCardFront(second);
-                if (alreadyFlipped.TryGetValue(tableLayoutPanel1.Controls.IndexOf(second), out bool hodnotaS))
-                {
-                    if (hodnotaS == false)
-                    {
-                        alreadyFlipped[tableLayoutPanel1.Controls.IndexOf(second)] = true;
-                        flippedLabels.Add((int)second.Tag);
-
-                        Console.WriteLine("Pridana hodnota do flipped " + (int)second.Tag);
-                    }
-                }
-                gameBoard.HiddenLabels.Remove((int)second.Tag);
-            }
-
-            if ((int)first.Tag == (int)second.Tag)
-            {
-                score[currentPlayer - 1]++;
-                ShowScore();
-                flippedLabels.Remove((int)first.Tag);
-                flippedLabels.Remove((int)second.Tag);
-                rightFlipped.Add(tableLayoutPanel1.Controls.IndexOf(first));
-                rightFlipped.Add(tableLayoutPanel1.Controls.IndexOf(second));
-                gameBoard.MatchedPairs[tableLayoutPanel1.Controls.IndexOf(first)] = (int)(first.Tag);
-                gameBoard.MatchedPairs[tableLayoutPanel1.Controls.IndexOf(second)] = (int)(second.Tag);
-                first.Tag = backImageId;
-                second.Tag = backImageId;
-                first = null;
-                second = null;
-
-
-                WinnerCheck();
-            }
-            else
-            {
-                await Task.Delay(1000);
-                timer1.Start();
-
-                currentPlayer = (currentPlayer % playerCount) + 1;
-                ShowScore();
-            }
-
-            //Console.WriteLine("Hidden Labels : ");
-            //foreach (int i in hiddenLabels) Console.Write(" ," + i);
-            //Console.WriteLine();
-            //Console.WriteLine("Flipped labels : ");
-            //foreach (int i in flippedLabels) Console.Write(" ," + i)
-            
-        }
-
-        private void WinnerCheck()
-        {
-            Console.WriteLine("Pocet hidden a flipped :");
-            Console.WriteLine(gameBoard.HiddenLabels.Count());
-            Console.WriteLine(flippedLabels.Count());
-            int totalCards = cardCount * cardCount;
-            if (rightFlipped.Count == totalCards)
-            {
-                EndScore();
-            }
-
-
-        }
+        
         private void timer1_Tick(object sender, EventArgs e)
         {
-            
+
             timer1.Stop();
-            if (first != null && (int)first.Tag != backImageId)
-            {
-
-                gameBoard.FlipCardBack(first);
-
-            }
-            if (second != null && (int)second.Tag != backImageId)
-            {
-
-                gameBoard.FlipCardBack(second);
-
-            }
-
-
-            first = null;
-            second = null;
-            locked = true;
-            if (pcPlayer && currentPlayer == 2) ComputerTurn();
-        }
-
-        private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
-        {
-
+            gameLogic.OnTimer1Tick();
         }
 
         
 
-        private int GetRight()
-        {
-
-            switch (difficulty)
-            {
-                case 1:
-                    {
-                        return 30;
-
-                    }
-                case 2:
-                    {
-                        return 60;
-
-                    }
-                case 3:
-                    {
-                        return 100;
-
-                    }
-                default: return 60;
-            }
-        }
+        
 
         private void btnMenu_Click(object sender, EventArgs e)
         {
@@ -329,178 +157,7 @@ namespace MainMenu
             this.Visible = false;
         }
 
-        private async void ComputerTurn()
-        {
-            playerRound = false;
-
-
-            await Task.Delay(1000);
-
-
-            
-
-
-            bool chance = GetRight() >= rnd.Next(100);
-            int indexFirstLabel = -1;
-            int indexSecondLabel = -1;
-            Console.WriteLine("Šance: "+chance);
-            if (chance)
-            {
-                bool nasel = false;
-                
-                for (int i = 0; i < flippedLabels.Count && !nasel; i++)
-                {
-                    for (int j = i + 1; j < flippedLabels.Count; j++)
-                    {
-                        if (flippedLabels[i] == flippedLabels[j])
-                        {
-                            indexFirstLabel = flippedLabels[i]; indexSecondLabel = flippedLabels[j];
-                            nasel = true;
-                            Console.WriteLine("Našel stejný par ve flipped");
-
-
-
-                            break;
-                        }
-                    }
-                }
-            }
-            Console.Write("Hidden indexy jsou");
-            foreach (int i in gameBoard.HiddenLabels) Console.Write(+i + " ");
-            bool pridatFirst = false;
-            if (indexFirstLabel == -1)
-            {
-                if (gameBoard.HiddenLabels.Count > 0)
-                {
-                    Console.WriteLine("Nahodny prvni obrazek");
-                    int indexFirstRandom = rnd.Next(gameBoard.HiddenLabels.Count);
-                    indexFirstLabel = gameBoard.HiddenLabels[indexFirstRandom];
-                    gameBoard.HiddenLabels.RemoveAt(indexFirstRandom);
-                    pridatFirst = true;
-                }
-                else
-                {
-                    int indexFirstRandom = rnd.Next(flippedLabels.Count);
-                    indexFirstLabel = flippedLabels[indexFirstRandom];
-
-
-                    
-
-                    
-                }
-
-                bool foundSecond = false;
-                if (chance && indexSecondLabel==-1)
-                {
-
-                    for (int index = 0; index < flippedLabels.Count - 1 && !foundSecond; index++)
-                    {
-                        if (flippedLabels[index] == indexFirstLabel)
-                        {
-                            Console.WriteLine("Nasel second in flipped po prvnim random");
-                            indexSecondLabel = flippedLabels[index];
-                            foundSecond = true;
-
-                        }
-                    }
-                }
-                
-
-
-                if (indexSecondLabel == -1)
-                {
-
-                    if (gameBoard.HiddenLabels.Count >= 1)
-                    {
-                        int indexS = rnd.Next(gameBoard.HiddenLabels.Count);
-                        
-                        indexSecondLabel = gameBoard.HiddenLabels[indexS];
-                        gameBoard.HiddenLabels.RemoveAt(indexS);
-                        flippedLabels.Add(indexSecondLabel);
-                        Console.WriteLine("Druhy se bere z hidden");
-                    }
-                    else
-                    {
-
-                        int indexS = rnd.Next(flippedLabels.Count);
-                        indexSecondLabel = flippedLabels[indexS];
-                        Console.WriteLine("Druhy se bere z flipped");
-                       
-                    }
-
-
-                   
-                   
-                }
-
-                if (pridatFirst == true) flippedLabels.Add(indexFirstLabel);
-            }
-            
-            
-
-
-            await Task.Delay(1000);
-            Console.WriteLine("Tag prvniho je " + indexFirstLabel);
-            Console.WriteLine("Tag druheho je " + indexSecondLabel);
-            Label firstLabel = null;
-
-            Label secondLabel = null;
-            List<Label> labels = tableLayoutPanel1.Controls.OfType<Label>().ToList();
-
-            firstLabel = labels.FirstOrDefault(label => label.Tag is int tag && tag == indexFirstLabel);
-            secondLabel = labels.Last(label => label.Tag is int tag && tag == indexSecondLabel);
-
-            if (firstLabel == null || secondLabel == null)
-            {
-                Console.WriteLine("Error: Could not find one or both labels");
-                return;
-            }
-            gameBoard.FlipCardFront(firstLabel);
-            await Task.Delay(1000);
-
-            gameBoard.FlipCardFront(secondLabel);
-            await Task.Delay(1000);
-           
-            if (indexFirstLabel == indexSecondLabel)
-            {
-                flippedLabels.RemoveAll(l => l == indexFirstLabel);
-                flippedLabels.RemoveAll(l => l == indexSecondLabel);
-                score[currentPlayer - 1]++;
-                rightFlipped.Add(tableLayoutPanel1.Controls.IndexOf(firstLabel));
-                rightFlipped.Add(tableLayoutPanel1.Controls.IndexOf(secondLabel));
-                gameBoard.MatchedPairs[tableLayoutPanel1.Controls.IndexOf(firstLabel)] = (int)(firstLabel.Tag);
-                gameBoard.MatchedPairs[tableLayoutPanel1.Controls.IndexOf(firstLabel)] = (int)(firstLabel.Tag);
-                firstLabel.Tag = backImageId;
-                secondLabel.Tag = backImageId;
-                ShowScore();
-                WinnerCheck();
-                ComputerTurn();
-            }
-            else
-            {
-                timer2.Start();
-                timer2.Stop();
-
-
-
-                gameBoard.FlipCardBack(firstLabel);
-                gameBoard.FlipCardBack(secondLabel);
-
-                currentPlayer = (currentPlayer % playerCount) + 1;
-                ShowScore();
-
-
-
-                firstLabel = null;
-                secondLabel = null;
-                playerRound = true;
-            }
-
-
-
-
-
-        }
+       
         private void buttonSave_Click(object sender, EventArgs e)
         {
             SaveGame();
@@ -530,8 +187,8 @@ namespace MainMenu
                         }
 
                         
-                        int indexFirstFlipped = tableLayoutPanel1.Controls.IndexOf(first);
-                        int indexSecondFlipped = tableLayoutPanel1.Controls.IndexOf(second);
+                        int indexFirstFlipped = tableLayoutPanel1.Controls.IndexOf(gameLogic.first);
+                        int indexSecondFlipped = tableLayoutPanel1.Controls.IndexOf(gameLogic.second);
 
                         
                         GameSave gs = new GameSave
@@ -541,9 +198,9 @@ namespace MainMenu
                             PCPlayer = this.pcPlayer,
                             Difficulty = this.difficulty,
                             IsSound = this.isSound,
-                            Score = this.score,
+                            Score = scoreManager.GetAllScores(),
+                            Names=scoreManager.GetAllNames(),
                             CardImagesIds = this.cardImagesIds,
-                            RightFlipped = this.rightFlipped,
                             CardPositions = cardPositions,
                             IndexFirstFlipped = indexFirstFlipped,
                             IndexSecondFlipped = indexSecondFlipped,
@@ -570,11 +227,6 @@ namespace MainMenu
             LoadGame();
         }
 
-        private void timer2_Tick(object sender, EventArgs e)
-        {
-
-        }
-
         private void LoadGame()
         {
             using (OpenFileDialog ofd = new OpenFileDialog())
@@ -595,13 +247,15 @@ namespace MainMenu
                         this.pcPlayer = loaded.PCPlayer;
                         this.difficulty = loaded.Difficulty;
                         this.isSound = loaded.IsSound;
-                        this.score = loaded.Score;
+                        scoreManager = new GameScoreManager(loaded.Names);
                         this.cardImagesIds = loaded.CardImagesIds;
-                        this.rightFlipped = loaded.RightFlipped;
-                        
 
-                        gameBoard.InitializeBoard(isLoading: true);
 
+                        scoreManager.SetScores(loaded.Score);
+
+                        gameBoard.InitializeBoard(isLoading: true,statusStrip1,toolStrip1);
+
+                        ShowScore();
                         
                         List<int> cardPositions = loaded.CardPositions;
                         for (int i = 0; i < cardPositions.Count; i++)
@@ -640,32 +294,32 @@ namespace MainMenu
 
                         if (loaded.IndexFirstFlipped >= 0 && loaded.IndexFirstFlipped < tableLayoutPanel1.Controls.Count)
                         {
-                            first = tableLayoutPanel1.Controls[loaded.IndexFirstFlipped] as Label;
-                            if (first != null && (int)first.Tag != backImageId)
+                            gameLogic.first = tableLayoutPanel1.Controls[loaded.IndexFirstFlipped] as Label;
+                            if (gameLogic.first != null && (int)gameLogic.first.Tag != backImageId)
                             {
-                                gameBoard.FlipCardFront(first);
+                                gameBoard.FlipCardFront(gameLogic.first);
                             }
                         }
                         else
                         {
-                            first = null;
+                            gameLogic.first = null;
                         }
 
                         
                         if (loaded.IndexSecondFlipped >= 0 && loaded.IndexSecondFlipped < tableLayoutPanel1.Controls.Count)
                         {
-                            second = tableLayoutPanel1.Controls[loaded.IndexSecondFlipped] as Label;
-                            if (second != null && (int)second.Tag != backImageId)
+                            gameLogic.second = tableLayoutPanel1.Controls[loaded.IndexSecondFlipped] as Label;
+                            if (gameLogic.second != null && (int)gameLogic.second.Tag != backImageId)
                             {
-                                gameBoard.FlipCardFront(second);
+                                gameBoard.FlipCardFront(gameLogic.second);
                             }
                         }
                         else
                         {
-                            second = null;
+                            gameLogic.second = null;
                         }
 
-                        ShowScore();
+                        
                         MessageBox.Show("Hra byla úspěšně načtena.");
                     }
                     catch (Exception ex)

@@ -22,5 +22,6 @@ namespace MainMenu
         public int IndexFirstFlipped { get; set; }
         public int IndexSecondFlipped { get; set; }
         public Dictionary<int, int> MatchedPairs { get; set; }
+        public string[] Names { get; set; }
     }
 }

@@ -8,7 +8,7 @@ namespace MainMenu
 {
     public class GameBoard
     {
-        private TableLayoutPanel tableLayoutPanel;
+        public TableLayoutPanel tableLayoutPanel;
         private List<int> hiddenLabels;
         public List<int> HiddenLabels => hiddenLabels;
         private Image backImage;
@@ -187,7 +187,10 @@ namespace MainMenu
             }
         }
 
-        
+        public int GetTotalCards()
+        {
+            return tableLayoutPanel.Controls.Count;
+        }
         private Label CreateCardLabel(int tagValue)
         {
             Label label = new Label
@@ -203,12 +206,11 @@ namespace MainMenu
                 Enabled = true,
             };
 
-            
-            label.Click += (s, e) => {
-                
-                
 
-                CardClicked?.Invoke(s,e);
+            label.Click += async (s, e) =>
+            {
+               
+                CardClicked?.Invoke(s, e);
             };
 
             return label;
