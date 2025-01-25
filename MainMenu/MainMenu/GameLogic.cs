@@ -26,10 +26,10 @@ namespace MainMenu
         private int backImageId = -1;
 
         private Random rnd = new Random();
-
+        public event Action GameEnded;
         private Dictionary<int, bool> alreadyFlipped;
         private List<int> flippedLabels = new List<int>();
-
+        public int CurrentPlayer => currentPlayer;
         public GameLogic(GameBoard board,GameScoreManager scoreMgr,int playerCount,
             int cardCount,bool pcPlayer,int difficulty,bool isSound,bool isLoading = false)
         {
@@ -50,6 +50,10 @@ namespace MainMenu
 
 
         }
+
+
+    
+
         public async Task OnCardClicked(Label clickedLabel)
         {
             locked = false;
@@ -121,10 +125,11 @@ namespace MainMenu
             {
                 
                 await Task.Delay(1000);
+                currentPlayer = (currentPlayer % playerCount) + 1;
                 OnTimer1Tick();
 
                 
-                currentPlayer = (currentPlayer % playerCount) + 1;
+                
             }
         }
         public void OnTimer1Tick()

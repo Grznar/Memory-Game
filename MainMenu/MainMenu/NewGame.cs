@@ -18,7 +18,7 @@ namespace MainMenu
 
         private int playerCount;
         public int[] score;
-        private int currentPlayer = 1;
+        
         private int cardCount;
         private bool pcPlayer;
         private int difficulty;
@@ -72,8 +72,8 @@ namespace MainMenu
                     ShowScore();
                 }
             };
-
-            currentPlayer = 1;
+            gameLogic.GameEnded += scoreManager.EndScore;
+            
 
             ShowScore();
 
@@ -128,7 +128,7 @@ namespace MainMenu
        
         private void ShowScore()
         {
-            int index = currentPlayer - 1;
+            int index = gameLogic.CurrentPlayer - 1;
             string name = scoreManager.GetPlayerName(index);
             int points = scoreManager.GetScore(index);
             toolStripStatusLabel1.Text = "Hráč " + name + " je na tahu. Počet bodů: " + points ;
