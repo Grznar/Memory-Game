@@ -51,8 +51,9 @@
   <ItemGroup>
     <Compile Include="GameBoard.cs" />
     <Compile Include="GameLogic.cs" />
+    <Compile Include="GameSave.cs" />
     <Compile Include="Player.cs" />
-    <Compile Include="SaveAndLoadManager.cs" />
+    <Compile Include="GameSaveManager.cs" />
     <Compile Include="StartingMenu.cs">
       <SubType>Form</SubType>
     </Compile>

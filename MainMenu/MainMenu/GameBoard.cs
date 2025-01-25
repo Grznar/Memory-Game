@@ -9,20 +9,23 @@ namespace MainMenu
     public class GameBoard
     {
         private TableLayoutPanel tableLayoutPanel;
-
         private List<int> hiddenLabels;
+        public List<int> HiddenLabels => hiddenLabels;
         private Image backImage;
         private List<Image> cardImages;
         private int backImageId = -1;
         public List<int> cardImagesIds = new List<int>();
+        public List<int> CardImagesIds => cardImagesIds;
         private int cardCount = 0;
+        public Dictionary<int, int> MatchedPairs { get; set; }
         public event EventHandler CardClicked;
         public GameBoard(int cardsCount, TableLayoutPanel panel)
         {
+            MatchedPairs=new Dictionary<int, int>();
             this.tableLayoutPanel = panel;
             this.cardCount = cardsCount;
         }
-        public void InitializeBoard(bool isLoading)
+        public void InitializeBoard(bool isLoading,StatusStrip status, ToolStrip strip)
         {
             
             LoadImages();
@@ -32,6 +35,9 @@ namespace MainMenu
 
             
             PlaceCards(isLoading);
+
+            tableLayoutPanel.Padding = new Padding(0, 0, 0, status.Height);
+            tableLayoutPanel.Padding = new Padding(0, strip.Height, 0, 0);
         }
         public Image GetCardImage(int cardId)
         {
@@ -66,8 +72,8 @@ namespace MainMenu
         }
 
        
-        public List<int> HiddenLabels => hiddenLabels;
-        public List<int> CardImagesIds => cardImagesIds;
+        
+        
         private void LoadImages()
         {
             cardImages = new List<Image>();
