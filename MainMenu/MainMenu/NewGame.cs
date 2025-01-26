@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static MainMenu.GameLogic;
 using static MainMenu.NewGame;
 namespace MainMenu
 {
@@ -78,6 +79,9 @@ namespace MainMenu
             ShowScore();
 
         }
+
+        
+
         private string[] GetNames(int playerNumber, bool pcPlayer)
         {
             if (this.names != null) return this.names;
@@ -193,6 +197,7 @@ namespace MainMenu
                         int indexSecondFlipped = tableLayoutPanel1.Controls.IndexOf(gameLogic.second);
 
                         
+
                         GameSave gs = new GameSave
                         {
                             PlayerNumber = this.playerCount,
@@ -206,7 +211,9 @@ namespace MainMenu
                             CardPositions = cardPositions,
                             IndexFirstFlipped = indexFirstFlipped,
                             IndexSecondFlipped = indexSecondFlipped,
-                            MatchedPairs = new Dictionary<int, int>(gameBoard.MatchedPairs)
+                            MatchedPairs = new Dictionary<int, int>(gameBoard.MatchedPairs),
+                            
+
                         };
 
                        
@@ -229,7 +236,7 @@ namespace MainMenu
             LoadGame();
         }
 
-        private void LoadGame()
+        public void LoadGame()
         {
             using (OpenFileDialog ofd = new OpenFileDialog())
             {
@@ -299,6 +306,7 @@ namespace MainMenu
                             gameLogic.first = tableLayoutPanel1.Controls[loaded.IndexFirstFlipped] as Label;
                             if (gameLogic.first != null && (int)gameLogic.first.Tag != backImageId)
                             {
+                                gameLogic.gameState = GameState.OneCardFlipped;
                                 gameBoard.FlipCardFront(gameLogic.first);
                             }
                         }
@@ -313,6 +321,7 @@ namespace MainMenu
                             gameLogic.second = tableLayoutPanel1.Controls[loaded.IndexSecondFlipped] as Label;
                             if (gameLogic.second != null && (int)gameLogic.second.Tag != backImageId)
                             {
+                                gameLogic.gameState = GameState.Processing;
                                 gameBoard.FlipCardFront(gameLogic.second);
                             }
                         }

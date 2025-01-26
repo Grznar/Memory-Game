@@ -72,40 +72,18 @@
             
         
 
-        private void StartGameFromSavedState(GameSave gameSave)
+        
+        
+        private void LoadGameDetails(object sender, EventArgs e)
         {
+            NewGame gameWindow = new NewGame(playerCount, cardCount, pcPlayer, difficulty, isSound, true);
+            gameWindow.LoadGame();
+            gameWindow.Show();
+            this.Visible = false;
             
         }
 
-        private void LoadGameDetails(object sender, EventArgs e)
-        {
-            using (OpenFileDialog openFileDialog = new OpenFileDialog())
-            {
-                openFileDialog.Filter = "Pexeso Saved Game Files|*.save";
-                openFileDialog.Title = "Načíst hru";
-
-                
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    try
-                    {
-                        
-                        using (FileStream fs = new FileStream(openFileDialog.FileName, FileMode.Open))
-                        {
-                            BinaryFormatter formatter = new BinaryFormatter();
-                            GameSave gameSave = (GameSave)formatter.Deserialize(fs);
-
-                            
-                            StartGameFromSavedState(gameSave);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Chyba při načítání hry: " + ex.Message);
-                    }
-                }
-            }
-        }
+        
     }
-    }
+ }
     

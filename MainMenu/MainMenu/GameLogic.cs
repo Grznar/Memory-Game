@@ -34,7 +34,7 @@ namespace MainMenu
         private List<int> flippedLabels = new List<int>();
 
 
-        private GameState gameState = GameState.Idle;
+        public GameState gameState = GameState.Idle;
 
         public int CurrentPlayer => currentPlayer;
         public GameLogic(GameBoard board,GameScoreManager scoreMgr,int playerCount,
@@ -58,7 +58,7 @@ namespace MainMenu
 
         }
 
-        private enum GameState
+        public enum GameState
         {
             Idle,           
             OneCardFlipped, 
