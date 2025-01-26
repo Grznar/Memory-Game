@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -13,6 +14,8 @@ namespace MainMenu
         private GameScoreManager scoreManager;
 
         public Label first, second;
+        
+
         private bool locked = false;
         private bool playerRound = true;
 
@@ -29,6 +32,10 @@ namespace MainMenu
         public event Action GameEnded;
         private Dictionary<int, bool> alreadyFlipped;
         private List<int> flippedLabels = new List<int>();
+
+
+        private GameState gameState = GameState.Idle;
+
         public int CurrentPlayer => currentPlayer;
         public GameLogic(GameBoard board,GameScoreManager scoreMgr,int playerCount,
             int cardCount,bool pcPlayer,int difficulty,bool isSound,bool isLoading = false)
@@ -51,24 +58,42 @@ namespace MainMenu
 
         }
 
+        private enum GameState
+        {
+            Idle,           
+            OneCardFlipped, 
+            Processing      
+        }
 
-    
 
         public async Task OnCardClicked(Label clickedLabel)
         {
-            locked = false;
-            if (locked || !playerRound || (first != null && second != null)) return;
+
+            if (gameState == GameState.Processing)
+                return;
+
+            if (locked) return;
+
+            if (first != null && second != null) return;
 
             if (clickedLabel == null) return;
             if ((int)clickedLabel.Tag == backImageId) return;
 
-           
-            if (first == null)
+
+            if (gameState == GameState.OneCardFlipped && clickedLabel == first)
+                return;
+
+
+
+
+            if (gameState == GameState.Idle)
             {
+                gameState = GameState.OneCardFlipped;
                 first = clickedLabel;
+
                 gameBoard.FlipCardFront(first);
 
-                
+                Console.WriteLine("First je " + first);
                 int idxF = gameBoard.tableLayoutPanel.Controls.IndexOf(first);
                 if (alreadyFlipped.TryGetValue(idxF, out bool valF) && !valF)
                 {
@@ -77,13 +102,19 @@ namespace MainMenu
                 }
                 gameBoard.HiddenLabels.Remove((int)first.Tag);
 
+                
                 return;
             }
 
-            
-            if (second == null)
+
+            if (gameState == GameState.OneCardFlipped)
             {
+                locked = true;
+               
                 second = clickedLabel;
+                Console.WriteLine("second je " + second);
+                
+                
                 gameBoard.FlipCardFront(second);
 
                 int idxS = gameBoard.tableLayoutPanel.Controls.IndexOf(second);
@@ -93,6 +124,8 @@ namespace MainMenu
                     flippedLabels.Add((int)second.Tag);
                 }
                 gameBoard.HiddenLabels.Remove((int)second.Tag);
+
+                gameState = GameState.Processing;
             }
 
             
@@ -118,8 +151,12 @@ namespace MainMenu
                 first = null;
                 second = null;
 
+                locked = false;
+
                 
                 WinnerCheck();
+                gameState = GameState.Idle;
+
             }
             else
             {
@@ -128,8 +165,8 @@ namespace MainMenu
                 currentPlayer = (currentPlayer % playerCount) + 1;
                 OnTimer1Tick();
 
-                
-                
+
+                gameState = GameState.Idle;
             }
         }
         public void OnTimer1Tick()
@@ -145,7 +182,9 @@ namespace MainMenu
             }
             first = null;
             second = null;
-            locked = true;
+            locked = false;
+
+            
             if (pcPlayer && currentPlayer == 2)
             {
                 ComputerTurn();
@@ -153,7 +192,12 @@ namespace MainMenu
         }
         public async void ComputerTurn()
         {
-            playerRound = false;
+            if (gameState == GameState.Processing)
+                return;
+
+            gameState = GameState.Processing;
+            locked = true;
+            
             await Task.Delay(1000);
 
             bool chance = (GetRight() >= rnd.Next(100));
@@ -232,7 +276,7 @@ namespace MainMenu
             Label secondLabel = FindLabelByTag(indexSecondLabel);
             if (firstLabel == null || secondLabel == null)
             {
-                playerRound = true;
+                locked = false;
                 return;
             }
 
@@ -257,6 +301,7 @@ namespace MainMenu
 
                 
                 WinnerCheck();
+
                 ComputerTurn();
             }
             else
@@ -265,7 +310,9 @@ namespace MainMenu
                 gameBoard.FlipCardBack(secondLabel);
 
                 currentPlayer = (currentPlayer % playerCount) + 1;
-                playerRound = true;
+                locked = false;
+
+                gameState = GameState.Idle;
             }
         }
         private int GetRight()

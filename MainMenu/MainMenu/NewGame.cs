@@ -104,11 +104,13 @@ namespace MainMenu
                     btn.Text = "Ok";
                     btn.DialogResult = DialogResult.OK;
                     btn.Location = new Point(10, 60);
-
+                    nameInputForm.MaximizeBox = false;
+                    nameInputForm.MinimizeBox = false;
                     nameInputForm.Controls.Add(label);
                     nameInputForm.Controls.Add(textbox);
                     nameInputForm.Controls.Add(btn);
-
+                    nameInputForm.StartPosition = FormStartPosition.CenterScreen;
+                    nameInputForm.ShowIcon = false;
 
                     if (nameInputForm.ShowDialog() == DialogResult.OK)
                     {
