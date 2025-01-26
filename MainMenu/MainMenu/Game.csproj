@@ -54,6 +54,11 @@
     <Compile Include="GameSave.cs" />
     <Compile Include="GameScoreManager.cs" />
     <Compile Include="GameSaveManager.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="StartingMenu.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -88,13 +93,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <EmbeddedResource Include="Score.resx">
       <DependentUpon>Score.cs</DependentUpon>
     </EmbeddedResource>
@@ -117,63 +118,25 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Content Include="Images\apple-worm.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\apple.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\avocado.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\BackImage.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\banana.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\bitten-apple-export.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\blueberry.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\cherry.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\coconut.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\grapes.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\kiwi.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\lemon.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\oragne.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\peach.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\pear.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\pineapple.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\plum.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\strawberry.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\watermelon.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <EmbeddedResource Include="Images\apple-worm.png" />
+    <EmbeddedResource Include="Images\apple.png" />
+    <EmbeddedResource Include="Images\avocado.png" />
+    <EmbeddedResource Include="Images\BackImage.png" />
+    <EmbeddedResource Include="Images\banana.png" />
+    <EmbeddedResource Include="Images\bitten-apple-export.png" />
+    <EmbeddedResource Include="Images\blueberry.png" />
+    <EmbeddedResource Include="Images\cherry.png" />
+    <EmbeddedResource Include="Images\coconut.png" />
+    <EmbeddedResource Include="Images\grapes.png" />
+    <EmbeddedResource Include="Images\kiwi.png" />
+    <EmbeddedResource Include="Images\lemon.png" />
+    <EmbeddedResource Include="Images\oragne.png" />
+    <EmbeddedResource Include="Images\peach.png" />
+    <EmbeddedResource Include="Images\pear.png" />
+    <EmbeddedResource Include="Images\pineapple.png" />
+    <EmbeddedResource Include="Images\plum.png" />
+    <EmbeddedResource Include="Images\strawberry.png" />
+    <EmbeddedResource Include="Images\watermelon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

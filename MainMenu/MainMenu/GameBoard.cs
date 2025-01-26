@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace MainMenu
@@ -71,50 +72,59 @@ namespace MainMenu
             label.Image = GetBackImage();
         }
 
-       
-        
-        
+
+
+
         private void LoadImages()
         {
             cardImages = new List<Image>();
+            backImageId = -1;
+
+           
+            Assembly assembly = Assembly.GetExecutingAssembly();
+
+          
+            string resourceFolder = "MainMenu.Images";
+
             
+            string[] resourceNames = assembly.GetManifestResourceNames();
 
-
-            string imagesPath = Path.Combine(Application.StartupPath, "Images");
-
-
-            if (!Directory.Exists(imagesPath))
+           
+            foreach (string resourceName in resourceNames)
             {
-                MessageBox.Show("Složka images neexisituje!!");
-                return;
+                if (resourceName.StartsWith(resourceFolder) && resourceName.EndsWith(".png", StringComparison.OrdinalIgnoreCase))
+                {
+                    
+                    using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+                    {
+                        if (stream != null)
+                        {
+                            
+                            Image image = Image.FromStream(stream);
+
+                            
+                            if (resourceName.EndsWith("BackImage.png", StringComparison.OrdinalIgnoreCase))
+                            {
+                                backImage = image;
+                            }
+                            else
+                            {
+                                cardImages.Add(image);
+                                cardImagesIds.Add(cardImages.Count - 1);
+                            }
+                        }
+                    }
+                }
             }
 
-
-            string[] imageFiles = Directory.GetFiles(imagesPath, "*.png");
-
-            for (int i = 0; i < imageFiles.Length; i++)
-            {
-
-                if (Path.GetFileName(imageFiles[i]).Equals("BackImage.png", StringComparison.OrdinalIgnoreCase))
-                {
-                    backImage = Image.FromFile(imageFiles[i]);
-                    backImageId = -1;
-
-                    continue;
-                }
-
-                {
-                    cardImages.Add(Image.FromFile(imageFiles[i]));
-                    cardImagesIds.Add(i);
-                }
-
-            }
-
-            if (cardImages.Count < 18)
+            
+            if (cardImages.Count < 18) 
             {
                 MessageBox.Show("Není dost obrázků!");
             }
         }
+
+
 
         private void SetupLayout()
         {
