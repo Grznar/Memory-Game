@@ -63,7 +63,7 @@
             // 
             this.settings.BackColor = System.Drawing.Color.PowderBlue;
             this.settings.Font = new System.Drawing.Font("Microsoft YaHei UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.settings.Location = new System.Drawing.Point(465, 249);
+            this.settings.Location = new System.Drawing.Point(465, 253);
             this.settings.Name = "settings";
             this.settings.Size = new System.Drawing.Size(155, 80);
             this.settings.TabIndex = 4;

@@ -84,7 +84,7 @@ namespace MainMenu
             Assembly assembly = Assembly.GetExecutingAssembly();
 
           
-            string resourceFolder = "MainMenu.Images";
+            string resourceFolder = "MainMenu.Root.Images";
 
             
             string[] resourceNames = assembly.GetManifestResourceNames();

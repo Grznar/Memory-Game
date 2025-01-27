@@ -110,7 +110,7 @@ namespace MainMenu
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show($"Chyba při načítání hry: {ex.Message}", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("Chyba při načítání hry "+ex.Message);
                     }
                 }
             }

@@ -126,7 +126,8 @@ namespace MainMenu
 
         private void VolumeChecked(object sender, EventArgs e)
         {
-
+            if (volumeBool.Checked) isSound = true;
+            else isSound = false;
         }
 
         private void isPcPlayerChecked(object sender, EventArgs e)

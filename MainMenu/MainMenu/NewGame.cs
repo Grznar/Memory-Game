@@ -1,4 +1,4 @@
-﻿using System;
+﻿    using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using static MainMenu.GameLogic;
 using static MainMenu.NewGame;
+
 namespace MainMenu
 {
     public partial class NewGame : Form
@@ -42,7 +43,7 @@ namespace MainMenu
             this.cardCount = cardNumber;
             this.difficulty = obtiznost;
             this.isSound = isSound;
-            
+            Console.WriteLine(isSound);
             score = new int[playerNumber];
             
 

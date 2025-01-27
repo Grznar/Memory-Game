@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MainMenu;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,7 +13,7 @@ namespace MainMenu
     {
         private GameBoard gameBoard;
         private GameScoreManager scoreManager;
-
+        //private SoundManager soundManager;
         public Label first, second;
         
 
@@ -55,7 +56,7 @@ namespace MainMenu
                 alreadyFlipped.Add(i, false);
             }
 
-
+            //soundManager=new SoundManager(isSound);
         }
 
         public enum GameState
@@ -91,8 +92,9 @@ namespace MainMenu
                 gameState = GameState.OneCardFlipped;
                 first = clickedLabel;
 
+                
                 gameBoard.FlipCardFront(first);
-
+                //soundManager.PlayFlipCardSound();
                 Console.WriteLine("First je " + first);
                 int idxF = gameBoard.tableLayoutPanel.Controls.IndexOf(first);
                 if (alreadyFlipped.TryGetValue(idxF, out bool valF) && !valF)
@@ -116,7 +118,7 @@ namespace MainMenu
                 
                 
                 gameBoard.FlipCardFront(second);
-
+                //soundManager.PlayFlipCardSound();
                 int idxS = gameBoard.tableLayoutPanel.Controls.IndexOf(second);
                 if (alreadyFlipped.TryGetValue(idxS, out bool valS) && !valS)
                 {
@@ -131,7 +133,7 @@ namespace MainMenu
             
             if ((int)first.Tag == (int)second.Tag)
             {
-                
+                //soundManager.PlayMatchedCorrect();
                 scoreManager.AddScore(currentPlayer - 1, 1);
 
                 
@@ -160,13 +162,13 @@ namespace MainMenu
             }
             else
             {
-                
+                //soundManager.PlayMatchedWrong();
                 await Task.Delay(1000);
                 currentPlayer = (currentPlayer % playerCount) + 1;
                 OnTimer1Tick();
 
 
-                gameState = GameState.Idle;
+               
             }
         }
         public void OnTimer1Tick()
@@ -184,7 +186,7 @@ namespace MainMenu
             second = null;
             locked = false;
 
-            
+            gameState = GameState.Idle;
             if (pcPlayer && currentPlayer == 2)
             {
                 ComputerTurn();
@@ -281,13 +283,16 @@ namespace MainMenu
             }
 
             gameBoard.FlipCardFront(firstLabel);
+            //soundManager.PlayFlipCardSound();
             await Task.Delay(1000);
 
             gameBoard.FlipCardFront(secondLabel);
+            //soundManager.PlayFlipCardSound();
             await Task.Delay(1000);
 
             if (indexFirstLabel == indexSecondLabel)
             {
+                //soundManager.PlayMatchedCorrect();
                 flippedLabels.RemoveAll(x => x == indexFirstLabel);
                 scoreManager.AddScore(currentPlayer - 1, 1);
 
@@ -306,8 +311,11 @@ namespace MainMenu
             }
             else
             {
+                //soundManager.PlayMatchedWrong();
                 gameBoard.FlipCardBack(firstLabel);
+                
                 gameBoard.FlipCardBack(secondLabel);
+                
 
                 currentPlayer = (currentPlayer % playerCount) + 1;
                 locked = false;
@@ -334,6 +342,7 @@ namespace MainMenu
             {
                 
                 scoreManager.EndScore();
+                //soundManager.Dispose();
             }
         }
         private Label FindLabelByTag(int cardId)
@@ -348,6 +357,7 @@ namespace MainMenu
             return null;
         }
 
-
+        
     }
+    
 }
