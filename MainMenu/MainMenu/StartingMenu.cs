@@ -9,10 +9,8 @@
     using System.Text;
     using System.Threading.Tasks;
     using System.Windows.Forms;
-    using static MainMenu.NewGame;
-
-
-    namespace MainMenu
+using static MainMenu.NewGame;
+namespace MainMenu
     {
         public partial class StartingMenu : Form
         {
@@ -55,9 +53,15 @@
         
             private void LoadSettings(object sender, EventArgs e)
             {
-                GameSettings gameSettings = new GameSettings(playerCount, cardCount, pcPlayer, difficulty, isSound);
+            GameSettings gameSettings = null;
+            
+                 gameSettings = new GameSettings(playerCount, cardCount, pcPlayer, difficulty, isSound);
+            
+            
                 gameSettings.Show();
                 this.Visible = false;
+            
+            
             }
 
             private void LoadScore(object sender, EventArgs e)
@@ -74,16 +78,48 @@
 
         
         
-        private void LoadGameDetails(object sender, EventArgs e)
+        
+
+            private void LoadGameDetails(object sender, EventArgs e)
         {
-            NewGame gameWindow = new NewGame(playerCount, cardCount, pcPlayer, difficulty, isSound, true);
-            gameWindow.LoadGame();
-            gameWindow.Show();
-            this.Visible = false;
-            
+            using (OpenFileDialog ofd = new OpenFileDialog())
+            {
+                ofd.Filter = "Pexeso Saved Game|*.save";
+                ofd.Title = "Načíst hru";
+
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        
+                        GameSave loadedGame = GameSaveManager.LoadGame(ofd.FileName);
+
+                        
+                        NewGame gameWindow = new NewGame(
+                            loadedGame.PlayerNumber,
+                            loadedGame.CardNumber,
+                            loadedGame.PCPlayer,
+                            loadedGame.Difficulty,
+                            loadedGame.IsSound,
+                            isLoading: true
+                        );
+
+                        gameWindow.RestoreFromGameSave(loadedGame); 
+                        gameWindow.Show();
+                        this.Hide();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Chyba při načítání hry: {ex.Message}", "Chyba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
         }
 
-        
+
     }
- }
+
+
+}
+ 
     

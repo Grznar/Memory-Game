@@ -40,6 +40,7 @@ namespace MainMenu
                 catch (Exception ex)
                 {
                     throw new Exception("Chyba při načítání hry: " + ex.Message, ex);
+                    
                 }
             }
         }

@@ -224,6 +224,7 @@ namespace MainMenu
                     catch (Exception ex)
                     {
                         MessageBox.Show("Chyba při ukládání hry: " + ex.Message);
+                        return;
                     }
                 }
             }
@@ -238,6 +239,7 @@ namespace MainMenu
 
         public void LoadGame()
         {
+            
             using (OpenFileDialog ofd = new OpenFileDialog())
             {
                 ofd.Filter = "Pexeso Saved Game|*.save";
@@ -336,8 +338,85 @@ namespace MainMenu
                     catch (Exception ex)
                     {
                         MessageBox.Show("Chyba při načítání hry: " + ex.Message);
+                        return;
                     }
                 }
+            }
+        }
+
+        public void RestoreFromGameSave(GameSave loaded)
+        {
+            this.playerCount = loaded.PlayerNumber;
+            this.cardCount = loaded.CardNumber;
+            this.pcPlayer = loaded.PCPlayer;
+            this.difficulty = loaded.Difficulty;
+            this.isSound = loaded.IsSound;
+            scoreManager = new GameScoreManager(loaded.Names);
+            this.cardImagesIds = loaded.CardImagesIds;
+
+            scoreManager.SetScores(loaded.Score);
+            gameBoard.InitializeBoard(isLoading: true, statusStrip1, toolStrip1);
+            ShowScore();
+
+            
+            List<int> cardPositions = loaded.CardPositions;
+            for (int i = 0; i < cardPositions.Count; i++)
+            {
+                Label lbl = tableLayoutPanel1.Controls[i] as Label;
+                if (lbl != null)
+                {
+                    lbl.Tag = cardPositions[i];
+                    lbl.Image = gameBoard.GetBackImage();
+                    lbl.Enabled = true;
+                }
+            }
+
+           
+            gameBoard.MatchedPairs = new Dictionary<int, int>(loaded.MatchedPairs);
+            foreach (var kvp in gameBoard.MatchedPairs)
+            {
+                int index = kvp.Key;
+                int cardId = kvp.Value;
+
+                if (index >= 0 && index < tableLayoutPanel1.Controls.Count)
+                {
+                    Label lbl = tableLayoutPanel1.Controls[index] as Label;
+                    if (lbl != null)
+                    {
+                        lbl.Tag = cardId;
+                        gameBoard.FlipCardFront(lbl);
+                        lbl.Tag = backImageId;
+                    }
+                }
+            }
+
+            
+            if (loaded.IndexFirstFlipped >= 0 && loaded.IndexFirstFlipped < tableLayoutPanel1.Controls.Count)
+            {
+                gameLogic.first = tableLayoutPanel1.Controls[loaded.IndexFirstFlipped] as Label;
+                if (gameLogic.first != null && (int)gameLogic.first.Tag != backImageId)
+                {
+                    gameLogic.gameState = GameState.OneCardFlipped;
+                    gameBoard.FlipCardFront(gameLogic.first);
+                }
+            }
+            else
+            {
+                gameLogic.first = null;
+            }
+
+            if (loaded.IndexSecondFlipped >= 0 && loaded.IndexSecondFlipped < tableLayoutPanel1.Controls.Count)
+            {
+                gameLogic.second = tableLayoutPanel1.Controls[loaded.IndexSecondFlipped] as Label;
+                if (gameLogic.second != null && (int)gameLogic.second.Tag != backImageId)
+                {
+                    gameLogic.gameState = GameState.Processing;
+                    gameBoard.FlipCardFront(gameLogic.second);
+                }
+            }
+            else
+            {
+                gameLogic.second = null;
             }
         }
     }
