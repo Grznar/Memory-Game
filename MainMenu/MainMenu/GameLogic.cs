@@ -21,7 +21,7 @@ namespace MainMenu
         private bool locked = false;
         private bool playerRound = true;
 
-        private int currentPlayer = 1;
+        public int currentPlayer = 1;
         private int playerCount;
         private int cardCount;
         private bool pcPlayer;
@@ -41,7 +41,7 @@ namespace MainMenu
 
         public GameState gameState = GameState.Idle;
 
-        public int CurrentPlayer => currentPlayer;
+        
         public GameLogic(GameBoard board,GameScoreManager scoreMgr,int playerCount,
             int cardCount,bool pcPlayer,int difficulty,bool isSound,bool isLoading = false)
         {
@@ -53,7 +53,7 @@ namespace MainMenu
             this.difficulty = difficulty;
             this.isSound = isSound;
             this.isLoading = isLoading;
-
+            
             alreadyFlipped = new Dictionary<int, bool>();
             for (int i = 0; i < cardCount * cardCount; i++)
             {
@@ -62,7 +62,7 @@ namespace MainMenu
 
             soundManager=new SoundManager(isSound);
         }
-
+        public int CurrentPlayer => currentPlayer;
         public enum GameState
         {
             Idle,           
@@ -367,7 +367,8 @@ namespace MainMenu
         }
         private void WinnerCheck()
         {
-            
+            Console.WriteLine(gameBoard.HiddenLabels.Count);
+            Console.WriteLine(flippedLabels.Count);
             int totalCards = cardCount * cardCount;
             int sum = gameBoard.HiddenLabels.Count + flippedLabels.Count;
             if (sum == 0)

@@ -27,6 +27,7 @@ namespace MainMenu
         public string[] Names { get; set; }
         public int CurrentPlayerOnTurn { get; set; }
         
+        
        
     }
 }

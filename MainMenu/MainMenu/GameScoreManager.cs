@@ -82,8 +82,6 @@ namespace MainMenu
 
             
             MessageBox.Show(output, "Final Score");
-
-            
         }
 
 

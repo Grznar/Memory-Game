@@ -160,9 +160,11 @@ namespace MainMenu
 
         private void btnMenu_Click(object sender, EventArgs e)
         {
+            
             StartingMenu startingMenu = new StartingMenu();
             startingMenu.Show();
             this.Visible = false;
+            this.Dispose();
         }
 
        
@@ -198,7 +200,7 @@ namespace MainMenu
                         int indexFirstFlipped = tableLayoutPanel1.Controls.IndexOf(gameLogic.first);
                         int indexSecondFlipped = tableLayoutPanel1.Controls.IndexOf(gameLogic.second);
 
-                        
+
 
                         GameSave gs = new GameSave
                         {
@@ -208,13 +210,14 @@ namespace MainMenu
                             Difficulty = this.difficulty,
                             IsSound = this.isSound,
                             Score = scoreManager.GetAllScores(),
-                            Names=scoreManager.GetAllNames(),
+                            Names = scoreManager.GetAllNames(),
                             CardImagesIds = this.cardImagesIds,
                             CardPositions = cardPositions,
                             IndexFirstFlipped = indexFirstFlipped,
                             IndexSecondFlipped = indexSecondFlipped,
                             MatchedPairs = new Dictionary<int, int>(gameBoard.MatchedPairs),
-                            
+                            CurrentPlayerOnTurn = gameLogic.CurrentPlayer
+
 
                         };
 
@@ -260,9 +263,10 @@ namespace MainMenu
                         this.pcPlayer = loaded.PCPlayer;
                         this.difficulty = loaded.Difficulty;
                         this.isSound = loaded.IsSound;
+                        this.names=loaded.Names;
                         scoreManager = new GameScoreManager(loaded.Names);
                         this.cardImagesIds = loaded.CardImagesIds;
-
+                        this.gameLogic.currentPlayer = loaded.CurrentPlayerOnTurn;
 
                         scoreManager.SetScores(loaded.Score);
 
@@ -353,8 +357,10 @@ namespace MainMenu
             this.pcPlayer = loaded.PCPlayer;
             this.difficulty = loaded.Difficulty;
             this.isSound = loaded.IsSound;
+            this.names = loaded.Names;
             scoreManager = new GameScoreManager(loaded.Names);
             this.cardImagesIds = loaded.CardImagesIds;
+            this.gameLogic.currentPlayer = loaded.CurrentPlayerOnTurn;
 
             scoreManager.SetScores(loaded.Score);
             gameBoard.InitializeBoard(isLoading: true, statusStrip1, toolStrip1);
