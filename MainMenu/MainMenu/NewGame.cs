@@ -74,6 +74,7 @@ namespace MainMenu
                     ShowScore();
                 }
             };
+            gameLogic.ScoreUpdated += ShowScore;
             gameLogic.GameEnded += scoreManager.EndScore;
             
 

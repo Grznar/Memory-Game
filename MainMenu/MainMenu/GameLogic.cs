@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static MainMenu.GameLogic;
 
 namespace MainMenu
 {
@@ -13,7 +14,7 @@ namespace MainMenu
     {
         private GameBoard gameBoard;
         private GameScoreManager scoreManager;
-        //private SoundManager soundManager;
+        private SoundManager soundManager;
         public Label first, second;
         
 
@@ -30,7 +31,10 @@ namespace MainMenu
         private int backImageId = -1;
 
         private Random rnd = new Random();
+
         public event Action GameEnded;
+        public event Action ScoreUpdated;
+
         private Dictionary<int, bool> alreadyFlipped;
         private List<int> flippedLabels = new List<int>();
 
@@ -56,21 +60,22 @@ namespace MainMenu
                 alreadyFlipped.Add(i, false);
             }
 
-            //soundManager=new SoundManager(isSound);
+            soundManager=new SoundManager(isSound);
         }
 
         public enum GameState
         {
             Idle,           
             OneCardFlipped, 
-            Processing      
+            Processing,
+            ProcessingForComputer
         }
 
 
         public async Task OnCardClicked(Label clickedLabel)
         {
 
-            if (gameState == GameState.Processing)
+            if (gameState == GameState.Processing || gameState==GameState.ProcessingForComputer)
                 return;
 
             if (locked) return;
@@ -94,8 +99,8 @@ namespace MainMenu
 
                 
                 gameBoard.FlipCardFront(first);
-                //soundManager.PlayFlipCardSound();
-                Console.WriteLine("First je " + first);
+                soundManager.PlayFlipCardSound();
+                await Task.Delay(1000);
                 int idxF = gameBoard.tableLayoutPanel.Controls.IndexOf(first);
                 if (alreadyFlipped.TryGetValue(idxF, out bool valF) && !valF)
                 {
@@ -112,13 +117,15 @@ namespace MainMenu
             if (gameState == GameState.OneCardFlipped)
             {
                 locked = true;
-               
+                
                 second = clickedLabel;
-                Console.WriteLine("second je " + second);
+                
                 
                 
                 gameBoard.FlipCardFront(second);
-                //soundManager.PlayFlipCardSound();
+                
+                soundManager.PlayFlipCardSound();
+                await Task.Delay(1000);
                 int idxS = gameBoard.tableLayoutPanel.Controls.IndexOf(second);
                 if (alreadyFlipped.TryGetValue(idxS, out bool valS) && !valS)
                 {
@@ -133,7 +140,7 @@ namespace MainMenu
             
             if ((int)first.Tag == (int)second.Tag)
             {
-                //soundManager.PlayMatchedCorrect();
+                soundManager.PlayMatchedCorrect();
                 scoreManager.AddScore(currentPlayer - 1, 1);
 
                 
@@ -162,7 +169,7 @@ namespace MainMenu
             }
             else
             {
-                //soundManager.PlayMatchedWrong();
+                soundManager.PlayMatchedWrong();
                 await Task.Delay(1000);
                 currentPlayer = (currentPlayer % playerCount) + 1;
                 OnTimer1Tick();
@@ -194,6 +201,10 @@ namespace MainMenu
         }
         public async void ComputerTurn()
         {
+            
+
+
+
             if (gameState == GameState.Processing)
                 return;
 
@@ -209,6 +220,7 @@ namespace MainMenu
             
             if (chance)
             {
+                Console.WriteLine(chance);
                 bool found = false;
                 for (int i = 0; i < flippedLabels.Count && !found; i++)
                 {
@@ -218,6 +230,7 @@ namespace MainMenu
                         {
                             indexFirstLabel = flippedLabels[i];
                             indexSecondLabel = flippedLabels[j];
+                            
                             found = true;
                             break;
                         }
@@ -234,11 +247,15 @@ namespace MainMenu
                     indexFirstLabel = gameBoard.HiddenLabels[r];
                     gameBoard.HiddenLabels.RemoveAt(r);
                     pickFirst = true;
+                    
+                   
                 }
                 else
                 {
                     int r = rnd.Next(flippedLabels.Count);
                     indexFirstLabel = flippedLabels[r];
+
+                    
                 }
 
                 bool foundSecond = false;
@@ -250,6 +267,7 @@ namespace MainMenu
                         {
                             indexSecondLabel = flippedLabels[k];
                             foundSecond = true;
+                            
                         }
                     }
                 }
@@ -261,21 +279,34 @@ namespace MainMenu
                         indexSecondLabel = gameBoard.HiddenLabels[r2];
                         gameBoard.HiddenLabels.RemoveAt(r2);
                         flippedLabels.Add(indexSecondLabel);
+                        
                     }
                     else
                     {
                         int r2 = rnd.Next(flippedLabels.Count);
                         indexSecondLabel = flippedLabels[r2];
+                        
                     }
                 }
                 if (pickFirst) flippedLabels.Add(indexFirstLabel);
             }
 
             await Task.Delay(1000);
-
+            Label firstLabel = null;
+            Label secondLabel = null;
+            foreach (Label label in gameBoard.tableLayoutPanel.Controls)
+            {
+                if((int)label.Tag== indexFirstLabel&& firstLabel==null)
+                {
+                    firstLabel = label;
+                }
+                else if((int)label.Tag==indexSecondLabel && secondLabel==null)
+                    {
+                    secondLabel = label;
+                }
+            }
             
-            Label firstLabel = FindLabelByTag(indexFirstLabel);
-            Label secondLabel = FindLabelByTag(indexSecondLabel);
+           
             if (firstLabel == null || secondLabel == null)
             {
                 locked = false;
@@ -283,16 +314,16 @@ namespace MainMenu
             }
 
             gameBoard.FlipCardFront(firstLabel);
-            //soundManager.PlayFlipCardSound();
+            soundManager.PlayFlipCardSound();
             await Task.Delay(1000);
 
             gameBoard.FlipCardFront(secondLabel);
-            //soundManager.PlayFlipCardSound();
+            soundManager.PlayFlipCardSound();
             await Task.Delay(1000);
 
             if (indexFirstLabel == indexSecondLabel)
             {
-                //soundManager.PlayMatchedCorrect();
+                soundManager.PlayMatchedCorrect();
                 flippedLabels.RemoveAll(x => x == indexFirstLabel);
                 scoreManager.AddScore(currentPlayer - 1, 1);
 
@@ -300,24 +331,25 @@ namespace MainMenu
                 int idxS = gameBoard.tableLayoutPanel.Controls.IndexOf(secondLabel);
                 gameBoard.MatchedPairs[idxF] = (int)firstLabel.Tag;
                 gameBoard.MatchedPairs[idxS] = (int)secondLabel.Tag;
+                ScoreUpdated();
 
                 firstLabel.Tag = backImageId;
                 secondLabel.Tag = backImageId;
 
-                
+                gameState = GameState.ProcessingForComputer;
                 WinnerCheck();
-
                 ComputerTurn();
             }
             else
             {
-                //soundManager.PlayMatchedWrong();
+                soundManager.PlayMatchedWrong();
                 gameBoard.FlipCardBack(firstLabel);
                 
                 gameBoard.FlipCardBack(secondLabel);
                 
 
                 currentPlayer = (currentPlayer % playerCount) + 1;
+                ScoreUpdated();
                 locked = false;
 
                 gameState = GameState.Idle;
@@ -342,20 +374,10 @@ namespace MainMenu
             {
                 
                 scoreManager.EndScore();
-                //soundManager.Dispose();
+                soundManager.Dispose();
             }
         }
-        private Label FindLabelByTag(int cardId)
-        {
-            foreach (Control c in gameBoard.tableLayoutPanel.Controls)
-            {
-                if (c is Label lbl && lbl.Tag is int tag && tag == cardId)
-                {
-                    return lbl;
-                }
-            }
-            return null;
-        }
+        
 
         
     }
