@@ -81,7 +81,7 @@ namespace MainMenu
             }
 
             
-            MessageBox.Show(output, "Final Score");
+            MessageBox.Show(output, "Finální skóre");
         }
 
 

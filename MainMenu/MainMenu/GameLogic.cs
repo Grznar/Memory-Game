@@ -146,9 +146,8 @@ namespace MainMenu
                 soundManager.PlayMatchedCorrect();
                 scoreManager.AddScore(currentPlayer - 1, 1);
 
-                
-                flippedLabels.Remove((int)first.Tag);
-                flippedLabels.Remove((int)second.Tag);
+
+                flippedLabels.RemoveAll(u => u == (int)first.Tag);
 
                 Console.WriteLine((int)first.Tag + "Odebrán z flipped");
                 Console.WriteLine((int)second.Tag + "Odebrán z flipped");
@@ -311,11 +310,17 @@ namespace MainMenu
             {
                 if((int)label.Tag== indexFirstLabel&& firstLabel==null)
                 {
+                   
+                    
                     firstLabel = label;
+                    
+                    
                 }
                 else if((int)label.Tag==indexSecondLabel && secondLabel==null)
                     {
-                    secondLabel = label;
+                    
+                        secondLabel = label;
+                    
                 }
             }
 
@@ -350,8 +355,8 @@ namespace MainMenu
             if (indexFirstLabel == indexSecondLabel)
             {
                 soundManager.PlayMatchedCorrect();
-                flippedLabels.Remove(indexFirstLabel);
-                flippedLabels.Remove(indexSecondLabel);
+                flippedLabels.RemoveAll(u=>u==indexFirstLabel);
+               
                 
                 scoreManager.AddScore(currentPlayer - 1, 1);
 
@@ -395,19 +400,19 @@ namespace MainMenu
         }
         private void WinnerCheck()
         {
-            //Console.WriteLine("Hidden count :" + gameBoard.HiddenLabels.Count);
-            //Console.WriteLine("Flipped count :" + flippedLabels.Count);
-            //Console.WriteLine();
-            //foreach(int i in flippedLabels)
-            //{
-            //    Console.Write(" " + i);
-            //}
-            //Console.WriteLine();
-            foreach(int i in alreadyFlipped.Keys)
+            Console.WriteLine("Hidden count :" + gameBoard.HiddenLabels.Count);
+            Console.WriteLine("Flipped count :" + flippedLabels.Count);
+            Console.WriteLine();
+            foreach (int i in flippedLabels)
             {
-            
-            Console.WriteLine("Index je "+i+" a value:"+ alreadyFlipped[i]);
+                Console.Write(" " + i);
             }
+            Console.WriteLine();
+            //foreach (int i in alreadyFlipped.Keys)
+            //{
+            
+            //Console.WriteLine("Index je "+i+" a value:"+ alreadyFlipped[i]);
+            //}
             
             int totalCards = cardCount * cardCount;
             int sum = gameBoard.HiddenLabels.Count + flippedLabels.Count;
