@@ -11,8 +11,9 @@ namespace MainMenu
     public class GameBoard
     {
         public TableLayoutPanel tableLayoutPanel;
-        private List<int> hiddenLabels;
-        public List<int> HiddenLabels => hiddenLabels;
+        public List<int> hiddenLabels;
+        public List<int> HiddenLabels { get; set; }
+        
         private Image backImage;
         private List<Image> cardImages;
         private int backImageId = -1;
@@ -40,6 +41,7 @@ namespace MainMenu
 
             tableLayoutPanel.Padding = new Padding(0, 0, 0, status.Height);
             tableLayoutPanel.Padding = new Padding(0, strip.Height, 0, 0);
+            HiddenLabels = hiddenLabels;
         }
         public Image GetCardImage(int cardId)
         {

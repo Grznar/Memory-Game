@@ -15,19 +15,17 @@ namespace MainMenu
         public bool IsSound { get; set; }
         public List<int> CardImagesIds { get; set; }
         public List<string> CardImagePaths { get; set; }
-        public List<int> FlippedLabelsIndex { get; set; }
-        public int[] Score { get; set; }
-        public List<int> HiddenLabelsIndex { get; set; }
-        public List<int> RightFlipped { get; set; }
+        public int[] Score { get; set; }       
         public List<int> CardPositions { get; set; }
-
         public int IndexFirstFlipped { get; set; }
         public int IndexSecondFlipped { get; set; }
         public Dictionary<int, int> MatchedPairs { get; set; }
         public string[] Names { get; set; }
         public int CurrentPlayerOnTurn { get; set; }
         
-        
-       
+        public List<int>FlippedLabels { get; set; }
+        public GameState GameStateSave { get; set; }
+        public List<int> HiddenLabels { get; set; }
+
     }
 }

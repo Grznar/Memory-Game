@@ -196,11 +196,8 @@ namespace MainMenu
                             }
                         }
 
-                        
                         int indexFirstFlipped = tableLayoutPanel1.Controls.IndexOf(gameLogic.first);
                         int indexSecondFlipped = tableLayoutPanel1.Controls.IndexOf(gameLogic.second);
-
-
 
                         GameSave gs = new GameSave
                         {
@@ -216,12 +213,13 @@ namespace MainMenu
                             IndexFirstFlipped = indexFirstFlipped,
                             IndexSecondFlipped = indexSecondFlipped,
                             MatchedPairs = new Dictionary<int, int>(gameBoard.MatchedPairs),
-                            CurrentPlayerOnTurn = gameLogic.CurrentPlayer
-
-
+                            CurrentPlayerOnTurn = gameLogic.CurrentPlayer,
+                            HiddenLabels = gameBoard.HiddenLabels,
+                            FlippedLabels = gameLogic.flippedLabels,
+                            GameStateSave = gameLogic.gameState
                         };
 
-                       
+                        
                         GameSaveManager.SaveGame(gs, sfd.FileName);
 
                         MessageBox.Show("Hra byla úspěšně uložena.");
@@ -237,6 +235,7 @@ namespace MainMenu
 
 
 
+
         private void loadButton_Click(object sender, EventArgs e)
         {
             LoadGame();
@@ -244,7 +243,6 @@ namespace MainMenu
 
         public void LoadGame()
         {
-            
             using (OpenFileDialog ofd = new OpenFileDialog())
             {
                 ofd.Filter = "Pexeso Saved Game|*.save";
@@ -257,22 +255,30 @@ namespace MainMenu
                         
                         GameSave loaded = GameSaveManager.LoadGame(ofd.FileName);
 
-                       
                         this.playerCount = loaded.PlayerNumber;
                         this.cardCount = loaded.CardNumber;
                         this.pcPlayer = loaded.PCPlayer;
                         this.difficulty = loaded.Difficulty;
                         this.isSound = loaded.IsSound;
-                        this.names=loaded.Names;
-                        scoreManager = new GameScoreManager(loaded.Names);
-                        this.cardImagesIds = loaded.CardImagesIds;
-                        this.gameLogic.currentPlayer = loaded.CurrentPlayerOnTurn;
+                        this.names = loaded.Names;
 
-                        scoreManager.SetScores(loaded.Score);
 
-                        gameBoard.InitializeBoard(isLoading: true,statusStrip1,toolStrip1);
+                        if (scoreManager == null)
+                        {
+                            scoreManager = new GameScoreManager(loaded.Names);
+                        }
+                        else
+                        {
+                            for (int i = 0; i < loaded.Names.Length; i++)
+                            {
+                                scoreManager.SetPlayerName(i, loaded.Names[i]);
+                            }
+                            scoreManager.SetScores(loaded.Score);
+                        }
 
-                        ShowScore();
+
+                        gameBoard.InitializeBoard(isLoading: true, statusStrip1, toolStrip1);
+
                         
                         List<int> cardPositions = loaded.CardPositions;
                         for (int i = 0; i < cardPositions.Count; i++)
@@ -281,16 +287,16 @@ namespace MainMenu
                             if (lbl != null)
                             {
                                 lbl.Tag = cardPositions[i];
-                                lbl.Image = gameBoard.GetBackImage();   
+                                lbl.Image = gameBoard.GetBackImage();
                                 lbl.Enabled = true;
                             }
                         }
 
-
+                        
                         gameBoard.MatchedPairs = new Dictionary<int, int>(loaded.MatchedPairs);
                         foreach (var kvp in gameBoard.MatchedPairs)
                         {
-                            int index = kvp.Key;   
+                            int index = kvp.Key;
                             int cardId = kvp.Value;
 
                             if (index >= 0 && index < tableLayoutPanel1.Controls.Count)
@@ -298,17 +304,14 @@ namespace MainMenu
                                 Label lbl = tableLayoutPanel1.Controls[index] as Label;
                                 if (lbl != null)
                                 {
-                                    
                                     lbl.Tag = cardId;
-                                    
                                     gameBoard.FlipCardFront(lbl);
-                                    
-                                    
                                     lbl.Tag = backImageId;
                                 }
                             }
                         }
 
+                       
                         if (loaded.IndexFirstFlipped >= 0 && loaded.IndexFirstFlipped < tableLayoutPanel1.Controls.Count)
                         {
                             gameLogic.first = tableLayoutPanel1.Controls[loaded.IndexFirstFlipped] as Label;
@@ -323,7 +326,6 @@ namespace MainMenu
                             gameLogic.first = null;
                         }
 
-                        
                         if (loaded.IndexSecondFlipped >= 0 && loaded.IndexSecondFlipped < tableLayoutPanel1.Controls.Count)
                         {
                             gameLogic.second = tableLayoutPanel1.Controls[loaded.IndexSecondFlipped] as Label;
@@ -339,6 +341,13 @@ namespace MainMenu
                         }
 
                         
+                        gameLogic.currentPlayer = loaded.CurrentPlayerOnTurn;
+                        gameLogic.flippedLabels = loaded.FlippedLabels;
+                        gameBoard.HiddenLabels = loaded.HiddenLabels;
+                        gameLogic.gameState = loaded.GameStateSave;
+
+                        ShowScore();
+
                         MessageBox.Show("Hra byla úspěšně načtena.");
                     }
                     catch (Exception ex)
@@ -361,12 +370,15 @@ namespace MainMenu
             scoreManager = new GameScoreManager(loaded.Names);
             this.cardImagesIds = loaded.CardImagesIds;
             this.gameLogic.currentPlayer = loaded.CurrentPlayerOnTurn;
+            this.gameLogic.flippedLabels = loaded.FlippedLabels;
+            
+            this.gameLogic.gameState = loaded.GameStateSave;
+            this.scoreManager.SetScores(loaded.Score);
 
-            scoreManager.SetScores(loaded.Score);
             gameBoard.InitializeBoard(isLoading: true, statusStrip1, toolStrip1);
+
             ShowScore();
 
-            
             List<int> cardPositions = loaded.CardPositions;
             for (int i = 0; i < cardPositions.Count; i++)
             {
@@ -379,7 +391,7 @@ namespace MainMenu
                 }
             }
 
-           
+
             gameBoard.MatchedPairs = new Dictionary<int, int>(loaded.MatchedPairs);
             foreach (var kvp in gameBoard.MatchedPairs)
             {
@@ -391,14 +403,17 @@ namespace MainMenu
                     Label lbl = tableLayoutPanel1.Controls[index] as Label;
                     if (lbl != null)
                     {
+
                         lbl.Tag = cardId;
+
                         gameBoard.FlipCardFront(lbl);
+
+
                         lbl.Tag = backImageId;
                     }
                 }
             }
 
-            
             if (loaded.IndexFirstFlipped >= 0 && loaded.IndexFirstFlipped < tableLayoutPanel1.Controls.Count)
             {
                 gameLogic.first = tableLayoutPanel1.Controls[loaded.IndexFirstFlipped] as Label;
@@ -413,6 +428,7 @@ namespace MainMenu
                 gameLogic.first = null;
             }
 
+
             if (loaded.IndexSecondFlipped >= 0 && loaded.IndexSecondFlipped < tableLayoutPanel1.Controls.Count)
             {
                 gameLogic.second = tableLayoutPanel1.Controls[loaded.IndexSecondFlipped] as Label;
@@ -426,6 +442,7 @@ namespace MainMenu
             {
                 gameLogic.second = null;
             }
+            this.gameBoard.HiddenLabels = loaded.HiddenLabels;
         }
     }
 

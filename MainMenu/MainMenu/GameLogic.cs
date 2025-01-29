@@ -36,7 +36,7 @@ namespace MainMenu
         public event Action ScoreUpdated;
 
         private Dictionary<int, bool> alreadyFlipped;
-        private List<int> flippedLabels = new List<int>();
+        public List<int> flippedLabels = new List<int>();
 
 
         public GameState gameState = GameState.Idle;
@@ -166,8 +166,8 @@ namespace MainMenu
                 second = null;
 
                 locked = false;
+                ScoreUpdated?.Invoke();
 
-                
                 WinnerCheck();
                 gameState = GameState.Idle;
 
@@ -177,6 +177,7 @@ namespace MainMenu
                 soundManager.PlayMatchedWrong();
                 await Task.Delay(1000);
                 currentPlayer = (currentPlayer % playerCount) + 1;
+                ScoreUpdated?.Invoke();
                 OnTimer1Tick();
                 WinnerCheck();
 
