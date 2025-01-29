@@ -55,7 +55,7 @@ namespace MainMenu
             this.isLoading = isLoading;
             
             alreadyFlipped = new Dictionary<int, bool>();
-            for (int i = 0; i < cardCount * cardCount; i++)
+            for (int i = 0; i < gameBoard.tableLayoutPanel.Controls.Count; i++)
             {
                 alreadyFlipped.Add(i, false);
             }
@@ -74,7 +74,7 @@ namespace MainMenu
 
         public async Task OnCardClicked(Label clickedLabel)
         {
-
+            
             if (gameState == GameState.Processing || gameState==GameState.ProcessingForComputer)
                 return;
 
@@ -102,14 +102,16 @@ namespace MainMenu
                 soundManager.PlayFlipCardSound();
                 await Task.Delay(1000);
                 int idxF = gameBoard.tableLayoutPanel.Controls.IndexOf(first);
-                if (alreadyFlipped.TryGetValue(idxF, out bool valF) && !valF)
+                if (alreadyFlipped[idxF] == false)
                 {
                     alreadyFlipped[idxF] = true;
                     flippedLabels.Add((int)first.Tag);
+                    Console.WriteLine(gameBoard.tableLayoutPanel.Controls.IndexOf(first) + "Přidán to flipped");
                 }
                 gameBoard.HiddenLabels.Remove((int)first.Tag);
-
                 
+
+
                 return;
             }
 
@@ -127,10 +129,11 @@ namespace MainMenu
                 soundManager.PlayFlipCardSound();
                 await Task.Delay(1000);
                 int idxS = gameBoard.tableLayoutPanel.Controls.IndexOf(second);
-                if (alreadyFlipped.TryGetValue(idxS, out bool valS) && !valS)
+                if (alreadyFlipped[idxS]==false)
                 {
                     alreadyFlipped[idxS] = true;
                     flippedLabels.Add((int)second.Tag);
+                    Console.WriteLine(gameBoard.tableLayoutPanel.Controls.IndexOf(second) + "Přidán to flipped");
                 }
                 gameBoard.HiddenLabels.Remove((int)second.Tag);
 
@@ -147,10 +150,13 @@ namespace MainMenu
                 flippedLabels.Remove((int)first.Tag);
                 flippedLabels.Remove((int)second.Tag);
 
-                
-                 
+                Console.WriteLine((int)first.Tag + "Odebrán z flipped");
+                Console.WriteLine((int)second.Tag + "Odebrán z flipped");
+
                 int idxFirst = gameBoard.tableLayoutPanel.Controls.IndexOf(first);
                 int idxSecond = gameBoard.tableLayoutPanel.Controls.IndexOf(second);
+                Console.WriteLine(idxFirst + "Odebrán z flipped");
+                Console.WriteLine(idxSecond + "Odebrán z flipped");
                 gameBoard.MatchedPairs[idxFirst] = (int)first.Tag;
                 gameBoard.MatchedPairs[idxSecond] = (int)second.Tag;
 
@@ -173,7 +179,7 @@ namespace MainMenu
                 await Task.Delay(1000);
                 currentPlayer = (currentPlayer % playerCount) + 1;
                 OnTimer1Tick();
-
+                WinnerCheck();
 
                
             }
@@ -204,7 +210,10 @@ namespace MainMenu
             
 
 
-
+            if(gameBoard.HiddenLabels.Count + flippedLabels.Count <= 0)
+            {
+                return;
+            }
             if (gameState == GameState.Processing)
                 return;
 
@@ -237,16 +246,18 @@ namespace MainMenu
                     }
                 }
             }
-
+            bool pickFirstFromHidden = false;
+            bool pickSecondFromHidden = false;
             if (indexFirstLabel == -1)
             {
-                bool pickFirst = false;
+                 
                 if (gameBoard.HiddenLabels.Count > 0)
                 {
                     int r = rnd.Next(gameBoard.HiddenLabels.Count);
                     indexFirstLabel = gameBoard.HiddenLabels[r];
+                   
                     gameBoard.HiddenLabels.RemoveAt(r);
-                    pickFirst = true;
+                    pickFirstFromHidden = true;
                     
                    
                 }
@@ -280,6 +291,8 @@ namespace MainMenu
                         gameBoard.HiddenLabels.RemoveAt(r2);
                         flippedLabels.Add(indexSecondLabel);
                         
+                        pickSecondFromHidden = true;
+                        
                     }
                     else
                     {
@@ -288,7 +301,7 @@ namespace MainMenu
                         
                     }
                 }
-                if (pickFirst) flippedLabels.Add(indexFirstLabel);
+                if (pickFirstFromHidden) flippedLabels.Add(indexFirstLabel); Console.WriteLine((int)indexFirstLabel + "Přidán do flipped");
             }
 
             await Task.Delay(1000);
@@ -305,8 +318,21 @@ namespace MainMenu
                     secondLabel = label;
                 }
             }
-            
-           
+
+            if(pickFirstFromHidden)
+            {
+                int index = gameBoard.tableLayoutPanel.Controls.IndexOf(firstLabel);
+                Console.WriteLine(index + "pridan do flipped");
+                alreadyFlipped[index] = true;
+            }
+            if (pickSecondFromHidden)
+            {
+                int index = gameBoard.tableLayoutPanel.Controls.IndexOf(secondLabel);
+                Console.WriteLine(index + "pridan do flipped");
+                alreadyFlipped[index] = true;
+            }
+
+
             if (firstLabel == null || secondLabel == null)
             {
                 locked = false;
@@ -324,7 +350,9 @@ namespace MainMenu
             if (indexFirstLabel == indexSecondLabel)
             {
                 soundManager.PlayMatchedCorrect();
-                flippedLabels.RemoveAll(x => x == indexFirstLabel);
+                flippedLabels.Remove(indexFirstLabel);
+                flippedLabels.Remove(indexSecondLabel);
+                
                 scoreManager.AddScore(currentPlayer - 1, 1);
 
                 int idxF = gameBoard.tableLayoutPanel.Controls.IndexOf(firstLabel);
@@ -344,7 +372,6 @@ namespace MainMenu
             {
                 soundManager.PlayMatchedWrong();
                 gameBoard.FlipCardBack(firstLabel);
-                
                 gameBoard.FlipCardBack(secondLabel);
                 
 
@@ -353,6 +380,7 @@ namespace MainMenu
                 locked = false;
 
                 gameState = GameState.Idle;
+                WinnerCheck();
             }
         }
         private int GetRight()
@@ -367,8 +395,20 @@ namespace MainMenu
         }
         private void WinnerCheck()
         {
-            Console.WriteLine(gameBoard.HiddenLabels.Count);
-            Console.WriteLine(flippedLabels.Count);
+            //Console.WriteLine("Hidden count :" + gameBoard.HiddenLabels.Count);
+            //Console.WriteLine("Flipped count :" + flippedLabels.Count);
+            //Console.WriteLine();
+            //foreach(int i in flippedLabels)
+            //{
+            //    Console.Write(" " + i);
+            //}
+            //Console.WriteLine();
+            foreach(int i in alreadyFlipped.Keys)
+            {
+            
+            Console.WriteLine("Index je "+i+" a value:"+ alreadyFlipped[i]);
+            }
+            
             int totalCards = cardCount * cardCount;
             int sum = gameBoard.HiddenLabels.Count + flippedLabels.Count;
             if (sum == 0)
@@ -376,6 +416,7 @@ namespace MainMenu
                 
                 scoreManager.EndScore();
                 soundManager.Dispose();
+                
             }
         }
         

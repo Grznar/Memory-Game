@@ -321,7 +321,7 @@
             this.loadButton});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(609, 38);
+            this.toolStrip1.Size = new System.Drawing.Size(609, 33);
             this.toolStrip1.TabIndex = 2;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -331,7 +331,7 @@
             this.buttonSave.Image = ((System.Drawing.Image)(resources.GetObject("buttonSave.Image")));
             this.buttonSave.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.buttonSave.Name = "buttonSave";
-            this.buttonSave.Size = new System.Drawing.Size(34, 33);
+            this.buttonSave.Size = new System.Drawing.Size(34, 28);
             this.buttonSave.Text = "Uložit";
             this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
             // 
@@ -341,7 +341,7 @@
             this.btnMenu.Image = ((System.Drawing.Image)(resources.GetObject("btnMenu.Image")));
             this.btnMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnMenu.Name = "btnMenu";
-            this.btnMenu.Size = new System.Drawing.Size(34, 33);
+            this.btnMenu.Size = new System.Drawing.Size(34, 28);
             this.btnMenu.Text = "Menu";
             this.btnMenu.Click += new System.EventHandler(this.btnMenu_Click);
             // 
@@ -351,7 +351,7 @@
             this.loadButton.Image = ((System.Drawing.Image)(resources.GetObject("loadButton.Image")));
             this.loadButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.loadButton.Name = "loadButton";
-            this.loadButton.Size = new System.Drawing.Size(34, 33);
+            this.loadButton.Size = new System.Drawing.Size(34, 28);
             this.loadButton.Text = "Load";
             this.loadButton.Click += new System.EventHandler(this.loadButton_Click);
             // 
@@ -372,8 +372,8 @@
             this.MinimizeBox = false;
             this.Name = "NewGame";
             this.ShowIcon = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Pexeso";
-            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.tableLayoutPanel1.ResumeLayout(false);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
