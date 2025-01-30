@@ -42,6 +42,10 @@
             // dataGridView1
             // 
             this.dataGridView1.AllowUserToAddRows = false;
+            this.dataGridView1.AllowUserToDeleteRows = false;
+            this.dataGridView1.AllowUserToResizeColumns = false;
+            this.dataGridView1.AllowUserToResizeRows = false;
+            this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Location = new System.Drawing.Point(0, 100);
             this.dataGridView1.Name = "dataGridView1";
@@ -49,29 +53,29 @@
             this.dataGridView1.RowHeadersWidth = 62;
             this.dataGridView1.RowTemplate.Height = 28;
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(1000, 900);
+            this.dataGridView1.Size = new System.Drawing.Size(1000, 905);
             this.dataGridView1.TabIndex = 0;
             // 
             // comboBoxFilter
             // 
             this.comboBoxFilter.FormattingEnabled = true;
-            this.comboBoxFilter.Location = new System.Drawing.Point(131, 30);
+            this.comboBoxFilter.Location = new System.Drawing.Point(136, 34);
             this.comboBoxFilter.Name = "comboBoxFilter";
-            this.comboBoxFilter.Size = new System.Drawing.Size(121, 28);
+            this.comboBoxFilter.Size = new System.Drawing.Size(244, 28);
             this.comboBoxFilter.TabIndex = 1;
             // 
             // textBoxFilter
             // 
-            this.textBoxFilter.Location = new System.Drawing.Point(289, 30);
+            this.textBoxFilter.Location = new System.Drawing.Point(400, 34);
             this.textBoxFilter.Name = "textBoxFilter";
-            this.textBoxFilter.Size = new System.Drawing.Size(154, 26);
+            this.textBoxFilter.Size = new System.Drawing.Size(262, 26);
             this.textBoxFilter.TabIndex = 2;
             // 
             // buttonFilter
             // 
-            this.buttonFilter.Location = new System.Drawing.Point(19, 22);
+            this.buttonFilter.Location = new System.Drawing.Point(24, 34);
             this.buttonFilter.Name = "buttonFilter";
-            this.buttonFilter.Size = new System.Drawing.Size(87, 43);
+            this.buttonFilter.Size = new System.Drawing.Size(92, 39);
             this.buttonFilter.TabIndex = 4;
             this.buttonFilter.Text = "Filtrovat";
             this.buttonFilter.UseVisualStyleBackColor = true;
@@ -79,9 +83,9 @@
             // 
             // buttonClose
             // 
-            this.buttonClose.Location = new System.Drawing.Point(627, 22);
+            this.buttonClose.Location = new System.Drawing.Point(841, 34);
             this.buttonClose.Name = "buttonClose";
-            this.buttonClose.Size = new System.Drawing.Size(121, 54);
+            this.buttonClose.Size = new System.Drawing.Size(135, 39);
             this.buttonClose.TabIndex = 5;
             this.buttonClose.Text = "Zavřít";
             this.buttonClose.UseVisualStyleBackColor = true;
@@ -89,9 +93,9 @@
             // 
             // buttonClear
             // 
-            this.buttonClear.Location = new System.Drawing.Point(473, 22);
+            this.buttonClear.Location = new System.Drawing.Point(681, 34);
             this.buttonClear.Name = "buttonClear";
-            this.buttonClear.Size = new System.Drawing.Size(135, 54);
+            this.buttonClear.Size = new System.Drawing.Size(140, 39);
             this.buttonClear.TabIndex = 6;
             this.buttonClear.Text = "Vymazat tabulku";
             this.buttonClear.UseVisualStyleBackColor = true;
@@ -117,7 +121,7 @@
             this.ClientSize = new System.Drawing.Size(1000, 1000);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.dataGridView1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "Score";

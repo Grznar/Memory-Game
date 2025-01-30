@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -457,15 +458,17 @@ namespace MainMenu
         }
         private void EndGame()
         {
-            
+
             int maxScore = int.MinValue;
             int minScore = int.MaxValue;
             List<int> winners = new List<int>();
             List<int> losers = new List<int>();
 
-            for (int i = 0; i < scoreManager.GetAllScores().Length; i++)
+            // Najděte maximální a minimální skóre
+            for (int i = 0; i < playerCount; i++)
             {
-                int playerScore = scoreManager.GetScore(i);
+                int playerScore = scoreManager.GetScore(i); // Předpokládá se, že GetScore(i) vrací PairsFound
+
                 if (playerScore > maxScore)
                 {
                     maxScore = playerScore;
@@ -489,39 +492,63 @@ namespace MainMenu
                 }
             }
 
-            foreach (int winner in winners)
-            {
-                scoreManager.AddWin(winner);
-            }
-
-            foreach (int loser in losers)
-            {
-                scoreManager.AddLoss(loser);
-            }
-
-            
+            // Načtěte existující skóre
             List<ScoreData> allScores = GameScoreSaveManager.LoadScoreData();
 
+            // Aktualizujte skóre pro všechny hráče
             for (int i = 0; i < playerCount; i++)
             {
                 string playerName = scoreManager.GetPlayerName(i);
-                int wins = scoreManager.GetWins(i);
-                int losses = scoreManager.GetLosses(i);
-                int pairsFound = gameLogic.flippedLabels.Count; 
-                int totalCards = cardCount * cardCount;
+                int pairsFoundThisGame = scoreManager.GetScore(i); // Předpokládá se, že tento počet je aktuální PairsFound
 
-                
-                ScoreData scoreData = new ScoreData(playerName, wins, losses, pairsFound, totalCards);
-                allScores.Add(scoreData);
+                // Najděte existující záznam pro hráče nebo vytvořte nový
+                var scoreData = allScores.FirstOrDefault(s => s.PlayerName.Equals(playerName, StringComparison.OrdinalIgnoreCase));
+                if (scoreData != null)
+                {
+                    // Aktualizace PairsFound a TotalCards
+                    scoreData.PairsFound += pairsFoundThisGame;
+                    scoreData.TotalCards += cardCount * cardCount;
+
+                    // Přičtení výhry, pokud je hráč vítězem
+                    if (winners.Contains(i))
+                    {
+                        scoreData.Wins += 1;
+                    }
+
+                    // Přičtení prohry, pokud je hráč poraženým
+                    if (losers.Contains(i))
+                    {
+                        scoreData.Losses += 1;
+                    }
+                }
+                else
+                {
+                    // Vytvoření nového záznamu pro hráče
+                    ScoreData newScore = new ScoreData(playerName, 0, 0, pairsFoundThisGame, cardCount * cardCount);
+
+                    // Přičtení výhry, pokud je hráč vítězem
+                    if (winners.Contains(i))
+                    {
+                        newScore.Wins = 1;
+                    }
+
+                    // Přičtení prohry, pokud je hráč poraženým
+                    if (losers.Contains(i))
+                    {
+                        newScore.Losses = 1;
+                    }
+
+                    allScores.Add(newScore);
+                }
             }
 
-            
+            // Uložte aktualizované skóre
             GameScoreSaveManager.SaveScoreData(allScores);
 
-            
-            MessageBox.Show("Hra byla ukončena. Skóre bylo uloženo.");
+            // Zobrazte zprávu o ukončení hry
+            MessageBox.Show("Hra byla ukončena. Skóre bylo uloženo.", "Konec Hry", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-            
+            // Otevřete formulář Score a zavřete aktuální formulář
             Score scoreForm = new Score();
             scoreForm.Show();
             this.Close();

@@ -9,6 +9,7 @@ namespace MainMenu
 {
     public class GameScoreManager
     {
+        private List<ScoreData> scoreList;
         private string[] playerNames;
         private int[] scores;
         private int[] wins;
@@ -16,10 +17,52 @@ namespace MainMenu
 
         public GameScoreManager(string[] names)
         {
+            
             this.playerNames = names;
             this.scores = new int[names.Length];
             this.wins = new int[names.Length];
             this.losses = new int[names.Length];
+            scoreList = new List<ScoreData>();
+            foreach (var name in names)
+            {
+                
+                if (!scoreList.Any(s => s.PlayerName.Equals(name, StringComparison.OrdinalIgnoreCase)))
+                {
+                    scoreList.Add(new ScoreData(name, 0, 0, 0, 0));
+                }
+            }
+        }
+        public void AddOrUpdateScore(string playerName, int wins, int losses, int pairsFound, int totalCards)
+        {
+            var playerScore = scoreList.FirstOrDefault(s => s.PlayerName.Equals(playerName, StringComparison.OrdinalIgnoreCase));
+            if (playerScore != null)
+            {
+                
+                playerScore.Wins += wins;
+                playerScore.Losses += losses;
+                playerScore.PairsFound += pairsFound;
+                playerScore.TotalCards += totalCards;
+            }
+            else
+            {
+                
+                scoreList.Add(new ScoreData(playerName, wins, losses, pairsFound, totalCards));
+            }
+            
+            GameScoreSaveManager.SaveScoreData(scoreList);
+        }
+
+        
+        public List<ScoreData> GetAllScoresToList()
+        {
+            return scoreList;
+        }
+
+        
+        public void ClearAllScores()
+        {
+            scoreList.Clear();
+            GameScoreSaveManager.ClearScoreData();
         }
         public void AddScore(int playerIndex, int points)
         {
