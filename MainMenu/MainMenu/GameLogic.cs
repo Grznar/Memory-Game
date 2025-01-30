@@ -34,6 +34,7 @@ namespace MainMenu
 
         public event Action GameEnded;
         public event Action ScoreUpdated;
+        
 
         private Dictionary<int, bool> alreadyFlipped;
         public List<int> flippedLabels = new List<int>();
@@ -179,7 +180,7 @@ namespace MainMenu
                 currentPlayer = (currentPlayer % playerCount) + 1;
                 ScoreUpdated?.Invoke();
                 OnTimer1Tick();
-                WinnerCheck();
+                
 
                
             }
@@ -386,7 +387,7 @@ namespace MainMenu
                 locked = false;
 
                 gameState = GameState.Idle;
-                WinnerCheck();
+                
             }
         }
         private int GetRight()
@@ -401,19 +402,7 @@ namespace MainMenu
         }
         private void WinnerCheck()
         {
-            Console.WriteLine("Hidden count :" + gameBoard.HiddenLabels.Count);
-            Console.WriteLine("Flipped count :" + flippedLabels.Count);
-            Console.WriteLine();
-            foreach (int i in flippedLabels)
-            {
-                Console.Write(" " + i);
-            }
-            Console.WriteLine();
-            //foreach (int i in alreadyFlipped.Keys)
-            //{
             
-            //Console.WriteLine("Index je "+i+" a value:"+ alreadyFlipped[i]);
-            //}
             
             int totalCards = cardCount * cardCount;
             int sum = gameBoard.HiddenLabels.Count + flippedLabels.Count;
@@ -422,7 +411,7 @@ namespace MainMenu
                 
                 scoreManager.EndScore();
                 soundManager.Dispose();
-                
+                GameEnded?.Invoke();
             }
         }
         

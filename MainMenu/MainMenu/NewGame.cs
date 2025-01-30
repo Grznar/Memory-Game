@@ -75,8 +75,9 @@ namespace MainMenu
                 }
             };
             gameLogic.ScoreUpdated += ShowScore;
-            gameLogic.GameEnded += scoreManager.EndScore;
-            
+            gameLogic.GameEnded += EndGame;
+           
+
 
             ShowScore();
 
@@ -367,17 +368,24 @@ namespace MainMenu
             this.difficulty = loaded.Difficulty;
             this.isSound = loaded.IsSound;
             this.names = loaded.Names;
-            scoreManager = new GameScoreManager(loaded.Names);
-            this.cardImagesIds = loaded.CardImagesIds;
-            this.gameLogic.currentPlayer = loaded.CurrentPlayerOnTurn;
-            this.gameLogic.flippedLabels = loaded.FlippedLabels;
-            
-            this.gameLogic.gameState = loaded.GameStateSave;
-            this.scoreManager.SetScores(loaded.Score);
+
+
+            if (scoreManager == null)
+            {
+                scoreManager = new GameScoreManager(loaded.Names);
+            }
+            else
+            {
+                for (int i = 0; i < loaded.Names.Length; i++)
+                {
+                    scoreManager.SetPlayerName(i, loaded.Names[i]);
+                }
+                scoreManager.SetScores(loaded.Score);
+            }
+
 
             gameBoard.InitializeBoard(isLoading: true, statusStrip1, toolStrip1);
 
-            ShowScore();
 
             List<int> cardPositions = loaded.CardPositions;
             for (int i = 0; i < cardPositions.Count; i++)
@@ -403,16 +411,13 @@ namespace MainMenu
                     Label lbl = tableLayoutPanel1.Controls[index] as Label;
                     if (lbl != null)
                     {
-
                         lbl.Tag = cardId;
-
                         gameBoard.FlipCardFront(lbl);
-
-
                         lbl.Tag = backImageId;
                     }
                 }
             }
+
 
             if (loaded.IndexFirstFlipped >= 0 && loaded.IndexFirstFlipped < tableLayoutPanel1.Controls.Count)
             {
@@ -428,7 +433,6 @@ namespace MainMenu
                 gameLogic.first = null;
             }
 
-
             if (loaded.IndexSecondFlipped >= 0 && loaded.IndexSecondFlipped < tableLayoutPanel1.Controls.Count)
             {
                 gameLogic.second = tableLayoutPanel1.Controls[loaded.IndexSecondFlipped] as Label;
@@ -442,7 +446,85 @@ namespace MainMenu
             {
                 gameLogic.second = null;
             }
-            this.gameBoard.HiddenLabels = loaded.HiddenLabels;
+
+
+            gameLogic.currentPlayer = loaded.CurrentPlayerOnTurn;
+            gameLogic.flippedLabels = loaded.FlippedLabels;
+            gameBoard.HiddenLabels = loaded.HiddenLabels;
+            gameLogic.gameState = loaded.GameStateSave;
+
+            ShowScore();
+        }
+        private void EndGame()
+        {
+            
+            int maxScore = int.MinValue;
+            int minScore = int.MaxValue;
+            List<int> winners = new List<int>();
+            List<int> losers = new List<int>();
+
+            for (int i = 0; i < scoreManager.GetAllScores().Length; i++)
+            {
+                int playerScore = scoreManager.GetScore(i);
+                if (playerScore > maxScore)
+                {
+                    maxScore = playerScore;
+                    winners.Clear();
+                    winners.Add(i);
+                }
+                else if (playerScore == maxScore)
+                {
+                    winners.Add(i);
+                }
+
+                if (playerScore < minScore)
+                {
+                    minScore = playerScore;
+                    losers.Clear();
+                    losers.Add(i);
+                }
+                else if (playerScore == minScore)
+                {
+                    losers.Add(i);
+                }
+            }
+
+            foreach (int winner in winners)
+            {
+                scoreManager.AddWin(winner);
+            }
+
+            foreach (int loser in losers)
+            {
+                scoreManager.AddLoss(loser);
+            }
+
+            
+            List<ScoreData> allScores = GameScoreSaveManager.LoadScoreData();
+
+            for (int i = 0; i < playerCount; i++)
+            {
+                string playerName = scoreManager.GetPlayerName(i);
+                int wins = scoreManager.GetWins(i);
+                int losses = scoreManager.GetLosses(i);
+                int pairsFound = gameLogic.flippedLabels.Count; 
+                int totalCards = cardCount * cardCount;
+
+                
+                ScoreData scoreData = new ScoreData(playerName, wins, losses, pairsFound, totalCards);
+                allScores.Add(scoreData);
+            }
+
+            
+            GameScoreSaveManager.SaveScoreData(allScores);
+
+            
+            MessageBox.Show("Hra byla ukončena. Skóre bylo uloženo.");
+
+            
+            Score scoreForm = new Score();
+            scoreForm.Show();
+            this.Close();
         }
     }
 

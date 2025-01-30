@@ -11,16 +11,42 @@ namespace MainMenu
     {
         private string[] playerNames;
         private int[] scores;
+        private int[] wins;
+        private int[] losses;
 
         public GameScoreManager(string[] names)
         {
             this.playerNames = names;
             this.scores = new int[names.Length];
+            this.wins = new int[names.Length];
+            this.losses = new int[names.Length];
         }
         public void AddScore(int playerIndex, int points)
         {
             if (playerIndex < 0 || playerIndex >= scores.Length) return;
             scores[playerIndex] += points;
+        }
+        public void AddWin(int playerIndex)
+        {
+            if (playerIndex < 0 || playerIndex >= wins.Length) return;
+            wins[playerIndex]++;
+        }
+        public void AddLoss(int playerIndex)
+        {
+            if (playerIndex < 0 || playerIndex >= losses.Length) return;
+            losses[playerIndex]++;
+        }
+        public int GetWins(int playerIndex)
+        {
+            if (playerIndex < 0 || playerIndex >= wins.Length)
+                return 0;
+            return wins[playerIndex];
+        }
+        public int GetLosses(int playerIndex)
+        {
+            if (playerIndex < 0 || playerIndex >= losses.Length)
+                return 0;
+            return losses[playerIndex];
         }
         public string GetPlayerName(int playerIndex)
         {
@@ -46,6 +72,31 @@ namespace MainMenu
         public int[] GetAllScores()
         {
             return (int[])scores.Clone();
+        }
+        public int[] GetAllWins()
+        {
+            return (int[])wins.Clone();
+        }
+
+        public int[] GetAllLosses()
+        {
+            return (int[])losses.Clone();
+        }
+        public void SetWins(int[] newWins)
+        {
+            if (newWins == null) return;
+            for (int i = 0; i < wins.Length && i < newWins.Length; i++)
+            {
+                wins[i] = newWins[i];
+            }
+        }
+        public void SetLosses(int[] newLosses)
+        {
+            if (newLosses == null) return;
+            for (int i = 0; i < losses.Length && i < newLosses.Length; i++)
+            {
+                losses[i] = newLosses[i];
+            }
         }
         public void SetScores(int[] newScores)
         {
@@ -77,7 +128,7 @@ namespace MainMenu
             string output = "";
             for (int i = 0; i < sortedNames.Length; i++)
             {
-                output += "Hráč "+sortedNames[i]+" má skore: "+sortedScores[i]+"\n";
+                output += "Hráč "+sortedNames[i]+" má skóre: "+sortedScores[i]+"\n";
             }
 
             

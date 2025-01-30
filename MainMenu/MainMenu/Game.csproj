@@ -84,11 +84,13 @@
     <Compile Include="GameSave.cs" />
     <Compile Include="GameScoreManager.cs" />
     <Compile Include="GameSaveManager.cs" />
+    <Compile Include="GameScoreSaveManager.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="ScoreData.cs" />
     <Compile Include="SoundManager.cs" />
     <Compile Include="StartingMenu.cs">
       <SubType>Form</SubType>

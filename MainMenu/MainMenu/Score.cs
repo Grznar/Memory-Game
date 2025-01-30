@@ -16,81 +16,112 @@ namespace MainMenu
 {
     public partial class Score : Form
     {
-        private DataTable scoreTable;
-        private List<GameData> gameResults;
+        private List<ScoreData> gameResults;
+
         public Score()
         {
             InitializeComponent();
-            ScoreScore();
+            InitializeDataGridView();
+            InitializeComboBox();
             LoadScoreData();
-            
-        }
-        public void ScoreScore()
-        {
-            dataGridView1.Columns.Add("PlayerName", "Jméno hráče");     
-            dataGridView1.Columns.Add("Wins", "Výhry");
-            dataGridView1.Columns.Add("Losses", "Prohry");
-            dataGridView1.Columns.Add("PairsFound", "Nasbírané páry"); 
-            dataGridView1.Columns.Add("TotalCards", "Celkový počet karet"); 
+            DisplayData(gameResults);
         }
 
-        private void DisplayData(List<GameData> data)
+        
+        private void InitializeDataGridView()
+        {
+            dataGridView1.Columns.Clear();
+            dataGridView1.AutoGenerateColumns = false;
+            dataGridView1.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "PlayerName",
+                HeaderText = "Jméno hráče",
+                DataPropertyName = "PlayerName",
+                Width = 150
+            });
+            dataGridView1.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "Wins",
+                HeaderText = "Výhry",
+                DataPropertyName = "Wins",
+                Width = 80
+            });
+            dataGridView1.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "Losses",
+                HeaderText = "Prohry",
+                DataPropertyName = "Losses",
+                Width = 80
+            });
+            dataGridView1.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "PairsFound",
+                HeaderText = "Nasbírané páry",
+                DataPropertyName = "PairsFound",
+                Width = 120
+            });
+            dataGridView1.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "TotalCards",
+                HeaderText = "Celkový počet karet",
+                DataPropertyName = "TotalCards",
+                Width = 130
+            });
+
+            dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dataGridView1.ReadOnly = true;
+            dataGridView1.AllowUserToAddRows = false;
+            dataGridView1.Padding = new Padding(0, panel1.Height + 100, 0, 0);
+        }
+
+        
+        private void InitializeComboBox()
+        {
+            comboBoxFilter.Items.Clear();
+            comboBoxFilter.Items.Add("Jméno hráče");
+            comboBoxFilter.Items.Add("Výhry");
+            comboBoxFilter.Items.Add("Prohry");
+            comboBoxFilter.Items.Add("Nasbírané páry");
+            comboBoxFilter.Items.Add("Celkový počet karet");
+            comboBoxFilter.SelectedIndex = 0;
+        }
+
+        
+        private void LoadScoreData()
+        {
+            try
+            {
+                gameResults = GameScoreSaveManager.LoadScoreData();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Chyba při načítání skóre: " + ex.Message);
+                gameResults = new List<ScoreData>();
+            }
+        }
+
+        
+        private void DisplayData(List<ScoreData> data)
         {
             dataGridView1.Rows.Clear();
             foreach (var item in data)
             {
-                dataGridView1.Rows.Add(item.PlayerName, item.Wins, item.Loses, item.PairsFound, item.TotalCards);
+                dataGridView1.Rows.Add(item.PlayerName, item.Wins, item.Losses, item.PairsFound, item.TotalCards);
             }
         }
-        private void InitializeComboBox()
-        {
-            comboBox1.Items.Add("Jméno hráče");
-            comboBox1.Items.Add("Výhry");
-            comboBox1.Items.Add("Prohry");
-            comboBox1.Items.Add("Nasbírané páry");
-            comboBox1.Items.Add("Celkový počet karet");
-            comboBox1.SelectedIndex = 0; 
-        }
-        public void LoadScoreData()
-        {
-            
-        }
 
-        [Serializable]
-        public class GameData
+        
+        private void buttonFilter_Click(object sender, EventArgs e)
         {
-            public string PlayerName { get; set; }
-            public int Wins { get; set; }
-            public int Loses { get; set; }
-            public int PairsFound { get; set; }
-            public int TotalCards { get; set; }
-
-            public GameData(string playerName, int pairsFound, int totalCards)
+            string filterText = textBoxFilter.Text.Trim().ToLower();
+            if (string.IsNullOrEmpty(filterText))
             {
-                PlayerName = playerName;
-                PairsFound = pairsFound;
-                TotalCards = totalCards;
-                Wins = 0;
-                Loses = 0;
+                DisplayData(gameResults);
+                return;
             }
-        }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            dataGridView1.Rows.Clear();
-            string file = "gameResult.json";
-            if (File.Exists(file))
-            {
-                File.Delete(file); 
-            }
-        }
-
-        private void buttonFilter(object sender, EventArgs e)
-        {
-            string filterText = textBox1.Text.ToLower();
-            List<GameData> filteredResults = new List<GameData>();
-
-            string selectedFilter = comboBox1.SelectedItem.ToString();
+            string selectedFilter = comboBoxFilter.SelectedItem.ToString();
+            List<ScoreData> filteredResults = new List<ScoreData>();
 
             foreach (var game in gameResults)
             {
@@ -105,7 +136,7 @@ namespace MainMenu
                         match = game.Wins.ToString().Contains(filterText);
                         break;
                     case "Prohry":
-                        match = game.Loses.ToString().Contains(filterText);
+                        match = game.Losses.ToString().Contains(filterText);
                         break;
                     case "Nasbírané páry":
                         match = game.PairsFound.ToString().Contains(filterText);
@@ -122,13 +153,44 @@ namespace MainMenu
             }
 
             DisplayData(filteredResults);
-        
-    }
+        }
 
+        
+        private void buttonClear_Click(object sender, EventArgs e)
+        {
+            var confirmResult = MessageBox.Show("Opravdu chcete vymazat veškeré skóre?", "Potvrzení", MessageBoxButtons.YesNo);
+            if (confirmResult == DialogResult.Yes)
+            {
+                try
+                {
+                    GameScoreSaveManager.ClearScoreData();
+                    gameResults.Clear();
+                    DisplayData(gameResults);
+                    MessageBox.Show("Skóre bylo úspěšně vymazáno.");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Chyba při mazání skóre: " + ex.Message);
+                }
+            }
+        }
+
+        
+        private void buttonClose_Click(object sender, EventArgs e)
+        {
+            
+            StartingMenu menu = new StartingMenu();
+            menu.Show();
+            this.Close();
+        }
+
+        
         private void Score_Load(object sender, EventArgs e)
         {
-
+            LoadScoreData();
+            DisplayData(gameResults);
         }
     }
 }
+
 
