@@ -44,34 +44,41 @@ namespace MainMenu
                 Name = "Wins",
                 HeaderText = "Výhry",
                 DataPropertyName = "Wins",
-                Width = 80
+                Width = 100
             });
             dataGridView1.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "Losses",
                 HeaderText = "Prohry",
                 DataPropertyName = "Losses",
-                Width = 80
+                Width = 100
             });
             dataGridView1.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "PairsFound",
                 HeaderText = "Nasbírané páry",
                 DataPropertyName = "PairsFound",
-                Width = 120
+                Width = 100
             });
             dataGridView1.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "TotalCards",
                 HeaderText = "Celkový počet karet",
                 DataPropertyName = "TotalCards",
-                Width = 130
+                Width = 100
+            });
+            dataGridView1.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "",
+                HeaderText = "",
+                DataPropertyName = "",
+                Width = 0
             });
 
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridView1.ReadOnly = true;
             dataGridView1.AllowUserToAddRows = false;
-            dataGridView1.Padding = new Padding(0, panel1.Height + 100, 0, 0);
+            dataGridView1.Padding = new Padding(0);
         }
 
         
