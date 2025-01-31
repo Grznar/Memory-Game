@@ -67,13 +67,7 @@ namespace MainMenu
                 DataPropertyName = "TotalCards",
                 Width = 100
             });
-            dataGridView1.Columns.Add(new DataGridViewTextBoxColumn
-            {
-                Name = "",
-                HeaderText = "",
-                DataPropertyName = "",
-                Width = 0
-            });
+            
 
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridView1.ReadOnly = true;
