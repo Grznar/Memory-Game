@@ -95,13 +95,14 @@ namespace MainMenu
 
             if (gameState == GameState.Idle)
             {
+                locked = true;
                 gameState = GameState.OneCardFlipped;
                 first = clickedLabel;
 
                 
                 gameBoard.FlipCardFront(first);
                 soundManager.PlayFlipCardSound();
-                await Task.Delay(1000);
+                
                 int idxF = gameBoard.tableLayoutPanel.Controls.IndexOf(first);
                 if (alreadyFlipped[idxF] == false)
                 {
@@ -110,9 +111,9 @@ namespace MainMenu
                     Console.WriteLine(gameBoard.tableLayoutPanel.Controls.IndexOf(first) + "Přidán to flipped");
                 }
                 gameBoard.HiddenLabels.Remove((int)first.Tag);
-                
+                await Task.Delay(1000);
 
-
+                locked = false;
                 return;
             }
 

@@ -80,32 +80,7 @@ namespace MainMenu
         
 
         private void PlayerCountChanged(object sender, EventArgs e)
-        {
-            //int count;
-            //if(int.TryParse(playerCountTextBox.Text, out count))
-            //{
-            //    if (count >= 2 && count <= 6)
-            //    {
-            //        playerCount = count;
-            //    }
-            //    else
-            //    {
-
-            //        playerCount = 2;
-
-            //    }
-            //}
-            //else if (string.IsNullOrEmpty(playerCountTextBox.Text))
-            //{
-
-            //    playerCount = 2;
-
-
-            //}
-            
-            
-            
-            
+        {   
         }
 
         private void CardCountChanged(object sender, EventArgs e)

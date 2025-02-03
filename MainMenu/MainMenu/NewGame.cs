@@ -1,4 +1,4 @@
-﻿    using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -464,10 +464,10 @@ namespace MainMenu
             List<int> winners = new List<int>();
             List<int> losers = new List<int>();
 
-            // Najděte maximální a minimální skóre
+            
             for (int i = 0; i < playerCount; i++)
             {
-                int playerScore = scoreManager.GetScore(i); // Předpokládá se, že GetScore(i) vrací PairsFound
+                int playerScore = scoreManager.GetScore(i); 
 
                 if (playerScore > maxScore)
                 {
@@ -492,30 +492,30 @@ namespace MainMenu
                 }
             }
 
-            // Načtěte existující skóre
+            
             List<ScoreData> allScores = GameScoreSaveManager.LoadScoreData();
 
-            // Aktualizujte skóre pro všechny hráče
+            
             for (int i = 0; i < playerCount; i++)
             {
                 string playerName = scoreManager.GetPlayerName(i);
-                int pairsFoundThisGame = scoreManager.GetScore(i); // Předpokládá se, že tento počet je aktuální PairsFound
+                int pairsFoundThisGame = scoreManager.GetScore(i);
 
-                // Najděte existující záznam pro hráče nebo vytvořte nový
-                var scoreData = allScores.FirstOrDefault(s => s.PlayerName.Equals(playerName, StringComparison.OrdinalIgnoreCase));
+                
+                ScoreData scoreData = allScores.FirstOrDefault(s => s.PlayerName.Equals(playerName, StringComparison.OrdinalIgnoreCase));
                 if (scoreData != null)
                 {
-                    // Aktualizace PairsFound a TotalCards
+                    
                     scoreData.PairsFound += pairsFoundThisGame;
                     scoreData.TotalCards += cardCount * cardCount;
 
-                    // Přičtení výhry, pokud je hráč vítězem
+                    
                     if (winners.Contains(i))
                     {
                         scoreData.Wins += 1;
                     }
 
-                    // Přičtení prohry, pokud je hráč poraženým
+                    
                     if (losers.Contains(i))
                     {
                         scoreData.Losses += 1;
@@ -523,16 +523,16 @@ namespace MainMenu
                 }
                 else
                 {
-                    // Vytvoření nového záznamu pro hráče
+                    
                     ScoreData newScore = new ScoreData(playerName, 0, 0, pairsFoundThisGame, cardCount * cardCount);
 
-                    // Přičtení výhry, pokud je hráč vítězem
+                    
                     if (winners.Contains(i))
                     {
                         newScore.Wins = 1;
                     }
 
-                    // Přičtení prohry, pokud je hráč poraženým
+                    
                     if (losers.Contains(i))
                     {
                         newScore.Losses = 1;
@@ -542,13 +542,13 @@ namespace MainMenu
                 }
             }
 
-            // Uložte aktualizované skóre
+            
             GameScoreSaveManager.SaveScoreData(allScores);
 
-            // Zobrazte zprávu o ukončení hry
+            
             MessageBox.Show("Hra byla ukončena. Skóre bylo uloženo.", "Konec Hry", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-            // Otevřete formulář Score a zavřete aktuální formulář
+            
             Score scoreForm = new Score();
             scoreForm.Show();
             this.Close();

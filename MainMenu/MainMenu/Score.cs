@@ -105,7 +105,7 @@ namespace MainMenu
         private void DisplayData(List<ScoreData> data)
         {
             dataGridView1.Rows.Clear();
-            foreach (var item in data)
+            foreach (ScoreData item in data)
             {
                 dataGridView1.Rows.Add(item.PlayerName, item.Wins, item.Losses, item.PairsFound, item.TotalCards);
             }
@@ -124,7 +124,7 @@ namespace MainMenu
             string selectedFilter = comboBoxFilter.SelectedItem.ToString();
             List<ScoreData> filteredResults = new List<ScoreData>();
 
-            foreach (var game in gameResults)
+            foreach (ScoreData game in gameResults)
             {
                 bool match = false;
 

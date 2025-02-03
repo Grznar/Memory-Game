@@ -34,7 +34,7 @@ namespace MainMenu
         }
         public void AddOrUpdateScore(string playerName, int wins, int losses, int pairsFound, int totalCards)
         {
-            var playerScore = scoreList.FirstOrDefault(s => s.PlayerName.Equals(playerName, StringComparison.OrdinalIgnoreCase));
+            ScoreData playerScore = scoreList.FirstOrDefault(s => s.PlayerName.Equals(playerName, StringComparison.OrdinalIgnoreCase));
             if (playerScore != null)
             {
                 
@@ -57,40 +57,13 @@ namespace MainMenu
         {
             return scoreList;
         }
-
-        
-        public void ClearAllScores()
-        {
-            scoreList.Clear();
-            GameScoreSaveManager.ClearScoreData();
-        }
         public void AddScore(int playerIndex, int points)
         {
             if (playerIndex < 0 || playerIndex >= scores.Length) return;
             scores[playerIndex] += points;
         }
-        public void AddWin(int playerIndex)
-        {
-            if (playerIndex < 0 || playerIndex >= wins.Length) return;
-            wins[playerIndex]++;
-        }
-        public void AddLoss(int playerIndex)
-        {
-            if (playerIndex < 0 || playerIndex >= losses.Length) return;
-            losses[playerIndex]++;
-        }
-        public int GetWins(int playerIndex)
-        {
-            if (playerIndex < 0 || playerIndex >= wins.Length)
-                return 0;
-            return wins[playerIndex];
-        }
-        public int GetLosses(int playerIndex)
-        {
-            if (playerIndex < 0 || playerIndex >= losses.Length)
-                return 0;
-            return losses[playerIndex];
-        }
+       
+        
         public string GetPlayerName(int playerIndex)
         {
             if (playerIndex < 0 || playerIndex >= playerNames.Length)
@@ -115,31 +88,6 @@ namespace MainMenu
         public int[] GetAllScores()
         {
             return (int[])scores.Clone();
-        }
-        public int[] GetAllWins()
-        {
-            return (int[])wins.Clone();
-        }
-
-        public int[] GetAllLosses()
-        {
-            return (int[])losses.Clone();
-        }
-        public void SetWins(int[] newWins)
-        {
-            if (newWins == null) return;
-            for (int i = 0; i < wins.Length && i < newWins.Length; i++)
-            {
-                wins[i] = newWins[i];
-            }
-        }
-        public void SetLosses(int[] newLosses)
-        {
-            if (newLosses == null) return;
-            for (int i = 0; i < losses.Length && i < newLosses.Length; i++)
-            {
-                losses[i] = newLosses[i];
-            }
         }
         public void SetScores(int[] newScores)
         {

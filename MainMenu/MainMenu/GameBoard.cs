@@ -200,10 +200,7 @@ namespace MainMenu
             }
         }
 
-        public int GetTotalCards()
-        {
-            return tableLayoutPanel.Controls.Count;
-        }
+        
         private Label CreateCardLabel(int tagValue)
         {
             Label label = new Label

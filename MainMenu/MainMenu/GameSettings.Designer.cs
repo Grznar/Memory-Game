@@ -77,9 +77,9 @@
             this.label2.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.label2.Location = new System.Drawing.Point(49, 97);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(158, 31);
+            this.label2.Size = new System.Drawing.Size(276, 31);
             this.label2.TabIndex = 4;
-            this.label2.Text = "Počet karet:";
+            this.label2.Text = "Velikost hracího pole:";
             // 
             // label3
             // 
@@ -128,7 +128,7 @@
             // cardCountOne
             // 
             this.cardCountOne.AutoSize = true;
-            this.cardCountOne.Location = new System.Drawing.Point(6, 11);
+            this.cardCountOne.Location = new System.Drawing.Point(24, 11);
             this.cardCountOne.Name = "cardCountOne";
             this.cardCountOne.Size = new System.Drawing.Size(59, 24);
             this.cardCountOne.TabIndex = 12;
@@ -166,10 +166,10 @@
             this.difficultyOne.AutoSize = true;
             this.difficultyOne.Location = new System.Drawing.Point(0, 6);
             this.difficultyOne.Name = "difficultyOne";
-            this.difficultyOne.Size = new System.Drawing.Size(76, 24);
+            this.difficultyOne.Size = new System.Drawing.Size(78, 24);
             this.difficultyOne.TabIndex = 15;
             this.difficultyOne.TabStop = true;
-            this.difficultyOne.Text = "Lehký";
+            this.difficultyOne.Text = "Lehká";
             this.difficultyOne.UseVisualStyleBackColor = true;
             this.difficultyOne.CheckedChanged += new System.EventHandler(this.difficultyChanged);
             // 
@@ -190,10 +190,10 @@
             this.difficultyThree.AutoSize = true;
             this.difficultyThree.Location = new System.Drawing.Point(192, 6);
             this.difficultyThree.Name = "difficultyThree";
-            this.difficultyThree.Size = new System.Drawing.Size(88, 24);
+            this.difficultyThree.Size = new System.Drawing.Size(116, 24);
             this.difficultyThree.TabIndex = 17;
             this.difficultyThree.TabStop = true;
-            this.difficultyThree.Text = "Brutální";
+            this.difficultyThree.Text = "Velmi těžká";
             this.difficultyThree.UseVisualStyleBackColor = true;
             this.difficultyThree.CheckedChanged += new System.EventHandler(this.difficultyChanged);
             // 
@@ -202,9 +202,10 @@
             this.groupBox1.Controls.Add(this.cardCountOne);
             this.groupBox1.Controls.Add(this.cardCountTwo);
             this.groupBox1.Controls.Add(this.cardCountThree);
-            this.groupBox1.Location = new System.Drawing.Point(307, 97);
+            this.groupBox1.ImeMode = System.Windows.Forms.ImeMode.On;
+            this.groupBox1.Location = new System.Drawing.Point(331, 97);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(242, 35);
+            this.groupBox1.Size = new System.Drawing.Size(240, 35);
             this.groupBox1.TabIndex = 19;
             this.groupBox1.TabStop = false;
             // 
@@ -215,7 +216,7 @@
             this.groupBox2.Controls.Add(this.difficultyThree);
             this.groupBox2.Location = new System.Drawing.Point(307, 257);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(284, 30);
+            this.groupBox2.Size = new System.Drawing.Size(321, 30);
             this.groupBox2.TabIndex = 20;
             this.groupBox2.TabStop = false;
             // 
