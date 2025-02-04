@@ -171,7 +171,7 @@ namespace MainMenu
                 ScoreUpdated?.Invoke();
 
                 WinnerCheck();
-                gameState = GameState.Idle;
+                gameState = GameState.Idle; 
 
             }
             else
@@ -204,7 +204,7 @@ namespace MainMenu
             gameState = GameState.Idle;
             if (pcPlayer && currentPlayer == 2)
             {
-                ComputerTurn();
+                ComputerTurn(); 
             }
         }
         public async void ComputerTurn()
@@ -235,7 +235,7 @@ namespace MainMenu
                 bool found = false;
                 for (int i = 0; i < flippedLabels.Count && !found; i++)
                 {
-                    for (int j = i + 1; j < flippedLabels.Count; j++)
+                    for (int j = i + 1; j < flippedLabels.Count && !found; j++)
                     {
                         if (flippedLabels[i] == flippedLabels[j])
                         {
@@ -243,7 +243,7 @@ namespace MainMenu
                             indexSecondLabel = flippedLabels[j];
                             
                             found = true;
-                            break;
+                            
                         }
                     }
                 }
