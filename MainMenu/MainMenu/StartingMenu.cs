@@ -67,7 +67,7 @@ namespace MainMenu
             private void LoadScore(object sender, EventArgs e)
             {
             
-                Score score = new Score();
+                Score score = new Score(playerCount, cardCount, pcPlayer, difficulty, isSound);
                 score.Show();
                 this.Visible = false;
             }

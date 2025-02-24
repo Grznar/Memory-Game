@@ -17,7 +17,24 @@ namespace MainMenu
     public partial class Score : Form
     {
         private List<ScoreData> gameResults;
-
+        private int difficulty = 2;
+        private int playerCount = 2;
+        private int cardCount = 4;
+        private bool pcPlayer = false;
+        private bool isSound = true;
+        public Score(int playerCount, int cardCount, bool pcPlayer, int difficulty, bool isSound)
+        {
+            InitializeComponent();
+            InitializeDataGridView();
+            InitializeComboBox();
+            LoadScoreData();
+            DisplayData(gameResults);
+            this.playerCount = playerCount;
+            this.difficulty = difficulty;
+            this.cardCount = cardCount;
+            this.pcPlayer = pcPlayer;
+            this.isSound = isSound;
+        }
         public Score()
         {
             InitializeComponent();
@@ -25,9 +42,10 @@ namespace MainMenu
             InitializeComboBox();
             LoadScoreData();
             DisplayData(gameResults);
+            
         }
 
-        
+
         private void InitializeDataGridView()
         {
             dataGridView1.Columns.Clear();
@@ -180,7 +198,7 @@ namespace MainMenu
         private void buttonClose_Click(object sender, EventArgs e)
         {
             
-            StartingMenu menu = new StartingMenu();
+            StartingMenu menu = new StartingMenu(playerCount, cardCount, pcPlayer, difficulty, isSound);
             menu.Show();
             this.Close();
         }

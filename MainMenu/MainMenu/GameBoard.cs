@@ -45,16 +45,20 @@ namespace MainMenu
         }
         public Image GetCardImage(int cardId)
         {
-            
-            if (cardId >= 0 && cardId < cardImages.Count)
+            int index;
+            if (cardId >= 100)
+                index = (cardId / 100) - 1;
+            else
+                index = cardId - 1;
+
+            if (index >= 0 && index < cardImages.Count)
             {
-                return cardImages[cardId];
+                return cardImages[index];
             }
-            
             return null;
         }
 
-        
+
         public Image GetBackImage()
         {
             return backImage;
@@ -177,8 +181,8 @@ namespace MainMenu
                 List<int> icons = new List<int>();
                 for (int i = 0; i < (cardCount * cardCount) / 2; i++)
                 {
-                    icons.Add(i);
-                    icons.Add(i);
+                    icons.Add(i+1);
+                    icons.Add((i+1)*100);
                 }
 
                 

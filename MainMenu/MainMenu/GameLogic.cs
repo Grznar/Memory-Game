@@ -142,15 +142,17 @@ namespace MainMenu
                 gameState = GameState.Processing;
             }
 
-            
-            if ((int)first.Tag == (int)second.Tag)
+
+            int tag1 = (int)first.Tag;
+            int tag2 = (int)second.Tag;
+            if (tag1 * 100 == tag2 || tag2 * 100 == tag1)
             {
                 soundManager.PlayMatchedCorrect();
                 scoreManager.AddScore(currentPlayer - 1, 1);
 
 
                 flippedLabels.RemoveAll(u => u == (int)first.Tag);
-
+                flippedLabels.RemoveAll(u => u == (int)second.Tag);
                 Console.WriteLine((int)first.Tag + "Odebrán z flipped");
                 Console.WriteLine((int)second.Tag + "Odebrán z flipped");
 
@@ -237,7 +239,7 @@ namespace MainMenu
                 {
                     for (int j = i + 1; j < flippedLabels.Count && !found; j++)
                     {
-                        if (flippedLabels[i] == flippedLabels[j])
+                        if (flippedLabels[i] * 100 == flippedLabels[j] || flippedLabels[j] * 100 == flippedLabels[i])
                         {
                             indexFirstLabel = flippedLabels[i];
                             indexSecondLabel = flippedLabels[j];
@@ -276,7 +278,7 @@ namespace MainMenu
                 {
                     for (int k = 0; k < flippedLabels.Count && !foundSecond; k++)
                     {
-                        if (flippedLabels[k] == indexFirstLabel)
+                        if (flippedLabels[k] * 100 == indexFirstLabel || indexFirstLabel * 100 == flippedLabels[k])
                         {
                             indexSecondLabel = flippedLabels[k];
                             foundSecond = true;
@@ -355,12 +357,13 @@ namespace MainMenu
             soundManager.PlayFlipCardSound();
             await Task.Delay(1000);
 
-            if (indexFirstLabel == indexSecondLabel)
+            if (indexFirstLabel * 100 == indexSecondLabel || indexSecondLabel * 100 == indexFirstLabel)
             {
                 soundManager.PlayMatchedCorrect();
-                flippedLabels.RemoveAll(u=>u==indexFirstLabel);
-               
-                
+                flippedLabels.RemoveAll(u => u == indexFirstLabel);
+                flippedLabels.RemoveAll(u => u == indexSecondLabel) ;
+
+
                 scoreManager.AddScore(currentPlayer - 1, 1);
 
                 int idxF = gameBoard.tableLayoutPanel.Controls.IndexOf(firstLabel);
@@ -404,7 +407,7 @@ namespace MainMenu
         private void WinnerCheck()
         {
             
-            
+
             int totalCards = cardCount * cardCount;
             int sum = gameBoard.HiddenLabels.Count + flippedLabels.Count;
             if (sum == 0)

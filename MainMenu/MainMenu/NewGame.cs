@@ -84,7 +84,7 @@ namespace MainMenu
 
         }
 
-        
+
 
         private string[] GetNames(int playerNumber, bool pcPlayer)
         {
@@ -92,7 +92,6 @@ namespace MainMenu
             string[] names = new string[playerNumber];
             for (int i = 0; i < playerNumber; i++)
             {
-
                 if (pcPlayer && i == 1)
                 {
                     names[i] = "PC";
@@ -100,42 +99,62 @@ namespace MainMenu
                 }
                 using (Form nameInputForm = new Form())
                 {
+                  
                     nameInputForm.Text = "Zadejte jméno pro hráče " + (i + 1);
-                    Label label = new Label();
-                    label.Text = "Hráč " + (i + 1);
-                    label.AutoSize = true;
-                    label.Location = new Point(10, 10);
-                    TextBox textbox = new TextBox();
-                    textbox.Width = 200;
-                    textbox.Location = new Point(10, 30);
-                    Button btn = new Button();
-                    btn.Text = "Ok";
-                    btn.DialogResult = DialogResult.OK;
-                    btn.Location = new Point(10, 60);
+                    nameInputForm.FormBorderStyle = FormBorderStyle.FixedDialog;
+                    nameInputForm.StartPosition = FormStartPosition.CenterScreen;
                     nameInputForm.MaximizeBox = false;
                     nameInputForm.MinimizeBox = false;
+                    nameInputForm.ClientSize = new Size(300, 150);
+                    nameInputForm.BackColor = SystemColors.ControlLight;
+
+                   
+                    Label label = new Label();
+                    label.Text = "Hráč " + (i + 1) + ":";
+                    label.Font = new Font("Segoe UI", 10, FontStyle.Regular);
+                    label.AutoSize = true;
+                    label.Location = new Point(15, 20);
+
+                   
+                    TextBox textbox = new TextBox();
+                    textbox.Font = new Font("Segoe UI", 10, FontStyle.Regular);
+                    textbox.Width = 260;
+                    textbox.Location = new Point(15, 50);
+
+                  
+                    Button btn = new Button();
+                    btn.Text = "OK";
+                    btn.Font = new Font("Segoe UI", 10, FontStyle.Regular);
+                    btn.DialogResult = DialogResult.OK;
+                    btn.Size = new Size(80, 30);
+                    btn.Location = new Point((nameInputForm.ClientSize.Width - btn.Width) / 2, 90);
+
+                    
+                    nameInputForm.AcceptButton = btn;
+
                     nameInputForm.Controls.Add(label);
                     nameInputForm.Controls.Add(textbox);
                     nameInputForm.Controls.Add(btn);
-                    nameInputForm.StartPosition = FormStartPosition.CenterScreen;
-                    nameInputForm.ShowIcon = false;
 
+                    
                     if (nameInputForm.ShowDialog() == DialogResult.OK)
                     {
-                        if (textbox.Text != string.Empty)   
+                        if (!string.IsNullOrEmpty(textbox.Text))
                         {
                             names[i] = textbox.Text;
                         }
-                        else names[i] = ((i + 1).ToString());
-
+                        else
+                        {
+                            names[i] = (i + 1).ToString();
+                        }
                     }
-
                 }
             }
             this.names = names;
             return names;
         }
-       
+
+
         private void ShowScore()
         {
             int index = gameLogic.CurrentPlayer - 1;
