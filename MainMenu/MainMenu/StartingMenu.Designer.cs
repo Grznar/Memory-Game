@@ -28,12 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(StartingMenu));
             this.newGame = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.settings = new System.Windows.Forms.Button();
             this.quitGame = new System.Windows.Forms.Button();
             this.loadSave = new System.Windows.Forms.Button();
             this.scorebtn = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // newGame
@@ -99,7 +102,7 @@
             // 
             this.scorebtn.BackColor = System.Drawing.Color.PowderBlue;
             this.scorebtn.Font = new System.Drawing.Font("Microsoft YaHei UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.scorebtn.Location = new System.Drawing.Point(895, 417);
+            this.scorebtn.Location = new System.Drawing.Point(691, 351);
             this.scorebtn.Name = "scorebtn";
             this.scorebtn.Size = new System.Drawing.Size(174, 80);
             this.scorebtn.TabIndex = 7;
@@ -107,11 +110,23 @@
             this.scorebtn.UseVisualStyleBackColor = false;
             this.scorebtn.Click += new System.EventHandler(this.LoadScore);
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.Location = new System.Drawing.Point(70, 125);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(355, 306);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.TabIndex = 8;
+            this.pictureBox1.TabStop = false;
+            // 
             // StartingMenu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1081, 519);
+            this.ClientSize = new System.Drawing.Size(1077, 515);
+            this.ControlBox = false;
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.scorebtn);
             this.Controls.Add(this.loadSave);
             this.Controls.Add(this.quitGame);
@@ -125,6 +140,8 @@
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Menu";
+            this.Load += new System.EventHandler(this.StartingMenu_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -138,6 +155,7 @@
         private System.Windows.Forms.Button quitGame;
         private System.Windows.Forms.Button loadSave;
         private System.Windows.Forms.Button scorebtn;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }
 

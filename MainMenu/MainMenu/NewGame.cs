@@ -107,6 +107,7 @@ namespace MainMenu
                     nameInputForm.MinimizeBox = false;
                     nameInputForm.ClientSize = new Size(300, 150);
                     nameInputForm.BackColor = SystemColors.ControlLight;
+                    nameInputForm.ControlBox = false;
 
                    
                     Label label = new Label();
@@ -172,7 +173,7 @@ namespace MainMenu
         {
 
             timer1.Stop();
-            gameLogic.OnTimer1Tick();
+            gameLogic.OnTimerTick();
         }
 
         

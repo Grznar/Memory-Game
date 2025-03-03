@@ -1,5 +1,4 @@
 ﻿using System;
-using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -13,30 +12,30 @@ namespace MainMenu
         public TableLayoutPanel tableLayoutPanel;
         public List<int> hiddenLabels;
         public List<int> HiddenLabels { get; set; }
-        
+
         private Image backImage;
         private List<Image> cardImages;
         private int backImageId = -1;
         public List<int> cardImagesIds = new List<int>();
-        public List<int> CardImagesIds => cardImagesIds;
+
         private int cardCount = 0;
         public Dictionary<int, int> MatchedPairs { get; set; }
         public event EventHandler CardClicked;
         public GameBoard(int cardsCount, TableLayoutPanel panel)
         {
-            MatchedPairs=new Dictionary<int, int>();
+            MatchedPairs = new Dictionary<int, int>();
             this.tableLayoutPanel = panel;
             this.cardCount = cardsCount;
         }
-        public void InitializeBoard(bool isLoading,StatusStrip status, ToolStrip strip)
+        public void InitializeBoard(bool isLoading, StatusStrip status, ToolStrip strip)
         {
-            
+
             LoadImages();
 
-            
+
             SetupLayout();
 
-            
+
             PlaceCards(isLoading);
 
             tableLayoutPanel.Padding = new Padding(0, 0, 0, status.Height);
@@ -64,16 +63,16 @@ namespace MainMenu
             return backImage;
         }
 
-        
+
         public void FlipCardFront(Label label)
         {
             if (label.Tag is int cardId)
             {
-                label.Image = GetCardImage(cardId);
+                label.Image = GetCardImage(cardId);     
             }
         }
 
-        
+
         public void FlipCardBack(Label label)
         {
             label.Image = GetBackImage();
@@ -87,29 +86,29 @@ namespace MainMenu
             cardImages = new List<Image>();
             backImageId = -1;
 
-           
+
             Assembly assembly = Assembly.GetExecutingAssembly();
 
-          
+
             string resourceFolder = "MainMenu.Root.Images";
 
-            
+
             string[] resourceNames = assembly.GetManifestResourceNames();
 
-           
+
             foreach (string resourceName in resourceNames)
             {
                 if (resourceName.StartsWith(resourceFolder) && resourceName.EndsWith(".png", StringComparison.OrdinalIgnoreCase))
                 {
-                    
+
                     using (Stream stream = assembly.GetManifestResourceStream(resourceName))
                     {
                         if (stream != null)
                         {
-                            
+
                             Image image = Image.FromStream(stream);
 
-                            
+
                             if (resourceName.EndsWith("BackImage.png", StringComparison.OrdinalIgnoreCase))
                             {
                                 backImage = image;
@@ -124,8 +123,8 @@ namespace MainMenu
                 }
             }
 
-            
-            if (cardImages.Count < 18) 
+
+            if (cardImages.Count < 18)
             {
                 MessageBox.Show("Není dost obrázků!");
             }
@@ -157,19 +156,19 @@ namespace MainMenu
                 tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100f / rows));
             }
 
-            
+
         }
         private void PlaceCards(bool isLoading)
         {
             hiddenLabels = new List<int>();
 
-            
+
             if (isLoading)
             {
-                
+
                 for (int i = 0; i < cardCount * cardCount; i++)
                 {
-                    
+
                     Label label = CreateCardLabel(tagValue: 0);
                     tableLayoutPanel.Controls.Add(label);
                     hiddenLabels.Add((int)label.Tag);
@@ -177,15 +176,15 @@ namespace MainMenu
             }
             else
             {
-                
+
                 List<int> icons = new List<int>();
                 for (int i = 0; i < (cardCount * cardCount) / 2; i++)
                 {
-                    icons.Add(i+1);
-                    icons.Add((i+1)*100);
+                    icons.Add(i + 1);
+                    icons.Add((i + 1) * 100);
                 }
 
-                
+
                 Random rnd = new Random();
                 List<int> randIcons = new List<int>();
                 while (icons.Count > 0)
@@ -204,12 +203,12 @@ namespace MainMenu
             }
         }
 
-        
+
         private Label CreateCardLabel(int tagValue)
         {
             Label label = new Label
             {
-                
+
                 Image = backImage,
                 Tag = tagValue,
                 ImageAlign = ContentAlignment.MiddleCenter,
@@ -223,7 +222,7 @@ namespace MainMenu
 
             label.Click += async (s, e) =>
             {
-               
+
                 CardClicked?.Invoke(s, e);
             };
 

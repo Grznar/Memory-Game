@@ -116,7 +116,10 @@ namespace MainMenu
             }
         }
 
+        private void StartingMenu_Load(object sender, EventArgs e)
+        {
 
+        }
     }
 
 

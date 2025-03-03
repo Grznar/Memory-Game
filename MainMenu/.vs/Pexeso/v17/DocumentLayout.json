@@ -3,12 +3,12 @@
   "WorkspaceRootPath": "C:\\Users\\Admin\\Documents\\GitHub\\Pexeso---ROP\\MainMenu\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{C44F58B6-04F3-4B7A-9388-2E8611810F1E}|MainMenu\\Game.csproj|c:\\users\\admin\\documents\\github\\pexeso---rop\\mainmenu\\mainmenu\\startingmenu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C44F58B6-04F3-4B7A-9388-2E8611810F1E}|MainMenu\\Game.csproj|solutionrelative:mainmenu\\startingmenu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{C44F58B6-04F3-4B7A-9388-2E8611810F1E}|MainMenu\\Game.csproj|c:\\users\\admin\\documents\\github\\pexeso---rop\\mainmenu\\mainmenu\\gamescoremanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C44F58B6-04F3-4B7A-9388-2E8611810F1E}|MainMenu\\Game.csproj|solutionrelative:mainmenu\\gamescoremanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{C44F58B6-04F3-4B7A-9388-2E8611810F1E}|MainMenu\\Game.csproj|c:\\users\\admin\\documents\\github\\pexeso---rop\\mainmenu\\mainmenu\\score.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C44F58B6-04F3-4B7A-9388-2E8611810F1E}|MainMenu\\Game.csproj|solutionrelative:mainmenu\\score.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{C44F58B6-04F3-4B7A-9388-2E8611810F1E}|MainMenu\\Game.csproj|c:\\users\\admin\\documents\\github\\pexeso---rop\\mainmenu\\mainmenu\\soundmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C44F58B6-04F3-4B7A-9388-2E8611810F1E}|MainMenu\\Game.csproj|solutionrelative:mainmenu\\soundmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -18,37 +18,37 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 0,
           "Children": [
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{0ad07096-bba9-4900-a651-0598d26f6d24}"
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "GameScoreManager.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Documents\\GitHub\\Pexeso---ROP\\MainMenu\\MainMenu\\GameScoreManager.cs",
+              "RelativeDocumentMoniker": "MainMenu\\GameScoreManager.cs",
+              "ToolTip": "C:\\Users\\Admin\\Documents\\GitHub\\Pexeso---ROP\\MainMenu\\MainMenu\\GameScoreManager.cs",
+              "RelativeToolTip": "MainMenu\\GameScoreManager.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAAB0AAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-03T11:15:47.372Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "Score.cs",
-              "DocumentMoniker": "C:\\Users\\Admin\\Documents\\GitHub\\Pexeso---ROP\\MainMenu\\MainMenu\\Score.cs",
-              "RelativeDocumentMoniker": "MainMenu\\Score.cs",
-              "ToolTip": "C:\\Users\\Admin\\Documents\\GitHub\\Pexeso---ROP\\MainMenu\\MainMenu\\Score.cs",
-              "RelativeToolTip": "MainMenu\\Score.cs",
-              "ViewState": "AgIAACMAAAAAAAAAAAAkwCwAAAAMAAAAAAAAAA==",
+              "Title": "SoundManager.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Documents\\GitHub\\Pexeso---ROP\\MainMenu\\MainMenu\\SoundManager.cs",
+              "RelativeDocumentMoniker": "MainMenu\\SoundManager.cs",
+              "ToolTip": "C:\\Users\\Admin\\Documents\\GitHub\\Pexeso---ROP\\MainMenu\\MainMenu\\SoundManager.cs",
+              "RelativeToolTip": "MainMenu\\SoundManager.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-24T07:56:50.086Z",
+              "WhenOpened": "2025-03-03T11:11:16.589Z",
               "EditorCaption": ""
             },
             {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "StartingMenu.cs",
-              "DocumentMoniker": "C:\\Users\\Admin\\Documents\\GitHub\\Pexeso---ROP\\MainMenu\\MainMenu\\StartingMenu.cs",
-              "RelativeDocumentMoniker": "MainMenu\\StartingMenu.cs",
-              "ToolTip": "C:\\Users\\Admin\\Documents\\GitHub\\Pexeso---ROP\\MainMenu\\MainMenu\\StartingMenu.cs",
-              "RelativeToolTip": "MainMenu\\StartingMenu.cs",
-              "ViewState": "AgIAACsAAAAAAAAAAAAQwD0AAAAlAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-24T07:56:25.693Z",
-              "EditorCaption": ""
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{0ad07096-bba9-4900-a651-0598d26f6d24}"
             }
           ]
         },
