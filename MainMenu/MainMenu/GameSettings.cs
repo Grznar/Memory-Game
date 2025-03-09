@@ -31,7 +31,7 @@ namespace MainMenu
 
 
             playerCountTextBox.Text = playerNumber.ToString();
-            if(cardNumber==2)cardCountOne.Checked = true;
+            if (cardNumber == 2) cardCountOne.Checked = true;
             else if (cardNumber == 4) cardCountTwo.Checked = true;
             else if (cardNumber == 6) cardCountThree.Checked = true;
             if (isSound) volumeBool.Checked = true;
@@ -45,13 +45,13 @@ namespace MainMenu
 
 
         }
-        
 
-        
+
+
         private void LoadMenu(object sender, EventArgs e)
         {
             int count = 0;
-            if(int.TryParse(playerCountTextBox.Text, out count))
+            if (int.TryParse(playerCountTextBox.Text, out count))
             {
 
                 if (count >= 2 && count <= 6)
@@ -59,12 +59,12 @@ namespace MainMenu
                     playerCount = count;
                 }
                 else count = 0;
-               
+
             }
             if (count == 0)
             {
                 MessageBox.Show("Zadej platný počet hráčů!");
-                
+
             }
             else
             {
@@ -75,13 +75,9 @@ namespace MainMenu
             }
 
         }
-        
 
-        
 
-        private void PlayerCountChanged(object sender, EventArgs e)
-        {   
-        }
+
 
         private void CardCountChanged(object sender, EventArgs e)
         {

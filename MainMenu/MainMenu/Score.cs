@@ -42,7 +42,7 @@ namespace MainMenu
             InitializeComboBox();
             LoadScoreData();
             DisplayData(gameResults);
-            
+
         }
 
 
@@ -85,7 +85,7 @@ namespace MainMenu
                 DataPropertyName = "TotalCards",
                 Width = 100
             });
-            
+
 
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridView1.ReadOnly = true;
@@ -93,7 +93,7 @@ namespace MainMenu
             dataGridView1.Padding = new Padding(0);
         }
 
-        
+
         private void InitializeComboBox()
         {
             comboBoxFilter.Items.Clear();
@@ -105,7 +105,7 @@ namespace MainMenu
             comboBoxFilter.SelectedIndex = 0;
         }
 
-        
+
         private void LoadScoreData()
         {
             try
@@ -119,7 +119,7 @@ namespace MainMenu
             }
         }
 
-        
+
         private void DisplayData(List<ScoreData> data)
         {
             dataGridView1.Rows.Clear();
@@ -129,7 +129,7 @@ namespace MainMenu
             }
         }
 
-        
+
         private void buttonFilter_Click(object sender, EventArgs e)
         {
             string filterText = textBoxFilter.Text.Trim().ToLower();
@@ -174,7 +174,7 @@ namespace MainMenu
             DisplayData(filteredResults);
         }
 
-        
+
         private void buttonClear_Click(object sender, EventArgs e)
         {
             var confirmResult = MessageBox.Show("Opravdu chcete vymazat veškeré skóre?", "Potvrzení", MessageBoxButtons.YesNo);
@@ -194,16 +194,16 @@ namespace MainMenu
             }
         }
 
-        
+
         private void buttonClose_Click(object sender, EventArgs e)
         {
-            
+
             StartingMenu menu = new StartingMenu(playerCount, cardCount, pcPlayer, difficulty, isSound);
             menu.Show();
             this.Close();
         }
 
-        
+
         private void Score_Load(object sender, EventArgs e)
         {
             LoadScoreData();

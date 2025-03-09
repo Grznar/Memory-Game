@@ -1,39 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static MainMenu.GameLogic;
-using static MainMenu.NewGame;
 
 namespace MainMenu
 {
     public partial class NewGame : Form
     {
-
         private GameBoard gameBoard;
         private GameScoreManager scoreManager;
         private GameLogic gameLogic;
 
         private int playerCount;
-        public int[] score;
-        
         private int cardCount;
         private bool pcPlayer;
         private int difficulty;
-        
         private string[] names;
         private bool isSound;
         private bool isLoading = false;
         private int backImageId = -1;
 
         public List<int> cardImagesIds = new List<int>();
-        public List<int> FlippedLabelsIndex { get; set; }
-        
 
         public NewGame(int playerNumber, int cardNumber, bool pcPlayer, int obtiznost, bool isSound, bool isLoading = false)
         {
@@ -44,51 +34,44 @@ namespace MainMenu
             this.cardCount = cardNumber;
             this.difficulty = obtiznost;
             this.isSound = isSound;
-            Console.WriteLine(isSound);
-            score = new int[playerNumber];
-            
+
 
             gameBoard = new GameBoard(cardCount, tableLayoutPanel1);
-            
-            gameBoard.InitializeBoard(isLoading,statusStrip1,toolStrip1);
-            
+            gameBoard.InitializeBoard(isLoading, statusStrip1, toolStrip1);
 
-            if (!isLoading) names = GetNames(playerNumber, pcPlayer);
+            if (!isLoading)
+                names = GetNames(playerNumber, pcPlayer);
             else
             {
                 names = new string[playerNumber];
                 for (int i = 0; i < playerNumber; i++)
-                {
                     names[i] = "Hráč " + (i + 1);
-                }
             }
+
             scoreManager = new GameScoreManager(names);
-            gameLogic = new GameLogic(gameBoard, scoreManager,
-            playerNumber, cardCount, pcPlayer, obtiznost, isSound, isLoading);
+            gameLogic = new GameLogic(gameBoard, scoreManager, playerNumber, cardCount, pcPlayer, obtiznost, isSound, isLoading);
 
             gameBoard.CardClicked += async (sender, e) =>
             {
-                Label clickedLabel = sender as Label;
-                if (clickedLabel != null)
+                if (sender is Label clickedLabel)
                 {
                     await gameLogic.OnCardClicked(clickedLabel);
                     ShowScore();
                 }
             };
+
             gameLogic.ScoreUpdated += ShowScore;
             gameLogic.GameEnded += EndGame;
-           
 
 
             ShowScore();
-
         }
-
-
 
         private string[] GetNames(int playerNumber, bool pcPlayer)
         {
-            if (this.names != null) return this.names;
+            if (this.names != null)
+                return this.names;
+
             string[] names = new string[playerNumber];
             for (int i = 0; i < playerNumber; i++)
             {
@@ -97,9 +80,9 @@ namespace MainMenu
                     names[i] = "PC";
                     continue;
                 }
+
                 using (Form nameInputForm = new Form())
                 {
-                  
                     nameInputForm.Text = "Zadejte jméno pro hráče " + (i + 1);
                     nameInputForm.FormBorderStyle = FormBorderStyle.FixedDialog;
                     nameInputForm.StartPosition = FormStartPosition.CenterScreen;
@@ -109,92 +92,70 @@ namespace MainMenu
                     nameInputForm.BackColor = SystemColors.ControlLight;
                     nameInputForm.ControlBox = false;
 
-                   
-                    Label label = new Label();
-                    label.Text = "Hráč " + (i + 1) + ":";
-                    label.Font = new Font("Segoe UI", 10, FontStyle.Regular);
-                    label.AutoSize = true;
-                    label.Location = new Point(15, 20);
+                    Label label = new Label
+                    {
+                        Text = "Hráč " + (i + 1) + ":",
+                        Font = new Font("Segoe UI", 10, FontStyle.Regular),
+                        AutoSize = true,
+                        Location = new Point(15, 20)
+                    };
 
-                   
-                    TextBox textbox = new TextBox();
-                    textbox.Font = new Font("Segoe UI", 10, FontStyle.Regular);
-                    textbox.Width = 260;
-                    textbox.Location = new Point(15, 50);
+                    TextBox textbox = new TextBox
+                    {
+                        Font = new Font("Segoe UI", 10, FontStyle.Regular),
+                        Width = 260,
+                        Location = new Point(15, 50)
+                    };
 
-                  
-                    Button btn = new Button();
-                    btn.Text = "OK";
-                    btn.Font = new Font("Segoe UI", 10, FontStyle.Regular);
-                    btn.DialogResult = DialogResult.OK;
-                    btn.Size = new Size(80, 30);
-                    btn.Location = new Point((nameInputForm.ClientSize.Width - btn.Width) / 2, 90);
+                    Button btn = new Button
+                    {
+                        Text = "OK",
+                        Font = new Font("Segoe UI", 10, FontStyle.Regular),
+                        DialogResult = DialogResult.OK,
+                        Size = new Size(80, 30),
+                        Location = new Point((300 - 80) / 2, 90)
+                    };
 
-                    
                     nameInputForm.AcceptButton = btn;
-
                     nameInputForm.Controls.Add(label);
                     nameInputForm.Controls.Add(textbox);
                     nameInputForm.Controls.Add(btn);
 
-                    
                     if (nameInputForm.ShowDialog() == DialogResult.OK)
-                    {
-                        if (!string.IsNullOrEmpty(textbox.Text))
-                        {
-                            names[i] = textbox.Text;
-                        }
-                        else
-                        {
-                            names[i] = (i + 1).ToString();
-                        }
-                    }
+                        names[i] = !string.IsNullOrEmpty(textbox.Text) ? textbox.Text : (i + 1).ToString();
                 }
             }
+
             this.names = names;
             return names;
         }
-
 
         private void ShowScore()
         {
             int index = gameLogic.CurrentPlayer - 1;
             string name = scoreManager.GetPlayerName(index);
             int points = scoreManager.GetScore(index);
-            toolStripStatusLabel1.Text = "Hráč " + name + " je na tahu. Počet bodů: " + points ;
-
+            toolStripStatusLabel1.Text = "Hráč " + name + " je na tahu. Počet bodů: " + points;
         }
-       
 
-        
-
-        
         private void timer1_Tick(object sender, EventArgs e)
         {
-
             timer1.Stop();
             gameLogic.OnTimerTick();
         }
 
-        
-
-        
-
         private void btnMenu_Click(object sender, EventArgs e)
         {
-            
             StartingMenu startingMenu = new StartingMenu();
             startingMenu.Show();
             this.Visible = false;
             this.Dispose();
         }
 
-       
         private void buttonSave_Click(object sender, EventArgs e)
         {
             SaveGame();
         }
-
 
         private void SaveGame()
         {
@@ -207,15 +168,11 @@ namespace MainMenu
                 {
                     try
                     {
-                        
                         List<int> cardPositions = new List<int>();
-                        for (int i = 0; i < tableLayoutPanel1.Controls.Count; i++)
+                        foreach (Control control in tableLayoutPanel1.Controls)
                         {
-                            Label lbl = tableLayoutPanel1.Controls[i] as Label;
-                            if (lbl != null && lbl.Tag is int tag)
-                            {
+                            if (control is Label lbl && lbl.Tag is int tag)
                                 cardPositions.Add(tag);
-                            }
                         }
 
                         int indexFirstFlipped = tableLayoutPanel1.Controls.IndexOf(gameLogic.first);
@@ -241,22 +198,16 @@ namespace MainMenu
                             GameStateSave = gameLogic.gameState
                         };
 
-                        
                         GameSaveManager.SaveGame(gs, sfd.FileName);
-
                         MessageBox.Show("Hra byla úspěšně uložena.");
                     }
                     catch (Exception ex)
                     {
                         MessageBox.Show("Chyba při ukládání hry: " + ex.Message);
-                        return;
                     }
                 }
             }
         }
-
-
-
 
         private void loadButton_Click(object sender, EventArgs e)
         {
@@ -274,7 +225,6 @@ namespace MainMenu
                 {
                     try
                     {
-                        
                         GameSave loaded = GameSaveManager.LoadGame(ofd.FileName);
 
                         this.playerCount = loaded.PlayerNumber;
@@ -284,7 +234,6 @@ namespace MainMenu
                         this.isSound = loaded.IsSound;
                         this.names = loaded.Names;
 
-
                         if (scoreManager == null)
                         {
                             scoreManager = new GameScoreManager(loaded.Names);
@@ -292,21 +241,16 @@ namespace MainMenu
                         else
                         {
                             for (int i = 0; i < loaded.Names.Length; i++)
-                            {
                                 scoreManager.SetPlayerName(i, loaded.Names[i]);
-                            }
                             scoreManager.SetScores(loaded.Score);
                         }
 
-
                         gameBoard.InitializeBoard(isLoading: true, statusStrip1, toolStrip1);
 
-                        
                         List<int> cardPositions = loaded.CardPositions;
                         for (int i = 0; i < cardPositions.Count; i++)
                         {
-                            Label lbl = tableLayoutPanel1.Controls[i] as Label;
-                            if (lbl != null)
+                            if (tableLayoutPanel1.Controls[i] is Label lbl)
                             {
                                 lbl.Tag = cardPositions[i];
                                 lbl.Image = gameBoard.GetBackImage();
@@ -314,17 +258,14 @@ namespace MainMenu
                             }
                         }
 
-                        
                         gameBoard.MatchedPairs = new Dictionary<int, int>(loaded.MatchedPairs);
                         foreach (var kvp in gameBoard.MatchedPairs)
                         {
                             int index = kvp.Key;
                             int cardId = kvp.Value;
-
                             if (index >= 0 && index < tableLayoutPanel1.Controls.Count)
                             {
-                                Label lbl = tableLayoutPanel1.Controls[index] as Label;
-                                if (lbl != null)
+                                if (tableLayoutPanel1.Controls[index] is Label lbl)
                                 {
                                     lbl.Tag = cardId;
                                     gameBoard.FlipCardFront(lbl);
@@ -333,7 +274,6 @@ namespace MainMenu
                             }
                         }
 
-                       
                         if (loaded.IndexFirstFlipped >= 0 && loaded.IndexFirstFlipped < tableLayoutPanel1.Controls.Count)
                         {
                             gameLogic.first = tableLayoutPanel1.Controls[loaded.IndexFirstFlipped] as Label;
@@ -362,20 +302,17 @@ namespace MainMenu
                             gameLogic.second = null;
                         }
 
-                        
                         gameLogic.currentPlayer = loaded.CurrentPlayerOnTurn;
                         gameLogic.flippedLabels = loaded.FlippedLabels;
                         gameBoard.HiddenLabels = loaded.HiddenLabels;
                         gameLogic.gameState = loaded.GameStateSave;
 
                         ShowScore();
-
                         MessageBox.Show("Hra byla úspěšně načtena.");
                     }
                     catch (Exception ex)
                     {
                         MessageBox.Show("Chyba při načítání hry: " + ex.Message);
-                        return;
                     }
                 }
             }
@@ -390,7 +327,6 @@ namespace MainMenu
             this.isSound = loaded.IsSound;
             this.names = loaded.Names;
 
-
             if (scoreManager == null)
             {
                 scoreManager = new GameScoreManager(loaded.Names);
@@ -398,21 +334,16 @@ namespace MainMenu
             else
             {
                 for (int i = 0; i < loaded.Names.Length; i++)
-                {
                     scoreManager.SetPlayerName(i, loaded.Names[i]);
-                }
                 scoreManager.SetScores(loaded.Score);
             }
 
-
             gameBoard.InitializeBoard(isLoading: true, statusStrip1, toolStrip1);
-
 
             List<int> cardPositions = loaded.CardPositions;
             for (int i = 0; i < cardPositions.Count; i++)
             {
-                Label lbl = tableLayoutPanel1.Controls[i] as Label;
-                if (lbl != null)
+                if (tableLayoutPanel1.Controls[i] is Label lbl)
                 {
                     lbl.Tag = cardPositions[i];
                     lbl.Image = gameBoard.GetBackImage();
@@ -420,17 +351,14 @@ namespace MainMenu
                 }
             }
 
-
             gameBoard.MatchedPairs = new Dictionary<int, int>(loaded.MatchedPairs);
             foreach (var kvp in gameBoard.MatchedPairs)
             {
                 int index = kvp.Key;
                 int cardId = kvp.Value;
-
                 if (index >= 0 && index < tableLayoutPanel1.Controls.Count)
                 {
-                    Label lbl = tableLayoutPanel1.Controls[index] as Label;
-                    if (lbl != null)
+                    if (tableLayoutPanel1.Controls[index] is Label lbl)
                     {
                         lbl.Tag = cardId;
                         gameBoard.FlipCardFront(lbl);
@@ -438,7 +366,6 @@ namespace MainMenu
                     }
                 }
             }
-
 
             if (loaded.IndexFirstFlipped >= 0 && loaded.IndexFirstFlipped < tableLayoutPanel1.Controls.Count)
             {
@@ -468,7 +395,6 @@ namespace MainMenu
                 gameLogic.second = null;
             }
 
-
             gameLogic.currentPlayer = loaded.CurrentPlayerOnTurn;
             gameLogic.flippedLabels = loaded.FlippedLabels;
             gameBoard.HiddenLabels = loaded.HiddenLabels;
@@ -476,19 +402,17 @@ namespace MainMenu
 
             ShowScore();
         }
+
         private void EndGame()
         {
-
             int maxScore = int.MinValue;
             int minScore = int.MaxValue;
             List<int> winners = new List<int>();
             List<int> losers = new List<int>();
 
-            
             for (int i = 0; i < playerCount; i++)
             {
-                int playerScore = scoreManager.GetScore(i); 
-
+                int playerScore = scoreManager.GetScore(i);
                 if (playerScore > maxScore)
                 {
                     maxScore = playerScore;
@@ -499,7 +423,6 @@ namespace MainMenu
                 {
                     winners.Add(i);
                 }
-
                 if (playerScore < minScore)
                 {
                     minScore = playerScore;
@@ -512,71 +435,41 @@ namespace MainMenu
                 }
             }
 
-            
             List<ScoreData> allScores = GameScoreSaveManager.LoadScoreData();
-
-            
             for (int i = 0; i < playerCount; i++)
             {
                 string playerName = scoreManager.GetPlayerName(i);
                 int pairsFoundThisGame = scoreManager.GetScore(i);
 
-                
-                ScoreData scoreData = allScores.FirstOrDefault(s => s.PlayerName.Equals(playerName, StringComparison.OrdinalIgnoreCase));
+                ScoreData scoreData = allScores.FirstOrDefault(s =>
+                    s.PlayerName.Equals(playerName, StringComparison.OrdinalIgnoreCase));
                 if (scoreData != null)
                 {
-                    
                     scoreData.PairsFound += pairsFoundThisGame;
                     scoreData.TotalCards += cardCount * cardCount;
-
-                    
                     if (winners.Contains(i))
-                    {
                         scoreData.Wins += 1;
-                    }
-
-                    
                     if (losers.Contains(i))
-                    {
                         scoreData.Losses += 1;
-                    }
                 }
                 else
                 {
-                    
                     ScoreData newScore = new ScoreData(playerName, 0, 0, pairsFoundThisGame, cardCount * cardCount);
-
-                    
                     if (winners.Contains(i))
-                    {
                         newScore.Wins = 1;
-                    }
-
-                    
                     if (losers.Contains(i))
-                    {
                         newScore.Losses = 1;
-                    }
-
                     allScores.Add(newScore);
                 }
             }
 
-            
             GameScoreSaveManager.SaveScoreData(allScores);
+            MessageBox.Show("Hra byla ukončena. Skóre bylo uloženo.",
+                "Konec Hry", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-            
-            MessageBox.Show("Hra byla ukončena. Skóre bylo uloženo.", "Konec Hry", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-            
             Score scoreForm = new Score();
             scoreForm.Show();
             this.Close();
         }
     }
-
-
-    }
-
-
-
+}

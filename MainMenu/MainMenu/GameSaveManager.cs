@@ -1,8 +1,6 @@
-﻿using static MainMenu.NewGame;
-using System.IO;
+﻿using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System;
-
 namespace MainMenu
 {
     public static class GameSaveManager

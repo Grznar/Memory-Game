@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection.Emit;
 using static MainMenu.GameLogic;
 
 namespace MainMenu
@@ -14,7 +13,6 @@ namespace MainMenu
         public int Difficulty { get; set; }
         public bool IsSound { get; set; }
         public List<int> CardImagesIds { get; set; }
-        public List<string> CardImagePaths { get; set; }
         public int[] Score { get; set; }       
         public List<int> CardPositions { get; set; }
         public int IndexFirstFlipped { get; set; }

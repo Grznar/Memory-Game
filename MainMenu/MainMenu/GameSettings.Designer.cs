@@ -126,7 +126,6 @@
             this.playerCountTextBox.TabIndex = 11;
             this.playerCountTextBox.Text = "2";
             this.playerCountTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.playerCountTextBox.TextChanged += new System.EventHandler(this.PlayerCountChanged);
             // 
             // cardCountOne
             // 
@@ -260,7 +259,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(944, 487);
+            this.ClientSize = new System.Drawing.Size(940, 483);
             this.ControlBox = false;
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.label5);
