@@ -19,7 +19,7 @@ namespace MainMenu
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception("Chyba při ukládání hry: " + ex.Message, ex);
+                    throw new Exception("Chyba při ukládání hry!");
                 }
             }
 
@@ -37,7 +37,7 @@ namespace MainMenu
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception("Chyba při načítání hry: " + ex.Message, ex);
+                    throw new Exception("Hra je špatně uložena!");
                     
                 }
             }

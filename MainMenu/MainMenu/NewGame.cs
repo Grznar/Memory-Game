@@ -203,7 +203,7 @@ namespace MainMenu
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show("Chyba při ukládání hry: " + ex.Message);
+                        MessageBox.Show("Chyba při ukládání hry!");
                     }
                 }
             }
@@ -312,7 +312,7 @@ namespace MainMenu
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show("Chyba při načítání hry: " + ex.Message);
+                        MessageBox.Show("Chyba při načítání hry!");
                     }
                 }
             }
