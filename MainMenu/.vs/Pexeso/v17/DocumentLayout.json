@@ -3,8 +3,31 @@
   "WorkspaceRootPath": "C:\\Users\\Admin\\Documents\\GitHub\\Pexeso---ROP\\MainMenu\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{C44F58B6-04F3-4B7A-9388-2E8611810F1E}|MainMenu\\Game.csproj|c:\\users\\admin\\documents\\github\\pexeso---rop\\mainmenu\\mainmenu\\startingmenu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{C44F58B6-04F3-4B7A-9388-2E8611810F1E}|MainMenu\\Game.csproj|solutionrelative:mainmenu\\startingmenu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C44F58B6-04F3-4B7A-9388-2E8611810F1E}|MainMenu\\Game.csproj|c:\\users\\admin\\documents\\github\\pexeso---rop\\mainmenu\\mainmenu\\score.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{C44F58B6-04F3-4B7A-9388-2E8611810F1E}|MainMenu\\Game.csproj|solutionrelative:mainmenu\\score.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C44F58B6-04F3-4B7A-9388-2E8611810F1E}|MainMenu\\Game.csproj|c:\\users\\admin\\documents\\github\\pexeso---rop\\mainmenu\\mainmenu\\gamesettings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{C44F58B6-04F3-4B7A-9388-2E8611810F1E}|MainMenu\\Game.csproj|solutionrelative:mainmenu\\gamesettings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C44F58B6-04F3-4B7A-9388-2E8611810F1E}|MainMenu\\Game.csproj|C:\\Users\\Admin\\Documents\\GitHub\\Pexeso---ROP\\MainMenu\\mainmenu\\newgame.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{C44F58B6-04F3-4B7A-9388-2E8611810F1E}|MainMenu\\Game.csproj|solutionrelative:mainmenu\\newgame.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{C44F58B6-04F3-4B7A-9388-2E8611810F1E}|MainMenu\\Game.csproj|c:\\users\\admin\\documents\\github\\pexeso---rop\\mainmenu\\mainmenu\\soundmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{C44F58B6-04F3-4B7A-9388-2E8611810F1E}|MainMenu\\Game.csproj|solutionrelative:mainmenu\\soundmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C44F58B6-04F3-4B7A-9388-2E8611810F1E}|MainMenu\\Game.csproj|c:\\users\\admin\\documents\\github\\pexeso---rop\\mainmenu\\mainmenu\\gamesettings.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C44F58B6-04F3-4B7A-9388-2E8611810F1E}|MainMenu\\Game.csproj|solutionrelative:mainmenu\\gamesettings.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{00000000-0000-0000-0000-000000000000}|\u003CSolution\u003E|Game||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
     },
     {
       "AbsoluteMoniker": "D:0:0:{C44F58B6-04F3-4B7A-9388-2E8611810F1E}|MainMenu\\Game.csproj|C:\\Users\\Admin\\Documents\\GitHub\\Pexeso---ROP\\MainMenu\\mainmenu\\gameboard.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -23,8 +46,7 @@
       "RelativeMoniker": "D:0:0:{C44F58B6-04F3-4B7A-9388-2E8611810F1E}|MainMenu\\Game.csproj|solutionrelative:mainmenu\\startingmenu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{C44F58B6-04F3-4B7A-9388-2E8611810F1E}|MainMenu\\Game.csproj|C:\\Users\\Admin\\Documents\\GitHub\\Pexeso---ROP\\MainMenu\\mainmenu\\newgame.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{C44F58B6-04F3-4B7A-9388-2E8611810F1E}|MainMenu\\Game.csproj|solutionrelative:mainmenu\\newgame.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+      "AbsoluteMoniker": "D:0:0:{C44F58B6-04F3-4B7A-9388-2E8611810F1E}|MainMenu\\Game.csproj|c:\\users\\admin\\documents\\github\\pexeso---rop\\mainmenu\\mainmenu\\||{B270807C-D8C6-49EB-8EBE-8E8D566637A1}|cc4014f5-b18d-439c-9352-f99d984cca85"
     }
   ],
   "DocumentGroupContainers": [
@@ -43,6 +65,67 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "StartingMenu.cs [N\u00E1vrh]",
+              "DocumentMoniker": "C:\\Users\\Admin\\Documents\\GitHub\\Pexeso---ROP\\MainMenu\\MainMenu\\StartingMenu.cs",
+              "RelativeDocumentMoniker": "MainMenu\\StartingMenu.cs",
+              "ToolTip": "C:\\Users\\Admin\\Documents\\GitHub\\Pexeso---ROP\\MainMenu\\MainMenu\\StartingMenu.cs [N\u00E1vrh]",
+              "RelativeToolTip": "MainMenu\\StartingMenu.cs [N\u00E1vrh]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-18T08:27:00.154Z",
+              "EditorCaption": " [N\u00E1vrh]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Score.cs [N\u00E1vrh]",
+              "DocumentMoniker": "C:\\Users\\Admin\\Documents\\GitHub\\Pexeso---ROP\\MainMenu\\MainMenu\\Score.cs",
+              "RelativeDocumentMoniker": "MainMenu\\Score.cs",
+              "ToolTip": "C:\\Users\\Admin\\Documents\\GitHub\\Pexeso---ROP\\MainMenu\\MainMenu\\Score.cs [N\u00E1vrh]",
+              "RelativeToolTip": "MainMenu\\Score.cs [N\u00E1vrh]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-18T08:26:32.084Z",
+              "EditorCaption": " [N\u00E1vrh]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "GameSettings.cs [N\u00E1vrh]",
+              "DocumentMoniker": "C:\\Users\\Admin\\Documents\\GitHub\\Pexeso---ROP\\MainMenu\\MainMenu\\GameSettings.cs",
+              "RelativeDocumentMoniker": "MainMenu\\GameSettings.cs",
+              "ToolTip": "C:\\Users\\Admin\\Documents\\GitHub\\Pexeso---ROP\\MainMenu\\MainMenu\\GameSettings.cs [N\u00E1vrh]",
+              "RelativeToolTip": "MainMenu\\GameSettings.cs [N\u00E1vrh]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-18T08:26:13.73Z",
+              "EditorCaption": " [N\u00E1vrh]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "GameSettings.Designer.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Documents\\GitHub\\Pexeso---ROP\\MainMenu\\MainMenu\\GameSettings.Designer.cs",
+              "RelativeDocumentMoniker": "MainMenu\\GameSettings.Designer.cs",
+              "ToolTip": "C:\\Users\\Admin\\Documents\\GitHub\\Pexeso---ROP\\MainMenu\\MainMenu\\GameSettings.Designer.cs",
+              "RelativeToolTip": "MainMenu\\GameSettings.Designer.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-18T08:23:07.404Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "NewGame.cs [N\u00E1vrh]",
+              "DocumentMoniker": "C:\\Users\\Admin\\Documents\\GitHub\\Pexeso---ROP\\MainMenu\\MainMenu\\NewGame.cs",
+              "RelativeDocumentMoniker": "MainMenu\\NewGame.cs",
+              "ToolTip": "C:\\Users\\Admin\\Documents\\GitHub\\Pexeso---ROP\\MainMenu\\MainMenu\\NewGame.cs [N\u00E1vrh]",
+              "RelativeToolTip": "MainMenu\\NewGame.cs [N\u00E1vrh]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-13T08:30:39.694Z",
+              "EditorCaption": " [N\u00E1vrh]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
               "Title": "SoundManager.cs",
               "DocumentMoniker": "C:\\Users\\Admin\\Documents\\GitHub\\Pexeso---ROP\\MainMenu\\MainMenu\\SoundManager.cs",
               "RelativeDocumentMoniker": "MainMenu\\SoundManager.cs",
@@ -55,7 +138,45 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 6,
+              "Title": "Game",
+              "DocumentMoniker": "C:\\Users\\Admin\\Documents\\GitHub\\Pexeso---ROP\\MainMenu\\MainMenu\\Game.csproj",
+              "RelativeDocumentMoniker": "MainMenu\\Game.csproj",
+              "ToolTip": "C:\\Users\\Admin\\Documents\\GitHub\\Pexeso---ROP\\MainMenu\\MainMenu\\Game.csproj",
+              "RelativeToolTip": "MainMenu\\Game.csproj",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-03-18T08:18:26.882Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "StartingMenu.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Documents\\GitHub\\Pexeso---ROP\\MainMenu\\MainMenu\\StartingMenu.cs",
+              "RelativeDocumentMoniker": "MainMenu\\StartingMenu.cs",
+              "ToolTip": "C:\\Users\\Admin\\Documents\\GitHub\\Pexeso---ROP\\MainMenu\\MainMenu\\StartingMenu.cs",
+              "RelativeToolTip": "MainMenu\\StartingMenu.cs",
+              "ViewState": "AgIAADoAAAAAAAAAAAAiwEgAAAAwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-13T08:33:30.866Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "NewGame.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\Documents\\GitHub\\Pexeso---ROP\\MainMenu\\MainMenu\\NewGame.cs",
+              "RelativeDocumentMoniker": "MainMenu\\NewGame.cs",
+              "ToolTip": "C:\\Users\\Admin\\Documents\\GitHub\\Pexeso---ROP\\MainMenu\\MainMenu\\NewGame.cs",
+              "RelativeToolTip": "MainMenu\\NewGame.cs",
+              "ViewState": "AgIAAH4BAAAAAAAAAAAAAJIBAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-13T08:31:08.84Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
               "Title": "GameBoard.cs",
               "DocumentMoniker": "C:\\Users\\Admin\\Documents\\GitHub\\Pexeso---ROP\\MainMenu\\MainMenu\\GameBoard.cs",
               "RelativeDocumentMoniker": "MainMenu\\GameBoard.cs",
@@ -67,42 +188,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "StartingMenu.cs",
-              "DocumentMoniker": "C:\\Users\\Admin\\Documents\\GitHub\\Pexeso---ROP\\MainMenu\\MainMenu\\StartingMenu.cs",
-              "RelativeDocumentMoniker": "MainMenu\\StartingMenu.cs",
-              "ToolTip": "C:\\Users\\Admin\\Documents\\GitHub\\Pexeso---ROP\\MainMenu\\MainMenu\\StartingMenu.cs",
-              "RelativeToolTip": "MainMenu\\StartingMenu.cs",
-              "ViewState": "AgIAADoAAAAAAAAAAAAiwEgAAAAwAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-13T08:33:30.866Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "NewGame.cs",
-              "DocumentMoniker": "C:\\Users\\Admin\\Documents\\GitHub\\Pexeso---ROP\\MainMenu\\MainMenu\\NewGame.cs",
-              "RelativeDocumentMoniker": "MainMenu\\NewGame.cs",
-              "ToolTip": "C:\\Users\\Admin\\Documents\\GitHub\\Pexeso---ROP\\MainMenu\\MainMenu\\NewGame.cs",
-              "RelativeToolTip": "MainMenu\\NewGame.cs",
-              "ViewState": "AgIAAH4BAAAAAAAAAAAAAJIBAAAYAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-13T08:31:08.84Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "NewGame.cs [N\u00E1vrh]",
-              "DocumentMoniker": "C:\\Users\\Admin\\Documents\\GitHub\\Pexeso---ROP\\MainMenu\\MainMenu\\NewGame.cs",
-              "RelativeDocumentMoniker": "MainMenu\\NewGame.cs",
-              "ToolTip": "C:\\Users\\Admin\\Documents\\GitHub\\Pexeso---ROP\\MainMenu\\MainMenu\\NewGame.cs [N\u00E1vrh]",
-              "RelativeToolTip": "MainMenu\\NewGame.cs [N\u00E1vrh]",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-13T08:30:39.694Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 8,
               "Title": "GameSaveManager.cs",
               "DocumentMoniker": "C:\\Users\\Admin\\Documents\\GitHub\\Pexeso---ROP\\MainMenu\\MainMenu\\GameSaveManager.cs",
               "RelativeDocumentMoniker": "MainMenu\\GameSaveManager.cs",
