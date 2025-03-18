@@ -34,3 +34,7 @@ C:\Users\Admin\Documents\GitHub\Pexeso---ROP\MainMenu\MainMenu\obj\Release\Game.
 C:\Users\Admin\Documents\GitHub\Pexeso---ROP\MainMenu\MainMenu\obj\Release\Game.csproj.Up2Date
 C:\Users\Admin\Documents\GitHub\Pexeso---ROP\MainMenu\MainMenu\obj\Release\MainMenu.exe
 C:\Users\Admin\Documents\GitHub\Pexeso---ROP\MainMenu\MainMenu\obj\Release\MainMenu.pdb
+C:\Users\Admin\Documents\GitHub\Pexeso---ROP\MainMenu\MainMenu\bin\Release\MainMenu.exe.manifest
+C:\Users\Admin\Documents\GitHub\Pexeso---ROP\MainMenu\MainMenu\bin\Release\MainMenu.application
+C:\Users\Admin\Documents\GitHub\Pexeso---ROP\MainMenu\MainMenu\obj\Release\MainMenu.exe.manifest
+C:\Users\Admin\Documents\GitHub\Pexeso---ROP\MainMenu\MainMenu\obj\Release\MainMenu.application
